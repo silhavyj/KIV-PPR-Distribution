@@ -14,7 +14,7 @@ namespace kiv_ppr
         enum class Flag
         {
             OK,
-            _EOF,
+            EOF_,
             ERROR
         };
 
@@ -29,12 +29,16 @@ namespace kiv_ppr
         File_Reader(const std::string& filename, std::size_t block_size);
         ~File_Reader();
 
-        Data_Block Read_Data() noexcept;
-        bool Is_Open() const noexcept;
+        Data_Block Read_Data();
+        [[nodiscard]] bool Is_Open() const noexcept;
+        [[nodiscard]] std::size_t Get_Size() const noexcept;
+        [[nodiscard]] std::size_t Get_Number_Of_Elements() const noexcept;
+        void Seek_Beg();
 
     private:
-        bool Is_EOF() const noexcept;
-        std::size_t Get_Number_Of_Elements_To_Read() const noexcept;
+        [[nodiscard]] bool Is_EOF() const noexcept;
+        [[nodiscard]] std::size_t Get_Number_Of_Elements_To_Read() const noexcept;
+        [[nodiscard]] std::size_t Calculate_File_Size() noexcept;
 
     private:
         std::size_t m_elements_per_read;
@@ -44,5 +48,6 @@ namespace kiv_ppr
         std::size_t m_max_read_count;
         std::size_t m_read_count;
         std::size_t m_number_of_trailing_elements;
+        std::size_t m_total_number_of_elements;
     };
 }
