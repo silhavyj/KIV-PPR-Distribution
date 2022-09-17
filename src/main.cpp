@@ -35,10 +35,12 @@ int main()
         return 1;
     }
 
-    fmt::print("min = {}\n", basic_stats.Get_Min());
-    fmt::print("max = {}\n", basic_stats.Get_Max());
-    fmt::print("mean = {}\n", basic_stats.Get_Mean());
-    fmt::print("median = {}\n", basic_stats.Get_Median());
+    const auto [min, max, mean, median] = basic_stats.Get_Values();
+
+    fmt::print("min = {}\n", min);
+    fmt::print("max = {}\n", max);
+    fmt::print("mean = {}\n", mean);
+    fmt::print("median = {}\n", median);
 
     std::cout << file << '\n';
 }

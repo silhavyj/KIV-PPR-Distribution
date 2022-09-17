@@ -39,7 +39,7 @@ namespace kiv_ppr
     }
 
     template<class T>
-    bool Stream_Median_Finder<T>::Is_Empty() const
+    [[nodiscard]] bool Stream_Median_Finder<T>::Is_Empty() const
     {
         return m_left_half.empty() && m_right_half.empty();
     }

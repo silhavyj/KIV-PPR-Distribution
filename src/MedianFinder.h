@@ -11,7 +11,7 @@ namespace kiv_ppr
     public:
         void Add_Value(T value);
         T Get_Median() const;
-        bool Is_Empty() const;
+        [[nodiscard]] bool Is_Empty() const;
         T Pop_Value();
 
     private:
