@@ -1,6 +1,6 @@
 #include "Histogram.h"
 
-namespace kiv_ppr::histogram
+namespace kiv_ppr
 {
     template<class T>
     Histogram<T>::Histogram(uint32_t number_of_slots, T min, T max)

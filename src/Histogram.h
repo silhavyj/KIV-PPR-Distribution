@@ -4,11 +4,14 @@
 #include <vector>
 #include <iostream>
 
-namespace kiv_ppr::histogram
+namespace kiv_ppr
 {
     template<class T>
     class Histogram
     {
+    public:
+        static constexpr uint32_t DEFAULT_NUMBER_OF_SLOTS = 10;
+
     public:
         Histogram(uint32_t number_of_slots, T min, T max);
         ~Histogram() = default;

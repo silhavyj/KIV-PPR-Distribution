@@ -18,21 +18,32 @@ namespace kiv_ppr
     }
 
     template<class T, class E>
-    T Basic_File_Stats<T, E>::Get_Min() const noexcept
+    [[nodiscard]] T Basic_File_Stats<T, E>::Get_Min() const noexcept
     {
         return m_min;
     }
 
     template<class T, class E>
-    T Basic_File_Stats<T, E>::Get_Max() const noexcept
+    [[nodiscard]] T Basic_File_Stats<T, E>::Get_Max() const noexcept
     {
         return m_max;
     }
 
     template<class T, class E>
-    T Basic_File_Stats<T, E>::Get_Mean() const noexcept
+    [[nodiscard]] T Basic_File_Stats<T, E>::Get_Mean() const noexcept
     {
         return m_mean;
+    }
+
+    template<class T, class E>
+    [[nodiscard]] typename Basic_File_Stats<T, E>::Values Basic_File_Stats<T, E>::Get_Values() const noexcept
+    {
+        return
+        {
+            Get_Min(),
+            Get_Max(),
+            Get_Mean()
+        };
     }
 
     template<class T, class E>
@@ -45,7 +56,7 @@ namespace kiv_ppr
             thread_results[i] = std::async(std::launch::async, &Basic_File_Stats::Worker, this);
         }
         return std::find_if(thread_results.begin(), thread_results.end(), [&](auto& future) {
-            return future.get() == -1;
+            return future.get() < 0;
         }) != thread_results.end();
     }
 

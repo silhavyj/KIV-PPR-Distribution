@@ -8,12 +8,21 @@ namespace kiv_ppr
     class Basic_File_Stats
     {
     public:
+        struct Values
+        {
+            T min;
+            T max;
+            T mean;
+        };
+
+    public:
         Basic_File_Stats(File_Reader<E>* file, uint32_t number_of_threads);
         ~Basic_File_Stats() = default;
 
-        T Get_Min() const noexcept;
-        T Get_Max() const noexcept;
-        T Get_Mean() const noexcept;
+        [[nodiscard]] T Get_Min() const noexcept;
+        [[nodiscard]] T Get_Max() const noexcept;
+        [[nodiscard]] T Get_Mean() const noexcept;
+        [[nodiscard]] Values Get_Values() const noexcept;
 
         [[nodiscard]] int Process();
 
