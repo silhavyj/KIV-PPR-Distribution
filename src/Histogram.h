@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 
-namespace kiv_ppr
+namespace kiv_ppr::histogram
 {
     template<class T>
     class Histogram
