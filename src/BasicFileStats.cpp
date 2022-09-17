@@ -76,7 +76,7 @@ namespace kiv_ppr
     }
 
     template<class T, class E>
-    void Basic_File_Stats<T, E>::Report_Results(T min, T max, T mean, Stream_Median_Finder& median_finder) noexcept
+    void Basic_File_Stats<T, E>::Report_Results(T min, T max, T mean, Stream_Median_Finder<T>& median_finder) noexcept
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
 
@@ -96,7 +96,7 @@ namespace kiv_ppr
         T min = std::numeric_limits<T>::max();
         T max = std::numeric_limits<T>::min();
         T mean{};
-        Stream_Median_Finder median_finder;
+        Stream_Median_Finder<T> median_finder;
 
         while (true)
         {
@@ -109,7 +109,7 @@ namespace kiv_ppr
                         min = std::min(min, static_cast<T>(data[i]));
                         max = std::max(max, static_cast<T>(data[i]));
                         mean += static_cast<T>(data[i]) / m_file->Get_Total_Number_Of_Elements();
-                        median_finder.Add_Value(data[i]);
+                        median_finder.Add_Value(static_cast<T>(data[i]));
                     }
                     break;
                 case File_Reader<E>::Status::ERROR:
@@ -119,65 +119,6 @@ namespace kiv_ppr
                     return 0;
             }
         }
-    }
-
-    template<class T, class E>
-    void Basic_File_Stats<T, E>::Stream_Median_Finder::Add_Value(T value)
-    {
-        m_left_half.push(value);
-
-        if ((!m_left_half.empty() && !m_right_half.empty()) && (m_left_half.top() > m_right_half.top()))
-        {
-            m_right_half.push(m_left_half.top());
-            m_left_half.pop();
-        }
-        if (m_left_half.size() > m_right_half.size() + 1)
-        {
-            m_right_half.push(m_left_half.top());
-            m_left_half.pop();
-        }
-        if (m_left_half.size() + 1 < m_right_half.size())
-        {
-            m_left_half.push(m_right_half.top());
-            m_right_half.pop();
-        }
-    }
-
-    template<class T, class E>
-    T Basic_File_Stats<T, E>::Stream_Median_Finder::Get_Median() const
-    {
-        if (m_left_half.size() > m_right_half.size())
-        {
-            return m_left_half.top();
-        }
-        else if (m_right_half.size() > m_left_half.size())
-        {
-            return m_right_half.top();
-        }
-        return (m_left_half.top() + m_right_half.top()) / 2.0;
-    }
-
-    template<class T, class E>
-    bool Basic_File_Stats<T, E>::Stream_Median_Finder::Is_Empty() const
-    {
-        return m_left_half.empty() && m_right_half.empty();
-    }
-
-    template<class T, class E>
-    T Basic_File_Stats<T, E>::Stream_Median_Finder::Pop_Value()
-    {
-        T value{};
-        if (!m_left_half.empty())
-        {
-            value = m_left_half.top();
-            m_left_half.pop();
-        }
-        else if (!m_right_half.empty())
-        {
-            value = m_right_half.top();
-            m_right_half.pop();
-        }
-        return value;
     }
 
     template class Basic_File_Stats<double, double>;

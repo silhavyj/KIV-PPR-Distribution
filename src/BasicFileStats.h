@@ -1,8 +1,6 @@
 #pragma once
 
-#include <queue>
-#include <vector>
-
+#include "MedianFinder.h"
 #include "FileReader.h"
 
 namespace kiv_ppr
@@ -32,21 +30,7 @@ namespace kiv_ppr
         [[nodiscard]] int Process();
 
     private:
-        class Stream_Median_Finder
-        {
-        public:
-            void Add_Value(T value);
-            T Get_Median() const;
-            bool Is_Empty() const;
-            T Pop_Value();
-
-        private:
-            std::priority_queue<T> m_left_half;
-            std::priority_queue<T, std::vector<T>, std::greater<T>> m_right_half;
-        };
-
-    private:
-        void Report_Results(T min, T max, T mean, Stream_Median_Finder& median_finder) noexcept;
+        void Report_Results(T min, T max, T mean, Stream_Median_Finder<T>& median_finder) noexcept;
         [[nodiscard]] int Worker() noexcept;
 
     private:
@@ -56,7 +40,7 @@ namespace kiv_ppr
         T m_max;
         T m_mean;
         T m_median;
-        Stream_Median_Finder m_median_finder;
+        Stream_Median_Finder<T> m_median_finder;
         std::mutex m_mtx;
     };
 }
