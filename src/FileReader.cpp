@@ -50,7 +50,7 @@ namespace kiv_ppr
         m_file.read(reinterpret_cast<char*>(buffer.get()), m_number_of_elements_per_read * sizeof(T));
         if (0 == m_file.gcount())
         {
-            return { Status::EMPTY, 0, nullptr };
+            return { Status::EOF_, 0, nullptr };
         }
         return { Status::OK, static_cast<std::size_t>(m_file.gcount()) / sizeof(T), buffer };
     }
@@ -95,9 +95,6 @@ namespace kiv_ppr
                     return out;
                 case File_Reader<E>::Status::ERROR:
                     spdlog::error("Error has occurred while printing out the contents of the input file\n");
-                    return out;
-                case File_Reader<E>::Status::EMPTY:
-                    spdlog::error("No data has been read from the input file\n");
                     return out;
             }
         }

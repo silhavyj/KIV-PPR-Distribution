@@ -16,7 +16,6 @@ namespace kiv_ppr
         {
             OK,
             ERROR,
-            EMPTY,
             EOF_
         };
 

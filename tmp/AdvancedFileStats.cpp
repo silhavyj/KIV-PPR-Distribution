@@ -41,7 +41,6 @@ namespace kiv_ppr
     [[nodiscard]] int Advanced_File_Stats<T, E>::Worker() noexcept
     {
         Histogram<T> histogram(Histogram<T>::DEFAULT_NUMBER_OF_SLOTS, m_values.min, m_values.max);
-
         while (true)
         {
             const auto [status, count, data] = m_file->Read_Data();
@@ -54,11 +53,14 @@ namespace kiv_ppr
                     }
                     break;
                 case File_Reader<E>::Status::ERROR:
+                    std::cout << "A\n";
                     return -1;
                 case File_Reader<E>::Status::EOF_:
+                    std::cout << "B\n";
                     Report_Results(histogram);
                     return 0;
                 case File_Reader<E>::Status::EMPTY:
+                    std::cout << "C\n";
                     return -2;
             }
         }

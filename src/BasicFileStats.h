@@ -1,5 +1,8 @@
 #pragma once
 
+#include <queue>
+#include <vector>
+
 #include "FileReader.h"
 
 namespace kiv_ppr
@@ -13,6 +16,7 @@ namespace kiv_ppr
             T min;
             T max;
             T mean;
+            T median;
         };
 
     public:
@@ -22,13 +26,27 @@ namespace kiv_ppr
         [[nodiscard]] T Get_Min() const noexcept;
         [[nodiscard]] T Get_Max() const noexcept;
         [[nodiscard]] T Get_Mean() const noexcept;
+        [[nodiscard]] T Get_Median() const noexcept;
         [[nodiscard]] Values Get_Values() const noexcept;
 
         [[nodiscard]] int Process();
 
     private:
-        void Report_Results(T min, T max, T mean) noexcept;
-        void Update_Values(T& min, T& max, T& mean, E value) const noexcept;
+        class Stream_Median_Finder
+        {
+        public:
+            void Add_Value(T value);
+            T Get_Median() const;
+            bool Is_Empty() const;
+            T Pop_Value();
+
+        private:
+            std::priority_queue<T> m_left_half;
+            std::priority_queue<T, std::vector<T>, std::greater<T>> m_right_half;
+        };
+
+    private:
+        void Report_Results(T min, T max, T mean, Stream_Median_Finder& median_finder) noexcept;
         [[nodiscard]] int Worker() noexcept;
 
     private:
@@ -37,6 +55,8 @@ namespace kiv_ppr
         T m_min;
         T m_max;
         T m_mean;
+        T m_median;
+        Stream_Median_Finder m_median_finder;
         std::mutex m_mtx;
     };
 }
