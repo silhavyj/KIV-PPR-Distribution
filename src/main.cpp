@@ -9,6 +9,7 @@
 #include "BasicFileStats.h"
 #include "HistogramBuilder.h"
 #include "AdvancedFileStats.h"
+#include "Config.h"
 
 int main()
 {
@@ -16,9 +17,12 @@ int main()
     // spdlog::set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
 
     std::string filename{"data.dat"};
-    kiv_ppr::utils::Generate_Normal_Distribution_Test_File(filename, 1 * 1024, 5, 2);
 
-    kiv_ppr::File_Reader<double> file(filename, 100);
+    /*spdlog::debug("Generating file...");
+    kiv_ppr::utils::Generate_Normal_Distribution_Test_File(filename, kiv_ppr::config::TEST_FILE_SIZE, 100, 20);*/
+
+    spdlog::debug("Processing...");
+    kiv_ppr::File_Reader<double> file(filename, kiv_ppr::config::FILE_BLOCK_SIZE);
     if (!file.Is_Open())
     {
         spdlog::error("Cannot open the input file");
@@ -26,7 +30,7 @@ int main()
     }
     // std::cout << file << "\n";
 
-    kiv_ppr::Basic_File_Stats<double, double> basic_stats(&file, 4);
+    kiv_ppr::Basic_File_Stats<double, double> basic_stats(&file, kiv_ppr::config::NUMBER_OF_WORKERS);
     if (0 != basic_stats.Process())
     {
         spdlog::error("Failed to process basic statistical information about the file");
@@ -41,7 +45,7 @@ int main()
     std::cout << histogram << "\n";
 
     auto values = basic_stats.Get_Values();
-    kiv_ppr::Advanced_File_Stats<double, double> advanced_stats(&file, values, 5);
+    kiv_ppr::Advanced_File_Stats<double, double> advanced_stats(&file, values, kiv_ppr::config::NUMBER_OF_WORKERS);
     if (0 != advanced_stats.Process())
     {
         spdlog::error("Failed to process advanced statistical information about the file");

@@ -34,7 +34,7 @@ namespace kiv_ppr
         }
         return std::find_if(thread_results.begin(), thread_results.end(), [&](auto& future) {
             return future.get() < 0;
-        }) != thread_results.end();
+        }) == thread_results.end();
     }
 
     template<class T, class E>
