@@ -25,7 +25,7 @@ namespace kiv_ppr
     }
 
     template<class T>
-    T Stream_Median_Finder<T>::Get_Median() const
+    [[nodiscard]] T Stream_Median_Finder<T>::Get_Median() const
     {
         if (m_left_half.size() > m_right_half.size())
         {
@@ -45,7 +45,7 @@ namespace kiv_ppr
     }
 
     template<class T>
-    T Stream_Median_Finder<T>::Pop_Value()
+    [[nodiscard]] T Stream_Median_Finder<T>::Pop_Value()
     {
         T value{};
         if (!m_left_half.empty())

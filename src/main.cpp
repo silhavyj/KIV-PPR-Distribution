@@ -17,8 +17,11 @@ int main()
 
     std::string filename{"data.dat"};
 
-    // spdlog::debug("Generating file...");
-    // kiv_ppr::utils::Generate_Normal_Distribution_Test_File(filename, 120, 20, 2);
+    spdlog::debug("Generating file...");
+    // kiv_ppr::utils::Generate_Normal_Distribution_Test_File(filename, 1024, 20, 2);
+    kiv_ppr::utils::Generate_Uniform_Distribution_Test_File(filename, 80, -100, 100);
+
+    auto start_time = std::chrono::steady_clock::now();
 
     spdlog::debug("Processing...");
     kiv_ppr::File_Reader<double> file(filename, 1024 * 1024);
@@ -42,5 +45,10 @@ int main()
     fmt::print("mean = {}\n", mean);
     fmt::print("median = {}\n", median);
 
+    auto end_time = std::chrono::steady_clock::now();
+
     std::cout << file << '\n';
+    // std::cout << "done\n";
+
+    std::cout << std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time).count() << "s\n";
 }

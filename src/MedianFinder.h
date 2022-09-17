@@ -10,9 +10,9 @@ namespace kiv_ppr
     {
     public:
         void Add_Value(T value);
-        T Get_Median() const;
+        [[nodiscard]] T Get_Median() const;
         [[nodiscard]] bool Is_Empty() const;
-        T Pop_Value();
+        [[nodiscard]] T Pop_Value();
 
     private:
         std::priority_queue<T> m_left_half;
