@@ -6,10 +6,15 @@ namespace kiv_ppr
 {
     template<class T>
     File_Reader<T>::File_Reader(const std::string &filename, std::size_t number_of_elements_per_read)
-        : m_number_of_elements_per_read{number_of_elements_per_read},
-          m_file(filename, std::ios::binary)
+        : m_number_of_elements_per_read{number_of_elements_per_read}
     {
+        m_file = std::ifstream(filename, std::ios::binary);
 
+        if (m_file.is_open())
+        {
+            m_file_size = Calculate_File_Size();
+            m_total_number_of_elements = m_file_size / sizeof(T);
+        }
     }
 
     template<class T>
@@ -41,24 +46,48 @@ namespace kiv_ppr
         {
             return { Status::ERROR, 0, nullptr };
         }
+
         m_file.read(reinterpret_cast<char*>(buffer.get()), m_number_of_elements_per_read * sizeof(T));
+        if (0 == m_file.gcount())
+        {
+            return { Status::EMPTY, 0, nullptr };
+        }
         return { Status::OK, static_cast<std::size_t>(m_file.gcount()) / sizeof(T), buffer };
     }
 
     template<class T>
     void File_Reader<T>::Seek_Beg()
     {
+        m_file.clear();
         m_file.seekg(0, std::ios::beg);
+    }
+
+    template<class T>
+    std::size_t File_Reader<T>::Calculate_File_Size()
+    {
+        m_file.seekg(0, std::ios::end);
+        const auto size = m_file.tellg();
+        m_file.seekg(0, std::ios::beg);
+        return size;
+    }
+
+    template<class T>
+    [[nodiscard]] std::size_t File_Reader<T>::Get_Total_Number_Of_Elements() const noexcept
+    {
+        return m_total_number_of_elements;
     }
 
     template<class E>
     std::ostream& operator<<(std::ostream& out, File_Reader<E>& file) {
         file.Seek_Beg();
-        while (true) {
+        while (true)
+        {
             const auto [status, count, data] = file.Read_Data();
-            switch (status) {
+            switch (status)
+            {
                 case kiv_ppr::File_Reader<E>::Status::OK:
-                    for (std::size_t i = 0; i < count; ++i) {
+                    for (std::size_t i = 0; i < count; ++i)
+                    {
                         out << data[i] << " ";
                     }
                     break;
@@ -66,6 +95,9 @@ namespace kiv_ppr
                     return out;
                 case File_Reader<E>::Status::ERROR:
                     spdlog::error("Error has occurred while printing out the contents of the input file\n");
+                    return out;
+                case File_Reader<E>::Status::EMPTY:
+                    spdlog::error("No data has been read from the input file\n");
                     return out;
             }
         }
