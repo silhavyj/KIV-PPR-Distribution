@@ -1,40 +1,56 @@
 #include <iostream>
+#include <limits>
+#include <cmath>
 
 #include <spdlog/spdlog.h>
 
+#include "Utils.h"
 #include "FileReader.h"
-#include "FileStats.h"
 #include "Histogram.h"
 
 int main()
 {
-    //spdlog::set_level(spdlog::level::debug); // Set global log level to debug
+    spdlog::set_level(spdlog::level::debug);
 
-    kiv_ppr::File_Reader<double> file("../../data.dat", 100 / sizeof(double));
-    if (file.Is_Open())
+    std::string filename{"data.dat"};
+    kiv_ppr::utils::Generate_Normal_Distribution_Test_File(filename, 1024, 5, 2);
+
+    /*kiv_ppr::File_Reader<double> file(filename, 1024 / 8);
+    if (!file.Is_Open())
     {
-        kiv_ppr::File_Stats<double, double> stats(&file);
-        if (0 == stats.Process(5))
-        {
-            fmt::print("min = {}\n", stats.Get_Min());
-            fmt::print("max = {}\n", stats.Get_Max());
-            fmt::print("mean = {}\n", stats.Get_Mean());
-
-            auto histogram = stats.Get_Histogram(10);
-            for (uint32_t i = 0; i < histogram.Get_Size(); ++i)
-            {
-                std::cout << histogram[i] << " ";
-            }
-        }
-        else
-        {
-            spdlog::error("File not open");
-        }
+        return 1;
     }
-    else
+    // std::cout << file << '\n';
+
+    file.Seek_Beg();
+    const auto [status, count, data] = file.Read_Data();
+    double min = std::numeric_limits<double>::max();
+    double max = std::numeric_limits<double>::min();
+
+    if (status == kiv_ppr::File_Reader<double>::Status::OK)
     {
-        spdlog::error("File not open");
+        for (std::size_t i = 0; i < count; ++i)
+        {
+            //std::cout << data[i] << " ";
+            max = std::max(max, data[i]);
+            min = std::min(min, data[i]);
+        }
+        std::cout << "\n";
     }
 
-    return 0;
+    kiv_ppr::Histogram<double> histogram(10, min, max);
+
+    file.Seek_Beg();
+    const auto block = file.Read_Data();
+
+    if (block.status == kiv_ppr::File_Reader<double>::Status::OK)
+    {
+        for (std::size_t i = 0; i < count; ++i)
+        {
+            //std::cout << data[i] << " ";
+            histogram.Add(data[i]);
+        }
+        std::cout << "\n";
+    }
+    std::cout << histogram << "\n";*/
 }

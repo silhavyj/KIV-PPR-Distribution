@@ -1,9 +1,10 @@
 #pragma once
 
+#include <cstdint>
 #include <mutex>
-#include <memory>
 #include <fstream>
 #include <string>
+#include <memory>
 
 namespace kiv_ppr
 {
@@ -11,43 +12,34 @@ namespace kiv_ppr
     class File_Reader
     {
     public:
-        enum class Flag
+        enum class Status : uint8_t
         {
             OK,
-            EOF_,
-            ERROR
+            ERROR,
+            EOF_
         };
 
         struct Data_Block
         {
-            Flag flag;
+            Status status;
             std::size_t count;
-            std::shared_ptr<T[]> data;         
+            std::shared_ptr<T[]> data;
         };
 
     public:
-        File_Reader(const std::string& filename, std::size_t block_size);
+        File_Reader(const std::string& filename, std::size_t number_of_elements_per_read);
         ~File_Reader();
 
-        Data_Block Read_Data();
-        [[nodiscard]] bool Is_Open() const noexcept;
-        [[nodiscard]] std::size_t Get_Size() const noexcept;
-        [[nodiscard]] std::size_t Get_Number_Of_Elements() const noexcept;
+        [[nodiscard]] Data_Block Read_Data();
+        [[nodiscard]] bool Is_Open() const;
         void Seek_Beg();
 
-    private:
-        [[nodiscard]] bool Is_EOF() const noexcept;
-        [[nodiscard]] std::size_t Get_Number_Of_Elements_To_Read() const noexcept;
-        [[nodiscard]] std::size_t Calculate_File_Size() noexcept;
+        template<class E>
+        friend std::ostream& operator<<(std::ostream& out, File_Reader<E>& file);
 
     private:
-        std::size_t m_elements_per_read;
-        std::mutex m_file_mtx;
+        std::size_t m_number_of_elements_per_read;
         std::ifstream m_file;
-        std::size_t m_file_size;
-        std::size_t m_max_read_count;
-        std::size_t m_read_count;
-        std::size_t m_number_of_trailing_elements;
-        std::size_t m_total_number_of_elements;
+        std::mutex m_mtx;
     };
 }
