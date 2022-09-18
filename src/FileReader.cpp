@@ -1,3 +1,5 @@
+#include <iomanip>
+
 #include <spdlog/spdlog.h>
 
 #include "FileReader.h"
@@ -88,7 +90,7 @@ namespace kiv_ppr
                 case kiv_ppr::File_Reader<E>::Status::OK:
                     for (std::size_t i = 0; i < count; ++i)
                     {
-                        out << data[i] << " ";
+                        out << std::setprecision(9) << data[i] << " ";
                     }
                     break;
                 case File_Reader<E>::Status::EOF_:

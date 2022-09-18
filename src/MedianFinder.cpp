@@ -35,7 +35,7 @@ namespace kiv_ppr
         {
             return m_right_half.top();
         }
-        return (m_left_half.top() + m_right_half.top()) / 2.0;
+        return (m_left_half.top() / 2.0) + (m_right_half.top() / 2.0);
     }
 
     template<class T>

@@ -19,7 +19,7 @@ int main()
 
     spdlog::debug("Generating file...");
     // kiv_ppr::utils::Generate_Normal_Distribution_Test_File(filename, 1024, 20, 2);
-    kiv_ppr::utils::Generate_Uniform_Distribution_Test_File(filename, 80, -100, 100);
+    // kiv_ppr::utils::Generate_Uniform_Distribution_Test_File(filename, 80, std::numeric_limits<double>::max() / 2, std::numeric_limits<double>::max());
 
     auto start_time = std::chrono::steady_clock::now();
 
