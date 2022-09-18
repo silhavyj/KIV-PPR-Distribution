@@ -5,58 +5,58 @@ namespace kiv_ppr
     template<class T>
     void Stream_Median_Finder<T>::Add_Value(T value)
     {
-        m_left_half.push(value);
+        m_min_heap.push(value);
 
-        if ((!m_left_half.empty() && !m_right_half.empty()) && (m_left_half.top() > m_right_half.top()))
+        if ((!m_min_heap.empty() && !m_max_heap.empty()) && (m_min_heap.top() > m_max_heap.top()))
         {
-            m_right_half.push(m_left_half.top());
-            m_left_half.pop();
+            m_max_heap.push(m_min_heap.top());
+            m_min_heap.pop();
         }
-        if (m_left_half.size() > m_right_half.size() + 1)
+        if (m_min_heap.size() > m_max_heap.size() + 1)
         {
-            m_right_half.push(m_left_half.top());
-            m_left_half.pop();
+            m_max_heap.push(m_min_heap.top());
+            m_min_heap.pop();
         }
-        if (m_left_half.size() + 1 < m_right_half.size())
+        if (m_min_heap.size() + 1 < m_max_heap.size())
         {
-            m_left_half.push(m_right_half.top());
-            m_right_half.pop();
+            m_min_heap.push(m_max_heap.top());
+            m_max_heap.pop();
         }
     }
 
     template<class T>
     [[nodiscard]] T Stream_Median_Finder<T>::Get_Median() const
     {
-        if (m_left_half.size() > m_right_half.size())
+        if (m_min_heap.size() > m_max_heap.size())
         {
-            return m_left_half.top();
+            return m_min_heap.top();
         }
-        else if (m_right_half.size() > m_left_half.size())
+        else if (m_max_heap.size() > m_min_heap.size())
         {
-            return m_right_half.top();
+            return m_max_heap.top();
         }
-        return (m_left_half.top() / 2.0) + (m_right_half.top() / 2.0);
+        return (m_min_heap.top() / 2.0) + (m_max_heap.top() / 2.0);
     }
 
     template<class T>
     [[nodiscard]] bool Stream_Median_Finder<T>::Is_Empty() const
     {
-        return m_left_half.empty() && m_right_half.empty();
+        return m_min_heap.empty() && m_max_heap.empty();
     }
 
     template<class T>
     [[nodiscard]] T Stream_Median_Finder<T>::Pop_Value()
     {
         T value{};
-        if (!m_left_half.empty())
+        if (!m_min_heap.empty())
         {
-            value = m_left_half.top();
-            m_left_half.pop();
+            value = m_min_heap.top();
+            m_min_heap.pop();
         }
-        else if (!m_right_half.empty())
+        else if (!m_max_heap.empty())
         {
-            value = m_right_half.top();
-            m_right_half.pop();
+            value = m_max_heap.top();
+            m_max_heap.pop();
         }
         return value;
     }

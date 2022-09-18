@@ -15,7 +15,7 @@ namespace kiv_ppr
         [[nodiscard]] T Pop_Value();
 
     private:
-        std::priority_queue<T> m_left_half;
-        std::priority_queue<T, std::vector<T>, std::greater<T>> m_right_half;
+        std::priority_queue<T> m_min_heap;
+        std::priority_queue<T, std::vector<T>, std::greater<T>> m_max_heap;
     };
 }
