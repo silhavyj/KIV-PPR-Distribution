@@ -23,13 +23,13 @@ namespace kiv_ppr
     }
 
     template<class T>
-    uint32_t Histogram<T>::Get_Size() const noexcept
+    [[nodiscard]] uint32_t Histogram<T>::Get_Size() const noexcept
     {
         return m_config.number_of_slots;
     }
 
     template<class T>
-    std::size_t& Histogram<T>::operator[](uint32_t index)
+    [[nodiscard]] std::size_t& Histogram<T>::operator[](uint32_t index)
     {
         return m_slots[index % Get_Size()];
     }

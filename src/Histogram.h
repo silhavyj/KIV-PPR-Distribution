@@ -25,7 +25,8 @@ namespace kiv_ppr
 
         void Add(T value);
         [[nodiscard]] uint32_t Get_Size() const noexcept;
-        std::size_t& operator[](uint32_t index);
+
+        [[nodiscard]] std::size_t& operator[](uint32_t index);
         void operator+=(Histogram& other);
 
         [[nodiscard]] static Histogram<T> Generate_Histogram(File_Reader<T>& file, Config histogram_config, uint32_t number_of_threads);
