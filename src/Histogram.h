@@ -12,7 +12,15 @@ namespace kiv_ppr
     class Histogram
     {
     public:
-        Histogram(uint32_t number_of_slots, T min, T max);
+        struct Config
+        {
+            uint32_t number_of_slots;
+            T min_value;
+            T max_value;
+        };
+
+    public:
+        explicit Histogram(Config config);
         ~Histogram() = default;
 
         void Add(T value);
@@ -20,15 +28,13 @@ namespace kiv_ppr
         std::size_t& operator[](uint32_t index);
         void operator+=(Histogram& other);
 
-        [[nodiscard]] static Histogram<T> Generate_Histogram(File_Reader<T>& file, uint32_t number_of_slots, T min, T max, uint32_t number_of_threads);
+        [[nodiscard]] static Histogram<T> Generate_Histogram(File_Reader<T>& file, Config histogram_config, uint32_t number_of_threads);
 
         template<class E>
         friend std::ostream& operator<<(std::ostream& out, Histogram<E>& histogram);
 
     private:
-        uint32_t m_number_of_slots;
+        Config m_config;
         std::vector<std::size_t> m_slots;
-        T m_min;
-        T m_max;
     };
 }

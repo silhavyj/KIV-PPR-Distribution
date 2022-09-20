@@ -1,16 +1,15 @@
 #include <vector>
 #include <future>
 
+#include "Config.h"
 #include "Histogram.h"
 
 namespace kiv_ppr
 {
     template<class T>
-    Histogram<T>::Histogram(uint32_t number_of_slots, T min, T max)
-            : m_number_of_slots(number_of_slots),
-              m_slots(number_of_slots),
-              m_min(min),
-              m_max(max)
+    Histogram<T>::Histogram(Config config)
+        : m_config(config),
+          m_slots(config.number_of_slots)
     {
 
     }
@@ -18,15 +17,15 @@ namespace kiv_ppr
     template<class T>
     void Histogram<T>::Add(T value)
     {
-        static auto slot_size = (m_max - m_min) / m_number_of_slots;
-        uint32_t slot_id = (value - m_min) / slot_size;
+        static auto slot_size = (m_config.max_value - m_config.min_value) / m_config.number_of_slots;
+        uint32_t slot_id = (value - m_config.min_value) / slot_size;
         ++m_slots[slot_id];
     }
 
     template<class T>
     uint32_t Histogram<T>::Get_Size() const noexcept
     {
-        return m_number_of_slots;
+        return m_config.number_of_slots;
     }
 
     template<class T>
@@ -46,19 +45,19 @@ namespace kiv_ppr
     }
 
     template<class T>
-    [[nodiscard]] Histogram<T> Histogram<T>::Generate_Histogram(File_Reader<T>& file, uint32_t number_of_slots, T min, T max, uint32_t number_of_threads)
+    [[nodiscard]] Histogram<T> Histogram<T>::Generate_Histogram(File_Reader<T>& file, Config histogram_config, uint32_t number_of_threads)
     {
-        Histogram<T> histogram(number_of_slots, min, max);
+        Histogram<T> histogram(histogram_config);
         file.Seek_Beg();
 
         std::vector<std::future<Histogram<T>>> workers(number_of_threads);
         for (uint32_t i = 0; i < number_of_threads; ++i)
         {
-            workers[i] = std::async(std::launch::async, [&file, &number_of_slots, &min, &max]() {
-                Histogram<T> sub_histogram(number_of_slots, min, max);
+            workers[i] = std::async(std::launch::async, [&file, &histogram_config]() {
+                Histogram<T> sub_histogram(histogram_config);
                 while (true)
                 {
-                    const auto [status, count, data] = file.Read_Data(10);
+                    const auto [status, count, data] = file.Read_Data(kiv_ppr::config::NUMBER_OF_ELEMENTS_PER_READ);
                     switch (status)
                     {
                         case kiv_ppr::File_Reader<T>::Status::OK:

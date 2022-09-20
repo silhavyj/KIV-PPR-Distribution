@@ -27,7 +27,7 @@ namespace kiv_ppr
         };
 
     public:
-        File_Reader(const std::string& filename);
+        explicit File_Reader(const std::string& filename);
         ~File_Reader();
 
         [[nodiscard]] Data_Block Read_Data(std::size_t number_of_elements);

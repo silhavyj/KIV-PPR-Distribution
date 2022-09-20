@@ -44,7 +44,10 @@ void Foo(kiv_ppr::File_Reader<double>& file)
 int main()
 {
     std::string filename{"data.dat"};
-    kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 1000, 0, 2);
+
+    /* std::cout << "Generating file...\n";
+    kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 268435456, 100, 20);
+    std::cout << "Done"; */
 
     kiv_ppr::File_Reader<double> file(filename);
     if (file.Is_Open())
@@ -54,7 +57,7 @@ int main()
 
         kiv_ppr::Basic_File_Stats<double, double> basic_stats(&file);
 
-        if (0 == basic_stats.Process())
+        if (0 == basic_stats.Process(kiv_ppr::config::NUMBER_OF_THREADS_TO_READ_FILE))
         {
             const auto [min, max, mean] = basic_stats.Get_Values();
 
@@ -62,7 +65,7 @@ int main()
             std::cout << "max = " << max << "\n";
             std::cout << "mean = " << mean << "\n";
 
-            auto histogram = kiv_ppr::Histogram<double>::Generate_Histogram(file, 10, min, max, 2);
+            auto histogram = kiv_ppr::Histogram<double>::Generate_Histogram(file, {kiv_ppr::config::DEFAULT_NUMBER_OF_SLOTS, min, max}, kiv_ppr::config::NUMBER_OF_THREADS_TO_READ_FILE);
             std::cout << histogram << "\n";
         }
         else

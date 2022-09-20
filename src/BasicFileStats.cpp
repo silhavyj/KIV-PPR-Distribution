@@ -2,6 +2,7 @@
 #include <vector>
 #include <future>
 
+#include "Config.h"
 #include "BasicFileStats.h"
 
 namespace kiv_ppr
@@ -84,7 +85,7 @@ namespace kiv_ppr
 
         while (true)
         {
-            const auto [status, count, data] = m_file->Read_Data(10);
+            const auto [status, count, data] = m_file->Read_Data(kiv_ppr::config::NUMBER_OF_ELEMENTS_PER_READ);
             switch (status)
             {
                 case kiv_ppr::File_Reader<E>::Status::OK:
