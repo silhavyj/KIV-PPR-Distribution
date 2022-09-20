@@ -8,10 +8,11 @@
 namespace kiv_ppr
 {
     template<class T, class E>
-    Basic_File_Stats<T, E>::Basic_File_Stats(File_Reader<E>* file)
+    Basic_File_Stats<T, E>::Basic_File_Stats(File_Reader<E>* file, std::function<bool(T)> num_valid_fce)
         : m_file(file),
           m_min{std::numeric_limits<T>::max()},
           m_max{std::numeric_limits<T>::min()},
+          m_num_valid_fce(num_valid_fce),
           m_mean{}
     {
 
@@ -91,9 +92,12 @@ namespace kiv_ppr
                 case kiv_ppr::File_Reader<E>::Status::OK:
                     for (std::size_t i = 0; i < count; ++i)
                     {
-                        min = std::min(min, static_cast<T>(data[i]));
-                        max = std::max(max, static_cast<T>(data[i]));
-                        mean += static_cast<T>(data[i]) / m_file->Get_Total_Number_Of_Elements();
+                        if (m_num_valid_fce(data[i]))
+                        {
+                            min = std::min(min, static_cast<T>(data[i]));
+                            max = std::max(max, static_cast<T>(data[i]));
+                            mean += static_cast<T>(data[i]) / m_file->Get_Total_Number_Of_Valid_Elements();
+                        }
                     }
                     break;
                 case File_Reader<E>::Status::ERROR:

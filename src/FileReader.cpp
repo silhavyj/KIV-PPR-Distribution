@@ -1,5 +1,6 @@
 #include <iomanip>
 #include <iostream>
+#include <future>
 
 #include "FileReader.h"
 
@@ -7,6 +8,7 @@ namespace kiv_ppr
 {
     template<class T>
     File_Reader<T>::File_Reader(const std::string &filename)
+        : m_total_number_of_valid_elements{}
     {
         m_file = std::ifstream(filename, std::ios::in | std::ios::binary);
 
@@ -75,6 +77,49 @@ namespace kiv_ppr
     [[nodiscard]] std::size_t File_Reader<T>::Get_Total_Number_Of_Elements() const noexcept
     {
         return m_total_number_of_elements;
+    }
+
+    template<class T>
+    [[nodiscard]] std::size_t File_Reader<T>::Get_Total_Number_Of_Valid_Elements() const noexcept
+    {
+        return m_total_number_of_valid_elements;
+    }
+
+    template<class T>
+    void File_Reader<T>::Calculate_Valid_Numbers(std::function<bool(T)> valid_fce, uint32_t number_of_threads, std::size_t number_of_elements_per_read)
+    {
+        Seek_Beg();
+        std::vector<std::future<std::size_t>> workers(number_of_threads);
+        for (uint32_t i = 0; i < number_of_threads; ++i)
+        {
+            workers[i] = std::async(std::launch::async, [&]() {
+                std::size_t local_count = 0;
+                while (true)
+                {
+                    const auto [status, count, data] = Read_Data(number_of_elements_per_read);
+                    switch (status)
+                    {
+                        case kiv_ppr::File_Reader<T>::Status::OK:
+                            for (std::size_t i = 0; i < count; ++i)
+                            {
+                                if (valid_fce(data[i]))
+                                {
+                                    ++local_count;
+                                }
+                            }
+                            break;
+                        case Status::ERROR: [[fallthrough]];
+                        case Status::EOF_:
+                            return local_count;
+                    }
+                }
+            });
+        }
+        for (auto& worker : workers)
+        {
+            const auto local_count = worker.get();
+            m_total_number_of_valid_elements += local_count;
+        }
     }
 
     template<class E>

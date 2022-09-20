@@ -1,45 +1,11 @@
 #include <iostream>
+#include <functional>
 
 #include "Utils.h"
 #include "FileReader.h"
 #include "BasicFileStats.h"
 #include "Histogram.h"
 #include "Config.h"
-
-bool Test_Value(double value)
-{
-    const auto type = std::fpclassify(value);
-    return type == FP_NORMAL || type == FP_ZERO;
-}
-
-void Foo(kiv_ppr::File_Reader<double>& file)
-{
-    file.Seek_Beg();
-    bool eof = false;
-
-    while (!eof)
-    {
-        auto [status, count, data] = file.Read_Data(10);
-        switch (status)
-        {
-            case kiv_ppr::File_Reader<double>::Status::OK:
-                for (std::size_t i = 0; i < count; ++i)
-                {
-                    if (false == Test_Value(data[i]))
-                    {
-                        std::cout << "Wrong number\n";
-                    }
-                }
-                break;
-            case kiv_ppr::File_Reader<double>::Status::ERROR:
-                std::cerr << "Error\n";
-                return;
-            case kiv_ppr::File_Reader<double>::Status::EOF_:
-                eof = true;
-                break;
-        }
-    }
-}
 
 int main()
 {
@@ -50,6 +16,14 @@ int main()
     std::cout << "Done"; */
 
     kiv_ppr::File_Reader<double> file(filename);
+    if (file.Is_Open())
+    {
+        file.Calculate_Valid_Numbers(&kiv_ppr::utils::Double_Valid_Function, 8, 1024);
+        std::cout << file.Get_Total_Number_Of_Elements() << "\n";
+        std::cout << file.Get_Total_Number_Of_Valid_Elements() << "\n";
+    }
+
+    /*kiv_ppr::File_Reader<double> file(filename);
     if (file.Is_Open())
     {
         // Foo(file);
@@ -76,5 +50,5 @@ int main()
     else
     {
         std::cerr << "File not open\n";
-    }
+    }*/
 }

@@ -24,4 +24,5 @@ namespace kiv_ppr::utils
         }
     }
 
+    bool Double_Valid_Function(double value);
 }
