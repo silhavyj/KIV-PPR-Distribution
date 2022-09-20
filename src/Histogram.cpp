@@ -17,8 +17,8 @@ namespace kiv_ppr
     template<class T>
     void Histogram<T>::Add(T value)
     {
-        static auto slot_size = (m_config.max_value - m_config.min_value) / m_config.number_of_slots;
-        uint32_t slot_id = (value - m_config.min_value) / slot_size;
+        static auto slot_size = (m_config.max - m_config.min) / m_config.number_of_slots;
+        uint32_t slot_id = (value - m_config.min) / slot_size;
         ++m_slots[slot_id];
     }
 

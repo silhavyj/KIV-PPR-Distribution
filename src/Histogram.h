@@ -15,8 +15,8 @@ namespace kiv_ppr
         struct Config
         {
             uint32_t number_of_slots;
-            T min_value;
-            T max_value;
+            T min;
+            T max;
         };
 
     public:
