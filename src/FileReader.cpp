@@ -1,16 +1,14 @@
 #include <iomanip>
-
-#include <spdlog/spdlog.h>
+#include <iostream>
 
 #include "FileReader.h"
 
 namespace kiv_ppr
 {
     template<class T>
-    File_Reader<T>::File_Reader(const std::string &filename, std::size_t number_of_elements_per_read)
-        : m_number_of_elements_per_read{number_of_elements_per_read}
+    File_Reader<T>::File_Reader(const std::string &filename)
     {
-        m_file = std::ifstream(filename, std::ios::binary);
+        m_file = std::ifstream(filename, std::ios::in | std::ios::binary);
 
         if (m_file.is_open())
         {
@@ -35,7 +33,7 @@ namespace kiv_ppr
     }
 
     template<class T>
-    typename File_Reader<T>::Data_Block File_Reader<T>::Read_Data()
+    typename File_Reader<T>::Data_Block File_Reader<T>::Read_Data(std::size_t number_of_elements)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
         if (m_file.eof())
@@ -43,13 +41,13 @@ namespace kiv_ppr
             return { Status::EOF_, 0, nullptr };
         }
 
-        auto buffer = std::shared_ptr<T[]>(new(std::nothrow) T[m_number_of_elements_per_read]);
+        auto buffer = std::shared_ptr<T[]>(new(std::nothrow) T[number_of_elements]);
         if (nullptr == buffer)
         {
             return { Status::ERROR, 0, nullptr };
         }
 
-        m_file.read(reinterpret_cast<char*>(buffer.get()), m_number_of_elements_per_read * sizeof(T));
+        m_file.read(reinterpret_cast<char*>(buffer.get()), number_of_elements * sizeof(T));
         if (0 == m_file.gcount())
         {
             return { Status::EOF_, 0, nullptr };
@@ -84,7 +82,7 @@ namespace kiv_ppr
         file.Seek_Beg();
         while (true)
         {
-            const auto [status, count, data] = file.Read_Data();
+            const auto [status, count, data] = file.Read_Data(1);
             switch (status)
             {
                 case kiv_ppr::File_Reader<E>::Status::OK:
@@ -96,7 +94,7 @@ namespace kiv_ppr
                 case File_Reader<E>::Status::EOF_:
                     return out;
                 case File_Reader<E>::Status::ERROR:
-                    spdlog::error("Error has occurred while printing out the contents of the input file\n");
+                    std::cerr << "Error has occurred while printing out the contents of the input file\n";
                     return out;
             }
         }

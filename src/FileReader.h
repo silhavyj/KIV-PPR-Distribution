@@ -27,10 +27,10 @@ namespace kiv_ppr
         };
 
     public:
-        File_Reader(const std::string& filename, std::size_t number_of_elements_per_read);
+        File_Reader(const std::string& filename);
         ~File_Reader();
 
-        [[nodiscard]] Data_Block Read_Data();
+        [[nodiscard]] Data_Block Read_Data(std::size_t number_of_elements);
         [[nodiscard]] bool Is_Open() const;
         void Seek_Beg();
         [[nodiscard]] std::size_t Get_Total_Number_Of_Elements() const noexcept;
@@ -42,7 +42,6 @@ namespace kiv_ppr
         std::size_t Calculate_File_Size();
 
     private:
-        std::size_t m_number_of_elements_per_read;
         std::ifstream m_file;
         std::mutex m_mtx;
         std::size_t m_file_size;

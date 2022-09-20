@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 # Specify the C++ standard used in the project
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Add the name of the project, version, description,
@@ -19,8 +19,8 @@ project(
 include_directories(include)
 
 # Add submodules (libraries)
-add_subdirectory(external/spdlog)
-add_subdirectory(external/googletest)
+# add_subdirectory(external/spdlog)
+# add_subdirectory(external/googletest)
 
 # Add src folder
 add_subdirectory(src)

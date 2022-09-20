@@ -15,5 +15,4 @@ add_executable(
 
 # Link libraries to the executable
 target_link_libraries(
-    ${PROJECT_NAME}
-    spdlog)
+    ${PROJECT_NAME})

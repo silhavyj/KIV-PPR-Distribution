@@ -4,14 +4,13 @@
 #include <vector>
 #include <iostream>
 
+#include "FileReader.h"
+
 namespace kiv_ppr
 {
     template<class T>
     class Histogram
     {
-    public:
-        static constexpr uint32_t DEFAULT_NUMBER_OF_SLOTS = 10;
-
     public:
         Histogram(uint32_t number_of_slots, T min, T max);
         ~Histogram() = default;
@@ -19,6 +18,9 @@ namespace kiv_ppr
         void Add(T value);
         [[nodiscard]] uint32_t Get_Size() const noexcept;
         std::size_t& operator[](uint32_t index);
+        void operator+=(Histogram& other);
+
+        [[nodiscard]] static Histogram<T> Generate_Histogram(File_Reader<T>& file, uint32_t number_of_slots, T min, T max, uint32_t number_of_threads);
 
         template<class E>
         friend std::ostream& operator<<(std::ostream& out, Histogram<E>& histogram);
