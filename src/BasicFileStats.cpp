@@ -8,7 +8,7 @@
 namespace kiv_ppr
 {
     template<class T, class E>
-    Basic_File_Stats<T, E>::Basic_File_Stats(File_Reader<E>* file, std::function<bool(T)> num_valid_fce)
+    Basic_File_Stats<T, E>::Basic_File_Stats(File_Reader<E>* file, std::function<bool(E)> num_valid_fce)
         : m_file(file),
           m_min{std::numeric_limits<T>::max()},
           m_max{std::numeric_limits<T>::min()},

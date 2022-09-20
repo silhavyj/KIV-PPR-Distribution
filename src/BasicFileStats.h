@@ -16,7 +16,7 @@ namespace kiv_ppr
         };
 
     public:
-        explicit Basic_File_Stats(File_Reader<E>* file, std::function<bool(T)> num_valid_fce);
+        explicit Basic_File_Stats(File_Reader<E>* file, std::function<bool(E)> num_valid_fce);
         ~Basic_File_Stats() = default;
 
         [[nodiscard]] T Get_Min() const noexcept;
@@ -34,7 +34,7 @@ namespace kiv_ppr
         File_Reader<E>* m_file;
         T m_min;
         T m_max;
-        std::function<bool(T)> m_num_valid_fce;
+        std::function<bool(E)> m_num_valid_fce;
         T m_mean;
         std::mutex m_mtx;
     };
