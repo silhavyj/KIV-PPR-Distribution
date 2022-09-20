@@ -1,5 +1,4 @@
 #include <iostream>
-#include <functional>
 
 #include "Utils.h"
 #include "FileReader.h"
@@ -31,9 +30,6 @@ int main()
             std::cout << "mean = " << mean << "\n";
 
             kiv_ppr::Histogram<double>::Config histogram_config = { kiv_ppr::config::DEFAULT_NUMBER_OF_SLOTS, min, max };
-
-            // auto histogram = kiv_ppr::Histogram<double>::Generate_Histogram(file, histogram_config, kiv_ppr::config::NUMBER_OF_THREADS_TO_READ_FILE);
-            // std::cout << histogram << "\n";
 
             kiv_ppr::Advanced_File_Stats<double, double> advanced_stats(&file, &kiv_ppr::utils::Double_Valid_Function, basic_stats.Get_Values(), histogram_config);
             if (0 == advanced_stats.Process(kiv_ppr::config::NUMBER_OF_THREADS_TO_READ_FILE))

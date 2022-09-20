@@ -29,8 +29,6 @@ namespace kiv_ppr
         [[nodiscard]] std::size_t& operator[](uint32_t index);
         void operator+=(Histogram& other);
 
-        [[nodiscard]] static Histogram<T> Generate_Histogram(File_Reader<T>& file, Config histogram_config, uint32_t number_of_threads);
-
         template<class E>
         friend std::ostream& operator<<(std::ostream& out, Histogram<E>& histogram);
 

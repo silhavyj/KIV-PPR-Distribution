@@ -19,7 +19,7 @@ namespace kiv_ppr
         };
 
     public:
-        Advanced_File_Stats(File_Reader<E>* file, std::function<bool(E)> num_valid_fce, typename Basic_File_Stats<T, E>::Values basic_values, typename Histogram<T>::Config histogram_config);
+        explicit Advanced_File_Stats(File_Reader<E>* file, std::function<bool(E)> num_valid_fce, typename Basic_File_Stats<T, E>::Values basic_values, typename Histogram<T>::Config histogram_config);
         ~Advanced_File_Stats() = default;
 
         [[nodiscard]] T Get_Standard_Deviation() const noexcept;

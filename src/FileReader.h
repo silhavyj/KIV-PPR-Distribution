@@ -33,10 +33,10 @@ namespace kiv_ppr
 
         [[nodiscard]] Data_Block Read_Data(std::size_t number_of_elements);
         [[nodiscard]] bool Is_Open() const;
-        void Seek_Beg();
-        void Calculate_Valid_Numbers(std::function<bool(T)> valid_fce, uint32_t number_of_threads, std::size_t number_of_elements_per_read);
         [[nodiscard]] std::size_t Get_Total_Number_Of_Elements() const noexcept;
         [[nodiscard]] std::size_t Get_Total_Number_Of_Valid_Elements() const noexcept;
+        void Seek_Beg();
+        void Calculate_Valid_Numbers(std::function<bool(T)> valid_fce, uint32_t number_of_threads, std::size_t number_of_elements_per_read);
 
         template<class E>
         friend std::ostream& operator<<(std::ostream& out, File_Reader<E>& file);

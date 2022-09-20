@@ -44,43 +44,6 @@ namespace kiv_ppr
         }
     }
 
-    template<class T>
-    [[nodiscard]] Histogram<T> Histogram<T>::Generate_Histogram(File_Reader<T>& file, Config histogram_config, uint32_t number_of_threads)
-    {
-        Histogram<T> histogram(histogram_config);
-        file.Seek_Beg();
-
-        std::vector<std::future<Histogram<T>>> workers(number_of_threads);
-        for (uint32_t i = 0; i < number_of_threads; ++i)
-        {
-            workers[i] = std::async(std::launch::async, [&file, &histogram_config]() {
-                Histogram<T> sub_histogram(histogram_config);
-                while (true)
-                {
-                    const auto [status, count, data] = file.Read_Data(kiv_ppr::config::NUMBER_OF_ELEMENTS_PER_READ);
-                    switch (status)
-                    {
-                        case kiv_ppr::File_Reader<T>::Status::OK:
-                            for (std::size_t i = 0; i < count; ++i)
-                            {
-                                sub_histogram.Add(data[i]);
-                            }
-                            break;
-                        case File_Reader<T>::Status::ERROR: [[fallthrough]];
-                        case File_Reader<T>::Status::EOF_:
-                            return sub_histogram;
-                    }
-                }
-            });
-        }
-        for (auto& worker : workers)
-        {
-            auto sub_histogram = worker.get();
-            histogram += sub_histogram;
-        }
-        return histogram;
-    }
-
     template<class E>
     std::ostream& operator<<(std::ostream& out, Histogram<E>& histogram)
     {
