@@ -14,17 +14,5 @@ project(
     HOMEPAGE_URL "%%myurl%%"
     LANGUAGES CXX C)
 
-# Add include directories, so there is no need
-# to specify relative paths
-include_directories(include)
-
-# Add submodules (libraries)
-# add_subdirectory(external/spdlog)
-# add_subdirectory(external/googletest)
-
 # Add src folder
 add_subdirectory(src)
-
-# Add test folder
-# enable_testing()
-# add_subdirectory(test)
