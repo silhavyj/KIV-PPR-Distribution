@@ -8,5 +8,6 @@ namespace kiv_ppr::config
     {
         uint32_t number_of_threads;
         uint32_t number_of_elements_per_file_read;
+        double kick_to_watch_dog_ms;
     };
 }

@@ -12,8 +12,9 @@ int main()
 {
     std::string filename{"data.dat"};
     kiv_ppr::config::TThread_Config thread_config = {
-            std::thread::hardware_concurrency(),
-            1024 * 1024 * 10
+        std::thread::hardware_concurrency(),
+        1024 * 1024 * 10,
+        2
     };
 
     // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 134217728, 100, 20);

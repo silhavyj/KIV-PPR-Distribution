@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "WatchDog.h"
 
 namespace kiv_ppr
@@ -87,8 +89,8 @@ namespace kiv_ppr
             std::thread::id expired_thread_id{};
             if (Is_Expired(expired_thread_id))
             {
-                // TODO terminate the process
-                std::terminate();
+                std::cerr << "Thread " << expired_thread_id << " seems to have not been active enough. Exiting...";
+                exit(1);
             }
             std::this_thread::sleep_until(Get_Next_Expire_Time());
         }

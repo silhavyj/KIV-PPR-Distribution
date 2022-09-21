@@ -2,6 +2,7 @@
 
 #include "Config.h"
 #include "FileReader.h"
+#include "WatchDog.h"
 
 namespace kiv_ppr
 {
@@ -29,7 +30,7 @@ namespace kiv_ppr
 
     private:
         void Report_Results(T min, T max, T mean) noexcept;
-        [[nodiscard]] int Worker(const config::TThread_Config& thread_config) noexcept;
+        [[nodiscard]] int Worker(const config::TThread_Config& thread_config, CWatch_Dog* watch_dog);
 
     private:
         CFile_Reader<E>* m_file;

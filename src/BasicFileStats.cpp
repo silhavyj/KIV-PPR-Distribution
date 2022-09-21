@@ -51,11 +51,12 @@ namespace kiv_ppr
     [[nodiscard]] int CBasic_File_Stats<T, E>::Process(config::TThread_Config thread_config)
     {
         m_file->Seek_Beg();
+        CWatch_Dog watch_dog(thread_config.kick_to_watch_dog_ms, thread_config.number_of_threads);
 
         std::vector<std::future<int>> workers(thread_config.number_of_threads);
         for (uint32_t i = 0; i < thread_config.number_of_threads; ++i)
         {
-            workers[i] = std::async(std::launch::async, &CBasic_File_Stats::Worker, this, thread_config);
+            workers[i] = std::async(std::launch::async, &CBasic_File_Stats::Worker, this, thread_config, &watch_dog);
         }
         std::atomic<int> success = 0;
         std::for_each(std::execution::par, workers.begin(), workers.end(), [&success](auto& worker) {
@@ -75,7 +76,7 @@ namespace kiv_ppr
     }
 
     template<class T, class E>
-    [[nodiscard]] int CBasic_File_Stats<T, E>::Worker(const config::TThread_Config& thread_config) noexcept
+    [[nodiscard]] int CBasic_File_Stats<T, E>::Worker(const config::TThread_Config& thread_config, CWatch_Dog* watch_dog)
     {
         T min = std::numeric_limits<T>::max();
         T max = std::numeric_limits<T>::min();
@@ -84,6 +85,8 @@ namespace kiv_ppr
         while (true)
         {
             const auto [status, count, data] = m_file->Read_Data(thread_config.number_of_elements_per_file_read);
+            watch_dog->Kick();
+
             switch (status)
             {
                 case kiv_ppr::CFile_Reader<E>::NStatus::OK:
@@ -98,8 +101,10 @@ namespace kiv_ppr
                     }
                     break;
                 case CFile_Reader<E>::NStatus::ERROR:
+                    watch_dog->Remove();
                     return 1;
                 case CFile_Reader<E>::NStatus::EOF_:
+                    watch_dog->Remove();
                     Report_Results(min, max, mean);
                     return 0;
             }
