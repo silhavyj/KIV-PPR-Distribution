@@ -57,7 +57,7 @@ namespace kiv_ppr
         {
             workers[i] = std::async(std::launch::async, &Basic_File_Stats::Worker, this, thread_config);
         }
-        int success = 0;
+        std::atomic<int> success = 0;
         std::for_each(std::execution::par, workers.begin(), workers.end(), [&success](auto& worker) {
             success += worker.get();
         });
@@ -87,6 +87,15 @@ namespace kiv_ppr
             switch (status)
             {
                 case kiv_ppr::File_Reader<E>::Status::OK:
+                    /*std::for_each_n(std::execution::par, data.get(), count, [&](E value) {
+                        if (m_num_valid_fce(value))
+                        {
+                            min = std::min(min, static_cast<T>(value));
+                            max = std::max(max, static_cast<T>(value));
+                            mean += static_cast<T>(value) / m_file->Get_Total_Number_Of_Valid_Elements();
+                        }
+                    });*/
+
                     for (std::size_t i = 0; i < count; ++i)
                     {
                         if (m_num_valid_fce(data[i]))

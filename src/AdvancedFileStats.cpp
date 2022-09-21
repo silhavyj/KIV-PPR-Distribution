@@ -54,7 +54,7 @@ namespace kiv_ppr
         {
             workers[i] = std::async(std::launch::async, &Advanced_File_Stats::Worker, this, thread_config);
         }
-        int success = 0;
+        std::atomic<int> success = 0;
         std::for_each(std::execution::par, workers.begin(), workers.end(), [&success](auto& worker) {
             success += worker.get();
         });
@@ -85,6 +85,19 @@ namespace kiv_ppr
             switch (status)
             {
                 case kiv_ppr::File_Reader<E>::Status::OK:
+                    /*std::for_each_n(std::execution::par, data.get(), count, [&](E value) {
+                        if (m_num_valid_fce(value))
+                        {
+                            tmp_value1 = static_cast<T>(value) - m_basic_values.mean;
+                            tmp_value2 = tmp_value1;
+                            tmp_value1 /= (m_file->Get_Total_Number_Of_Valid_Elements() - 1);
+                            tmp_value1 *= tmp_value2;
+                            standard_deviation += tmp_value1;
+
+                            histogram.Add(value);
+                        }
+                    });*/
+
                     for (std::size_t i = 0; i < count; ++i)
                     {
                         if (m_num_valid_fce(data[i]))

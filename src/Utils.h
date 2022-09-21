@@ -4,6 +4,8 @@
 #include <string>
 #include <fstream>
 #include <random>
+#include <chrono>
+#include <cstdint>
 
 namespace kiv_ppr::utils
 {
@@ -22,6 +24,15 @@ namespace kiv_ppr::utils
                 output.write(reinterpret_cast<const char*>(&num), sizeof(num));
             }
         }
+    }
+
+    template<typename Function>
+    uint32_t Time_Call(Function&& function)
+    {
+        const auto start_time = std::chrono::steady_clock::now();
+        function();
+        const auto end_time = std::chrono::steady_clock::now();
+        return std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time).count();
     }
 
     bool Double_Valid_Function(double value);
