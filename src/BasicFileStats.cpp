@@ -1,6 +1,7 @@
 #include <limits>
 #include <vector>
 #include <future>
+#include <execution>
 
 #include "BasicFileStats.h"
 
@@ -56,14 +57,11 @@ namespace kiv_ppr
         {
             workers[i] = std::async(std::launch::async, &Basic_File_Stats::Worker, this, thread_config);
         }
-        for (auto& worker : workers)
-        {
-            if (0 != worker.get())
-            {
-                return 1;
-            }
-        }
-        return 0;
+        int success = 0;
+        std::for_each(std::execution::par, workers.begin(), workers.end(), [&success](auto& worker) {
+            success += worker.get();
+        });
+        return success;
     }
 
     template<class T, class E>

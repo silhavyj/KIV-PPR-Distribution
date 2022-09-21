@@ -1,13 +1,17 @@
 #include <vector>
 #include <future>
 #include <cmath>
+#include <execution>
 
 #include "AdvancedFileStats.h"
 
 namespace kiv_ppr
 {
     template<class T, class E>
-    Advanced_File_Stats<T, E>::Advanced_File_Stats(File_Reader<E> *file, std::function<bool(E)> num_valid_fce, typename Basic_File_Stats<T, E>::Values basic_values, typename Histogram<T>::Config histogram_config)
+    Advanced_File_Stats<T, E>::Advanced_File_Stats(File_Reader<E> *file,
+                                                   std::function<bool(E)> num_valid_fce,
+                                                   typename Basic_File_Stats<T, E>::Values basic_values,
+                                                   typename Histogram<T>::Config histogram_config)
         : m_file(file),
           m_num_valid_fce(num_valid_fce),
           m_basic_values(basic_values),
@@ -50,15 +54,12 @@ namespace kiv_ppr
         {
             workers[i] = std::async(std::launch::async, &Advanced_File_Stats::Worker, this, thread_config);
         }
-        for (auto& worker : workers)
-        {
-            if (0 != worker.get())
-            {
-                return 1;
-            }
-        }
+        int success = 0;
+        std::for_each(std::execution::par, workers.begin(), workers.end(), [&success](auto& worker) {
+            success += worker.get();
+        });
         m_standard_deviation = std::sqrt(m_standard_deviation);
-        return 0;
+        return success;
     }
 
     template<class T, class E>
