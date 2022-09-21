@@ -9,12 +9,12 @@
 namespace kiv_ppr
 {
     template<class T>
-    class Histogram
+    class CHistogram
     {
     public:
         static constexpr uint32_t DEFAULT_NUMBER_OF_SLOTS = 10;
 
-        struct Config
+        struct TConfig
         {
             uint32_t number_of_slots;
             T min;
@@ -22,20 +22,20 @@ namespace kiv_ppr
         };
 
     public:
-        explicit Histogram(Config config);
-        ~Histogram() = default;
+        explicit CHistogram(TConfig config);
+        ~CHistogram() = default;
 
         void Add(T value);
         [[nodiscard]] uint32_t Get_Size() const noexcept;
 
         [[nodiscard]] std::size_t& operator[](uint32_t index);
-        void operator+=(Histogram& other);
+        void operator+=(CHistogram& other);
 
         template<class E>
-        friend std::ostream& operator<<(std::ostream& out, Histogram<E>& histogram);
+        friend std::ostream& operator<<(std::ostream& out, CHistogram<E>& histogram);
 
     private:
-        Config m_config;
+        TConfig m_config;
         std::vector<std::size_t> m_slots;
     };
 }

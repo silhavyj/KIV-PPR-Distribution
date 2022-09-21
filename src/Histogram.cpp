@@ -6,7 +6,7 @@
 namespace kiv_ppr
 {
     template<class T>
-    Histogram<T>::Histogram(Config config)
+    CHistogram<T>::CHistogram(TConfig config)
         : m_config(config),
           m_slots(config.number_of_slots)
     {
@@ -14,7 +14,7 @@ namespace kiv_ppr
     }
 
     template<class T>
-    void Histogram<T>::Add(T value)
+    void CHistogram<T>::Add(T value)
     {
         static auto slot_size = (m_config.max - m_config.min) / m_config.number_of_slots;
         const auto slot_id = (value - m_config.min) / slot_size;
@@ -22,19 +22,19 @@ namespace kiv_ppr
     }
 
     template<class T>
-    [[nodiscard]] uint32_t Histogram<T>::Get_Size() const noexcept
+    [[nodiscard]] uint32_t CHistogram<T>::Get_Size() const noexcept
     {
         return m_config.number_of_slots;
     }
 
     template<class T>
-    [[nodiscard]] std::size_t& Histogram<T>::operator[](uint32_t index)
+    [[nodiscard]] std::size_t& CHistogram<T>::operator[](uint32_t index)
     {
         return m_slots[index % Get_Size()];
     }
 
     template<class T>
-    void Histogram<T>::operator+=(Histogram<T>& other)
+    void CHistogram<T>::operator+=(CHistogram<T>& other)
     {
         uint32_t size = std::min(Get_Size(), other.Get_Size());
         for (uint32_t i = 0; i < size; ++i)
@@ -44,7 +44,7 @@ namespace kiv_ppr
     }
 
     template<class E>
-    std::ostream& operator<<(std::ostream& out, Histogram<E>& histogram)
+    std::ostream& operator<<(std::ostream& out, CHistogram<E>& histogram)
     {
         uint32_t size = histogram.Get_Size();
         for (uint32_t i = 0; i < size; ++i)
@@ -54,6 +54,6 @@ namespace kiv_ppr
         return out;
     }
 
-    template class Histogram<double>;
-    template std::ostream& operator<<(std::ostream& out, Histogram<double>& histogram);
+    template class CHistogram<double>;
+    template std::ostream& operator<<(std::ostream& out, CHistogram<double>& histogram);
 }

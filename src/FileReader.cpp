@@ -7,7 +7,7 @@
 namespace kiv_ppr
 {
     template<class T>
-    File_Reader<T>::File_Reader(const std::string &filename)
+    CFile_Reader<T>::CFile_Reader(const std::string &filename)
         : m_total_number_of_valid_elements{}
     {
         m_file = std::ifstream(filename, std::ios::in | std::ios::binary);
@@ -20,7 +20,7 @@ namespace kiv_ppr
     }
 
     template<class T>
-    File_Reader<T>::~File_Reader()
+    CFile_Reader<T>::~CFile_Reader()
     {
         if (m_file && m_file.is_open())
         {
@@ -29,43 +29,43 @@ namespace kiv_ppr
     }
 
     template<class T>
-    bool File_Reader<T>::Is_Open() const
+    bool CFile_Reader<T>::Is_Open() const
     {
         return m_file.is_open();
     }
 
     template<class T>
-    typename File_Reader<T>::Data_Block File_Reader<T>::Read_Data(std::size_t number_of_elements)
+    typename CFile_Reader<T>::TData_Block CFile_Reader<T>::Read_Data(std::size_t number_of_elements)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
         if (m_file.eof())
         {
-            return { Status::EOF_, 0, nullptr };
+            return {NStatus::EOF_, 0, nullptr };
         }
 
         auto buffer = std::shared_ptr<T[]>(new(std::nothrow) T[number_of_elements]);
         if (nullptr == buffer)
         {
-            return { Status::ERROR, 0, nullptr };
+            return {NStatus::ERROR, 0, nullptr };
         }
 
         m_file.read(reinterpret_cast<char*>(buffer.get()), number_of_elements * sizeof(T));
         if (0 == m_file.gcount())
         {
-            return { Status::EOF_, 0, nullptr };
+            return {NStatus::EOF_, 0, nullptr };
         }
-        return { Status::OK, static_cast<std::size_t>(m_file.gcount()) / sizeof(T), buffer };
+        return {NStatus::OK, static_cast<std::size_t>(m_file.gcount()) / sizeof(T), buffer };
     }
 
     template<class T>
-    void File_Reader<T>::Seek_Beg()
+    void CFile_Reader<T>::Seek_Beg()
     {
         m_file.clear();
         m_file.seekg(0, std::ios::beg);
     }
 
     template<class T>
-    std::size_t File_Reader<T>::Calculate_File_Size()
+    std::size_t CFile_Reader<T>::Calculate_File_Size()
     {
         m_file.seekg(0, std::ios::end);
         const auto size = m_file.tellg();
@@ -74,19 +74,19 @@ namespace kiv_ppr
     }
 
     template<class T>
-    [[nodiscard]] std::size_t File_Reader<T>::Get_Total_Number_Of_Elements() const noexcept
+    [[nodiscard]] std::size_t CFile_Reader<T>::Get_Total_Number_Of_Elements() const noexcept
     {
         return m_total_number_of_elements;
     }
 
     template<class T>
-    [[nodiscard]] std::size_t File_Reader<T>::Get_Total_Number_Of_Valid_Elements() const noexcept
+    [[nodiscard]] std::size_t CFile_Reader<T>::Get_Total_Number_Of_Valid_Elements() const noexcept
     {
         return m_total_number_of_valid_elements;
     }
 
     template<class T>
-    void File_Reader<T>::Calculate_Valid_Numbers(std::function<bool(T)> valid_fce, config::Thread_Config thread_config)
+    void CFile_Reader<T>::Calculate_Valid_Numbers(std::function<bool(T)> valid_fce, config::TThread_Config thread_config)
     {
         Seek_Beg();
         std::vector<std::future<std::size_t>> workers(thread_config.number_of_threads);
@@ -99,7 +99,7 @@ namespace kiv_ppr
                     const auto [status, count, data] = Read_Data(thread_config.number_of_elements_per_file_read);
                     switch (status)
                     {
-                        case kiv_ppr::File_Reader<T>::Status::OK:
+                        case kiv_ppr::CFile_Reader<T>::NStatus::OK:
                             for (std::size_t i = 0; i < count; ++i)
                             {
                                 if (valid_fce(data[i]))
@@ -108,10 +108,10 @@ namespace kiv_ppr
                                 }
                             }
                             break;
-                        case Status::ERROR:
+                        case NStatus::ERROR:
                             std::cerr << L"Error occurred while calculating the number of valid elements in the input file. Exiting...\n";
                             exit(__LINE__);
-                        case Status::EOF_:
+                        case NStatus::EOF_:
                             return local_count;
                     }
                 }
@@ -125,28 +125,28 @@ namespace kiv_ppr
     }
 
     template<class E>
-    std::ostream& operator<<(std::ostream& out, File_Reader<E>& file) {
+    std::ostream& operator<<(std::ostream& out, CFile_Reader<E>& file) {
         file.Seek_Beg();
         while (true)
         {
             const auto [status, count, data] = file.Read_Data(1);
             switch (status)
             {
-                case kiv_ppr::File_Reader<E>::Status::OK:
+                case kiv_ppr::CFile_Reader<E>::NStatus::OK:
                     for (std::size_t i = 0; i < count; ++i)
                     {
                         out << std::setprecision(9) << data[i] << " ";
                     }
                     break;
-                case File_Reader<E>::Status::EOF_:
+                case CFile_Reader<E>::NStatus::EOF_:
                     return out;
-                case File_Reader<E>::Status::ERROR:
+                case CFile_Reader<E>::NStatus::ERROR:
                     std::cerr << L"Error occurred printing out the contents of the input file. Exiting...\n";
                     exit(__LINE__);
             }
         }
     }
 
-    template class File_Reader<double>;
-    template std::ostream& operator<<(std::ostream& out, File_Reader<double>& file);
+    template class CFile_Reader<double>;
+    template std::ostream& operator<<(std::ostream& out, CFile_Reader<double>& file);
 }
