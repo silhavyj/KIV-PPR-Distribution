@@ -2,7 +2,6 @@
 #include <vector>
 #include <future>
 
-#include "Config.h"
 #include "BasicFileStats.h"
 
 namespace kiv_ppr
@@ -48,18 +47,18 @@ namespace kiv_ppr
     }
 
     template<class T, class E>
-    [[nodiscard]] int Basic_File_Stats<T, E>::Process(uint32_t number_of_threads)
+    [[nodiscard]] int Basic_File_Stats<T, E>::Process(config::Thread_Config thread_config)
     {
         m_file->Seek_Beg();
 
-        std::vector<std::future<int>> workers(number_of_threads);
-        for (uint32_t i = 0; i < number_of_threads; ++i)
+        std::vector<std::future<int>> workers(thread_config.number_of_threads);
+        for (uint32_t i = 0; i < thread_config.number_of_threads; ++i)
         {
-            workers[i] = std::async(std::launch::async, &Basic_File_Stats::Worker, this);
+            workers[i] = std::async(std::launch::async, &Basic_File_Stats::Worker, this, thread_config);
         }
         for (auto& worker : workers)
         {
-            if (worker.get() < 0)
+            if (0 != worker.get())
             {
                 return 1;
             }
@@ -78,7 +77,7 @@ namespace kiv_ppr
     }
 
     template<class T, class E>
-    [[nodiscard]] int Basic_File_Stats<T, E>::Worker() noexcept
+    [[nodiscard]] int Basic_File_Stats<T, E>::Worker(const config::Thread_Config& thread_config) noexcept
     {
         T min = std::numeric_limits<T>::max();
         T max = std::numeric_limits<T>::min();
@@ -86,7 +85,7 @@ namespace kiv_ppr
 
         while (true)
         {
-            const auto [status, count, data] = m_file->Read_Data(kiv_ppr::config::NUMBER_OF_ELEMENTS_PER_READ);
+            const auto [status, count, data] = m_file->Read_Data(thread_config.number_of_elements_per_file_read);
             switch (status)
             {
                 case kiv_ppr::File_Reader<E>::Status::OK:
@@ -101,7 +100,7 @@ namespace kiv_ppr
                     }
                     break;
                 case File_Reader<E>::Status::ERROR:
-                    return -1;
+                    return 1;
                 case File_Reader<E>::Status::EOF_:
                     Report_Results(min, max, mean);
                     return 0;

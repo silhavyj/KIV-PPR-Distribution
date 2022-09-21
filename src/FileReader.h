@@ -7,6 +7,8 @@
 #include <memory>
 #include <functional>
 
+#include "Config.h"
+
 namespace kiv_ppr
 {
     template<class T>
@@ -36,7 +38,7 @@ namespace kiv_ppr
         [[nodiscard]] std::size_t Get_Total_Number_Of_Elements() const noexcept;
         [[nodiscard]] std::size_t Get_Total_Number_Of_Valid_Elements() const noexcept;
         void Seek_Beg();
-        void Calculate_Valid_Numbers(std::function<bool(T)> valid_fce, uint32_t number_of_threads, std::size_t number_of_elements_per_read);
+        void Calculate_Valid_Numbers(std::function<bool(T)> valid_fce, config::Thread_Config thread_config);
 
         template<class E>
         friend std::ostream& operator<<(std::ostream& out, File_Reader<E>& file);

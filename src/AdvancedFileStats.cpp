@@ -3,7 +3,6 @@
 #include <cmath>
 
 #include "AdvancedFileStats.h"
-#include "Config.h"
 
 namespace kiv_ppr
 {
@@ -42,18 +41,18 @@ namespace kiv_ppr
     }
 
     template<class T, class E>
-    [[nodiscard]] int Advanced_File_Stats<T, E>::Process(uint32_t number_of_threads)
+    [[nodiscard]] int Advanced_File_Stats<T, E>::Process(config::Thread_Config thread_config)
     {
         m_file->Seek_Beg();
 
-        std::vector<std::future<int>> workers(number_of_threads);
-        for (uint32_t i = 0; i < number_of_threads; ++i)
+        std::vector<std::future<int>> workers(thread_config.number_of_threads);
+        for (uint32_t i = 0; i < thread_config.number_of_threads; ++i)
         {
-            workers[i] = std::async(std::launch::async, &Advanced_File_Stats::Worker, this);
+            workers[i] = std::async(std::launch::async, &Advanced_File_Stats::Worker, this, thread_config);
         }
         for (auto& worker : workers)
         {
-            if (worker.get() < 0)
+            if (0 != worker.get())
             {
                 return 1;
             }
@@ -72,7 +71,7 @@ namespace kiv_ppr
     }
 
     template<class T, class E>
-    [[nodiscard]] int Advanced_File_Stats<T, E>::Worker() noexcept
+    [[nodiscard]] int Advanced_File_Stats<T, E>::Worker(const config::Thread_Config& thread_config) noexcept
     {
         Histogram<T> histogram(m_histogram_config);
         T standard_deviation{};
@@ -81,7 +80,7 @@ namespace kiv_ppr
 
         while (true)
         {
-            const auto [status, count, data] = m_file->Read_Data(kiv_ppr::config::NUMBER_OF_ELEMENTS_PER_READ);
+            const auto [status, count, data] = m_file->Read_Data(thread_config.number_of_elements_per_file_read);
             switch (status)
             {
                 case kiv_ppr::File_Reader<E>::Status::OK:
@@ -100,7 +99,7 @@ namespace kiv_ppr
                     }
                     break;
                 case File_Reader<E>::Status::ERROR:
-                    return -1;
+                    return 1;
                 case File_Reader<E>::Status::EOF_:
                     Report_Results(standard_deviation, histogram);
                     return 0;

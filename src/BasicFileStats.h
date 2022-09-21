@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Config.h"
 #include "FileReader.h"
 
 namespace kiv_ppr
@@ -24,11 +25,11 @@ namespace kiv_ppr
         [[nodiscard]] T Get_Mean() const noexcept;
         [[nodiscard]] Values Get_Values() const noexcept;
 
-        [[nodiscard]] int Process(uint32_t number_of_threads);
+        [[nodiscard]] int Process(config::Thread_Config thread_config);
 
     private:
         void Report_Results(T min, T max, T mean) noexcept;
-        [[nodiscard]] int Worker() noexcept;
+        [[nodiscard]] int Worker(const config::Thread_Config& thread_config) noexcept;
 
     private:
         File_Reader<E>* m_file;

@@ -12,6 +12,8 @@ namespace kiv_ppr
     class Histogram
     {
     public:
+        static constexpr uint32_t DEFAULT_NUMBER_OF_SLOTS = 10;
+
         struct Config
         {
             uint32_t number_of_slots;

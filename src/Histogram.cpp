@@ -1,7 +1,6 @@
 #include <vector>
 #include <future>
 
-#include "Config.h"
 #include "Histogram.h"
 
 namespace kiv_ppr

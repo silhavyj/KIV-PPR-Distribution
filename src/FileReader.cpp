@@ -86,17 +86,17 @@ namespace kiv_ppr
     }
 
     template<class T>
-    void File_Reader<T>::Calculate_Valid_Numbers(std::function<bool(T)> valid_fce, uint32_t number_of_threads, std::size_t number_of_elements_per_read)
+    void File_Reader<T>::Calculate_Valid_Numbers(std::function<bool(T)> valid_fce, config::Thread_Config thread_config)
     {
         Seek_Beg();
-        std::vector<std::future<std::size_t>> workers(number_of_threads);
-        for (uint32_t i = 0; i < number_of_threads; ++i)
+        std::vector<std::future<std::size_t>> workers(thread_config.number_of_threads);
+        for (uint32_t i = 0; i < thread_config.number_of_threads; ++i)
         {
             workers[i] = std::async(std::launch::async, [&]() {
                 std::size_t local_count = 0;
                 while (true)
                 {
-                    const auto [status, count, data] = Read_Data(number_of_elements_per_read);
+                    const auto [status, count, data] = Read_Data(thread_config.number_of_elements_per_file_read);
                     switch (status)
                     {
                         case kiv_ppr::File_Reader<T>::Status::OK:
@@ -108,7 +108,9 @@ namespace kiv_ppr
                                 }
                             }
                             break;
-                        case Status::ERROR: [[fallthrough]];
+                        case Status::ERROR:
+                            std::cerr << L"Error occurred while calculating the number of valid elements in the input file. Exiting...\n";
+                            exit(__LINE__);
                         case Status::EOF_:
                             return local_count;
                     }
@@ -139,8 +141,8 @@ namespace kiv_ppr
                 case File_Reader<E>::Status::EOF_:
                     return out;
                 case File_Reader<E>::Status::ERROR:
-                    std::cerr << "Error has occurred while printing out the contents of the input file\n";
-                    return out;
+                    std::cerr << L"Error occurred printing out the contents of the input file. Exiting...\n";
+                    exit(__LINE__);
             }
         }
     }

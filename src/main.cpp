@@ -1,15 +1,16 @@
 #include <iostream>
 
 #include "Utils.h"
+#include "Config.h"
 #include "FileReader.h"
 #include "BasicFileStats.h"
 #include "Histogram.h"
-#include "Config.h"
 #include "AdvancedFileStats.h"
 
 int main()
 {
     std::string filename{"data.dat"};
+    kiv_ppr::config::Thread_Config thread_config = { 4, 10 };
 
    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 10, 100, 20);
 
@@ -18,10 +19,10 @@ int main()
     {
         std::cout << file << "\n";
 
-        file.Calculate_Valid_Numbers(&kiv_ppr::utils::Double_Valid_Function, kiv_ppr::config::NUMBER_OF_THREADS_TO_READ_FILE, kiv_ppr::config::NUMBER_OF_ELEMENTS_PER_READ);
+        file.Calculate_Valid_Numbers(&kiv_ppr::utils::Double_Valid_Function, thread_config);
         kiv_ppr::Basic_File_Stats<double, double> basic_stats(&file, &kiv_ppr::utils::Double_Valid_Function);
 
-        if (0 == basic_stats.Process(kiv_ppr::config::NUMBER_OF_THREADS_TO_READ_FILE))
+        if (0 == basic_stats.Process(thread_config))
         {
             const auto [min, max, mean] = basic_stats.Get_Values();
 
@@ -29,10 +30,10 @@ int main()
             std::cout << "max = " << max << "\n";
             std::cout << "mean = " << mean << "\n";
 
-            kiv_ppr::Histogram<double>::Config histogram_config = { kiv_ppr::config::DEFAULT_NUMBER_OF_SLOTS, min, max };
+            kiv_ppr::Histogram<double>::Config histogram_config = { kiv_ppr::Histogram<double>::DEFAULT_NUMBER_OF_SLOTS, min, max };
 
             kiv_ppr::Advanced_File_Stats<double, double> advanced_stats(&file, &kiv_ppr::utils::Double_Valid_Function, basic_stats.Get_Values(), histogram_config);
-            if (0 == advanced_stats.Process(kiv_ppr::config::NUMBER_OF_THREADS_TO_READ_FILE))
+            if (0 == advanced_stats.Process(thread_config))
             {
                 const auto [sd, histogram2] = advanced_stats.Get_Values();
 

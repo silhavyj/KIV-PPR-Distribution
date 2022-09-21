@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "Config.h"
 #include "FileReader.h"
 #include "Histogram.h"
 #include "BasicFileStats.h"
@@ -26,11 +27,11 @@ namespace kiv_ppr
         [[nodiscard]] std::shared_ptr<Histogram<T>> Get_Histogram() const noexcept;
         [[nodiscard]] Values Get_Values() const noexcept;
 
-        [[nodiscard]] int Process(uint32_t number_of_threads);
+        [[nodiscard]] int Process(config::Thread_Config thread_config);
 
     private:
         void Report_Results(T standard_deviation, Histogram<T>& histogram) noexcept;
-        [[nodiscard]] int Worker() noexcept;
+        [[nodiscard]] int Worker(const config::Thread_Config& thread_config) noexcept;
 
     private:
         File_Reader<T>* m_file;
