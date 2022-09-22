@@ -22,7 +22,7 @@ namespace kiv_ppr
         size_t Get_Number_Of_Active_Threads() const noexcept;
 
     private:
-        bool Is_Expired(std::thread::id &expired_thread_id);
+        bool Is_Expired(std::thread::id& expired_thread_id);
         auto Get_Next_Expire_Time();
         void Run();
 

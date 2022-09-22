@@ -19,7 +19,7 @@ namespace kiv_ppr
         m_watch_dog_thread.join();
     }
 
-    bool CWatch_Dog::Kick(const std::thread::id &thread_id)
+    bool CWatch_Dog::Kick(const std::thread::id& thread_id)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
 
@@ -43,7 +43,7 @@ namespace kiv_ppr
         return true;
     }
 
-    bool CWatch_Dog::Remove(const std::thread::id &thread_id)
+    bool CWatch_Dog::Remove(const std::thread::id& thread_id)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
         if (m_thread_iterators.count(thread_id))
@@ -56,7 +56,7 @@ namespace kiv_ppr
         return false;
     }
 
-    bool CWatch_Dog::Is_Expired(std::thread::id &expired_thread_id)
+    bool CWatch_Dog::Is_Expired(std::thread::id& expired_thread_id)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
         const auto [id, time] = m_thread_queue.back();
