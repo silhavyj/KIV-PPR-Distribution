@@ -6,6 +6,7 @@
 #include <list>
 #include <unordered_map>
 #include <atomic>
+#include <functional>
 
 namespace kiv_ppr
 {
@@ -20,6 +21,7 @@ namespace kiv_ppr
         bool Kick(const std::thread::id& thread_id = std::this_thread::get_id());
         bool Remove(const std::thread::id& thread_id = std::this_thread::get_id());
         size_t Get_Number_Of_Active_Threads() const noexcept;
+        bool Reached_Maximum_Number_Of_Clients() const noexcept;
 
     private:
         bool Is_Expired(std::thread::id& expired_thread_id);
@@ -31,6 +33,7 @@ namespace kiv_ppr
         size_t m_maximum_number_of_threads;
         size_t m_number_of_threads;
         std::atomic<bool> m_watch_dog_thread_enabled;
+        bool m_reached_max_number_of_clients;
         std::thread m_watch_dog_thread;
         std::mutex m_mtx;
         std::list<std::pair<std::thread::id, Time_t>> m_thread_queue;

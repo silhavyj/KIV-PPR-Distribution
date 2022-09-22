@@ -1,7 +1,4 @@
 #include <limits>
-#include <vector>
-#include <future>
-#include <execution>
 
 #include "BasicFileStats.h"
 
@@ -51,18 +48,22 @@ namespace kiv_ppr
     [[nodiscard]] int CBasic_File_Stats<T, E>::Process(config::TThread_Config thread_config)
     {
         m_file->Seek_Beg();
-        CWatch_Dog watch_dog(thread_config.kick_to_watch_dog_ms, thread_config.number_of_threads);
 
+        CWatch_Dog watch_dog(thread_config.watchdog_threshold_ms, thread_config.number_of_threads);
         std::vector<std::future<int>> workers(thread_config.number_of_threads);
-        for (uint32_t i = 0; i < thread_config.number_of_threads; ++i)
+
+        for (auto& worker : workers)
         {
-            workers[i] = std::async(std::launch::async, &CBasic_File_Stats::Worker, this, thread_config, &watch_dog);
+            worker = std::async(std::launch::async, &CBasic_File_Stats::Worker, this, thread_config, &watch_dog);
         }
-        std::atomic<int> success = 0;
-        std::for_each(std::execution::par, workers.begin(), workers.end(), [&success](auto& worker) {
+
+        int success = 0;
+        for (auto& worker : workers)
+        {
             success += worker.get();
-        });
-        if (watch_dog.Get_Number_Of_Active_Threads() != 0)
+        }
+
+        if (watch_dog.Get_Number_Of_Active_Threads() != 0 || !watch_dog.Reached_Maximum_Number_Of_Clients())
         {
             return -1;
         }

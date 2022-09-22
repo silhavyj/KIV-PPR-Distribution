@@ -8,15 +8,37 @@
 #include "BasicFileStats.h"
 #include "Histogram.h"
 #include "AdvancedFileStats.h"
+#include "WatchDog.h"
 
 int main()
 {
+    /*kiv_ppr::CWatch_Dog watch_dog(0.01, 2);
+
+    std::thread t1([&watch_dog]() {
+        for (int i = 0; i < 10; ++i)
+        {
+            watch_dog.Kick();
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+    });
+
+    std::thread t2([&watch_dog]() {
+        for (int i = 0; i < 10; ++i)
+        {
+            watch_dog.Kick();
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+    });
+
+    t1.join();
+    t2.join();*/
+
     std::string filename{"data.dat"};
 
     kiv_ppr::config::TThread_Config thread_config = {
         std::thread::hardware_concurrency(), // TODO minus WatchDog, Main thread
         1024 * 1024 * 10,
-        2
+        10
     };
 
     // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 134217728, 100, 20);
@@ -25,7 +47,7 @@ int main()
         kiv_ppr::CFile_Reader<double> file(filename);
         if (file.Is_Open())
         {
-            std::cout << file << "\n";
+            // std::cout << file << "\n";
 
             file.Calculate_Valid_Numbers(&kiv_ppr::utils::Double_Valid_Function, thread_config);
             kiv_ppr::CBasic_File_Stats<double, double> basic_stats(&file, &kiv_ppr::utils::Double_Valid_Function);

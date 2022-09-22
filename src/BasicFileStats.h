@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include <future>
+
 #include "Config.h"
 #include "FileReader.h"
 #include "WatchDog.h"

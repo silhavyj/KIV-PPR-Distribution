@@ -50,14 +50,18 @@ namespace kiv_ppr
         m_file->Seek_Beg();
 
         std::vector<std::future<int>> workers(thread_config.number_of_threads);
-        for (uint32_t i = 0; i < thread_config.number_of_threads; ++i)
+
+        for (auto& worker : workers)
         {
-            workers[i] = std::async(std::launch::async, &CAdvanced_File_Stats::Worker, this, thread_config);
+            worker = std::async(std::launch::async, &CAdvanced_File_Stats::Worker, this, thread_config);
         }
-        std::atomic<int> success = 0;
-        std::for_each(std::execution::par, workers.begin(), workers.end(), [&success](auto& worker) {
+
+        int success = 0;
+        for (auto& worker : workers)
+        {
             success += worker.get();
-        });
+        }
+
         m_standard_deviation = std::sqrt(m_standard_deviation);
         return success;
     }
