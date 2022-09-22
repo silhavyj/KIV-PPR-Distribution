@@ -4,7 +4,7 @@
 
 namespace kiv_ppr
 {
-    CWatch_Dog::CWatch_Dog(uint32_t interval_ms, size_t maximum_number_of_threads)
+    CWatch_Dog::CWatch_Dog(double interval_ms, size_t maximum_number_of_threads)
         : m_interval_ms(interval_ms),
           m_maximum_number_of_threads(maximum_number_of_threads),
           m_number_of_threads{},
