@@ -28,7 +28,7 @@ namespace kiv_ppr
     }
 
     template<class T>
-    [[nodiscard]] std::size_t& CHistogram<T>::operator[](uint32_t index)
+    [[nodiscard]] size_t& CHistogram<T>::operator[](uint32_t index)
     {
         return m_slots[index % Get_Size()];
     }

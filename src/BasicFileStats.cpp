@@ -62,6 +62,10 @@ namespace kiv_ppr
         std::for_each(std::execution::par, workers.begin(), workers.end(), [&success](auto& worker) {
             success += worker.get();
         });
+        if (watch_dog.Get_Number_Of_Active_Threads() != 0)
+        {
+            return -1;
+        }
         return success;
     }
 
@@ -90,7 +94,7 @@ namespace kiv_ppr
             switch (status)
             {
                 case kiv_ppr::CFile_Reader<E>::NStatus::OK:
-                    for (std::size_t i = 0; i < count; ++i)
+                    for (size_t i = 0; i < count; ++i)
                     {
                         if (m_num_valid_fce(data[i]))
                         {

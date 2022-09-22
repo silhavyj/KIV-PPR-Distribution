@@ -1,5 +1,6 @@
 #include <iostream>
 #include <thread>
+#include <cmath>
 
 #include "Utils.h"
 #include "Config.h"
@@ -11,8 +12,9 @@
 int main()
 {
     std::string filename{"data.dat"};
+
     kiv_ppr::config::TThread_Config thread_config = {
-        std::thread::hardware_concurrency(),
+        std::thread::hardware_concurrency(), // TODO minus WatchDog, Main thread
         1024 * 1024 * 10,
         2
     };
@@ -23,7 +25,7 @@ int main()
         kiv_ppr::CFile_Reader<double> file(filename);
         if (file.Is_Open())
         {
-            // std::cout << file << "\n";
+            std::cout << file << "\n";
 
             file.Calculate_Valid_Numbers(&kiv_ppr::utils::Double_Valid_Function, thread_config);
             kiv_ppr::CBasic_File_Stats<double, double> basic_stats(&file, &kiv_ppr::utils::Double_Valid_Function);

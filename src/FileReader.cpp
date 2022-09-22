@@ -35,26 +35,26 @@ namespace kiv_ppr
     }
 
     template<class T>
-    typename CFile_Reader<T>::TData_Block CFile_Reader<T>::Read_Data(std::size_t number_of_elements)
+    typename CFile_Reader<T>::TData_Block CFile_Reader<T>::Read_Data(size_t number_of_elements)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
         if (m_file.eof())
         {
-            return {NStatus::EOF_, 0, nullptr };
+            return { NStatus::EOF_, 0, nullptr };
         }
 
         auto buffer = std::shared_ptr<T[]>(new(std::nothrow) T[number_of_elements]);
         if (nullptr == buffer)
         {
-            return {NStatus::ERROR, 0, nullptr };
+            return { NStatus::ERROR, 0, nullptr };
         }
 
         m_file.read(reinterpret_cast<char*>(buffer.get()), number_of_elements * sizeof(T));
         if (0 == m_file.gcount())
         {
-            return {NStatus::EOF_, 0, nullptr };
+            return { NStatus::EOF_, 0, nullptr };
         }
-        return {NStatus::OK, static_cast<std::size_t>(m_file.gcount()) / sizeof(T), buffer };
+        return { NStatus::OK, static_cast<size_t>(m_file.gcount()) / sizeof(T), buffer };
     }
 
     template<class T>
@@ -65,7 +65,7 @@ namespace kiv_ppr
     }
 
     template<class T>
-    std::size_t CFile_Reader<T>::Calculate_File_Size()
+    size_t CFile_Reader<T>::Calculate_File_Size()
     {
         m_file.seekg(0, std::ios::end);
         const auto size = m_file.tellg();
@@ -74,13 +74,13 @@ namespace kiv_ppr
     }
 
     template<class T>
-    [[nodiscard]] std::size_t CFile_Reader<T>::Get_Total_Number_Of_Elements() const noexcept
+    [[nodiscard]] size_t CFile_Reader<T>::Get_Total_Number_Of_Elements() const noexcept
     {
         return m_total_number_of_elements;
     }
 
     template<class T>
-    [[nodiscard]] std::size_t CFile_Reader<T>::Get_Total_Number_Of_Valid_Elements() const noexcept
+    [[nodiscard]] size_t CFile_Reader<T>::Get_Total_Number_Of_Valid_Elements() const noexcept
     {
         return m_total_number_of_valid_elements;
     }
@@ -89,18 +89,18 @@ namespace kiv_ppr
     void CFile_Reader<T>::Calculate_Valid_Numbers(std::function<bool(T)> valid_fce, config::TThread_Config thread_config)
     {
         Seek_Beg();
-        std::vector<std::future<std::size_t>> workers(thread_config.number_of_threads);
+        std::vector<std::future<size_t>> workers(thread_config.number_of_threads);
         for (uint32_t i = 0; i < thread_config.number_of_threads; ++i)
         {
             workers[i] = std::async(std::launch::async, [&]() {
-                std::size_t local_count = 0;
+                size_t local_count = 0;
                 while (true)
                 {
                     const auto [status, count, data] = Read_Data(thread_config.number_of_elements_per_file_read);
                     switch (status)
                     {
                         case kiv_ppr::CFile_Reader<T>::NStatus::OK:
-                            for (std::size_t i = 0; i < count; ++i)
+                            for (size_t i = 0; i < count; ++i)
                             {
                                 if (valid_fce(data[i]))
                                 {
@@ -133,7 +133,7 @@ namespace kiv_ppr
             switch (status)
             {
                 case kiv_ppr::CFile_Reader<E>::NStatus::OK:
-                    for (std::size_t i = 0; i < count; ++i)
+                    for (size_t i = 0; i < count; ++i)
                     {
                         out << std::setprecision(9) << data[i] << " ";
                     }

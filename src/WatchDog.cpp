@@ -23,10 +23,10 @@ namespace kiv_ppr
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
 
-        if (m_hash_map.count(thread_id))
+        if (m_thread_iterators.count(thread_id))
         {
-            m_list.erase(m_hash_map[thread_id]);
-            m_hash_map.erase(thread_id);
+            m_thread_queue.erase(m_thread_iterators[thread_id]);
+            m_thread_iterators.erase(thread_id);
             --m_number_of_threads;
         }
         else if (m_number_of_threads == m_maximum_number_of_threads)
@@ -36,8 +36,8 @@ namespace kiv_ppr
 
         auto expired_time = std::chrono::system_clock::now();
         expired_time += std::chrono::duration_cast<std::chrono::milliseconds>(m_interval_ms);
-        m_list.emplace_front(thread_id, expired_time);
-        m_hash_map[thread_id] = m_list.begin();
+        m_thread_queue.emplace_front(thread_id, expired_time);
+        m_thread_iterators[thread_id] = m_thread_queue.begin();
         ++m_number_of_threads;
 
         return true;
@@ -46,10 +46,10 @@ namespace kiv_ppr
     bool CWatch_Dog::Remove(const std::thread::id &thread_id)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
-        if (m_hash_map.count(thread_id))
+        if (m_thread_iterators.count(thread_id))
         {
-            m_list.erase(m_hash_map[thread_id]);
-            m_hash_map.erase(thread_id);
+            m_thread_queue.erase(m_thread_iterators[thread_id]);
+            m_thread_iterators.erase(thread_id);
             --m_number_of_threads;
             return true;
         }
@@ -59,8 +59,8 @@ namespace kiv_ppr
     bool CWatch_Dog::Is_Expired(std::thread::id &expired_thread_id)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
-        const auto [id, time] = m_list.back();
-        if (m_list.size() && time < std::chrono::system_clock::now())
+        const auto [id, time] = m_thread_queue.back();
+        if (m_thread_queue.size() && time < std::chrono::system_clock::now())
         {
             expired_thread_id = id;
             return true;
@@ -74,12 +74,17 @@ namespace kiv_ppr
         auto expire_time = std::chrono::system_clock::now();
         expire_time += std::chrono::duration_cast<std::chrono::milliseconds>(m_interval_ms);
 
-        if (m_list.size())
+        if (m_thread_queue.size())
         {
-            const auto [id, time] = m_list.back();
+            const auto [id, time] = m_thread_queue.back();
             return time;
         }
         return expire_time;
+    }
+
+    size_t CWatch_Dog::Get_Number_Of_Active_Threads() const noexcept
+    {
+        return m_number_of_threads;
     }
 
     void CWatch_Dog::Run()

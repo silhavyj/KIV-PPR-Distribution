@@ -28,7 +28,7 @@ namespace kiv_ppr
         void Add(T value);
         [[nodiscard]] uint32_t Get_Size() const noexcept;
 
-        [[nodiscard]] std::size_t& operator[](uint32_t index);
+        [[nodiscard]] size_t& operator[](uint32_t index);
         void operator+=(CHistogram& other);
 
         template<class E>
@@ -36,6 +36,6 @@ namespace kiv_ppr
 
     private:
         TConfig m_config;
-        std::vector<std::size_t> m_slots;
+        std::vector<size_t> m_slots;
     };
 }
