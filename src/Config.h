@@ -8,6 +8,6 @@ namespace kiv_ppr::config
     {
         uint32_t number_of_threads;
         uint32_t number_of_elements_per_file_read;
-        double watchdog_threshold_ms;
+        double watchdog_expiration_sec;
     };
 }

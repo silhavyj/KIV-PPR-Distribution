@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <cmath>
+#include <cassert>
 
 #include "Utils.h"
 #include "Config.h"
@@ -12,22 +13,24 @@
 
 int main()
 {
-    kiv_ppr::CWatch_Dog watch_dog(5, 1);
+    /*kiv_ppr::CWatch_Dog watch_dog(5);
 
     std::thread t1([&watch_dog]() {
-        watch_dog.Kick();
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        assert(true == watch_dog.Register());
+        assert(true == watch_dog.Kick());
+        std::this_thread::sleep_for(std::chrono::seconds(6));
+        assert(true == watch_dog.Unregister());
         std::cout << "Terminating thread1\n";
     });
 
-    t1.join();
+    t1.join();*/
 
-    /*std::string filename{"data.dat"};
+    std::string filename{"data.dat"};
 
     kiv_ppr::config::TThread_Config thread_config = {
         std::thread::hardware_concurrency(), // TODO minus WatchDog, Main thread
         1024 * 1024 * 10,
-        10
+        0.5
     };
 
     // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 134217728, 100, 20);
@@ -73,5 +76,5 @@ int main()
         {
             std::cerr << "File not open\n";
         }
-    }) << "s\n";*/
+    }) << "s\n";
 }

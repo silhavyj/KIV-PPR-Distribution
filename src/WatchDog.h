@@ -1,42 +1,42 @@
 #pragma once
 
 #include <mutex>
-#include <memory>
 #include <thread>
 #include <list>
 #include <unordered_map>
+#include <unordered_set>
 #include <atomic>
-#include <functional>
 
 namespace kiv_ppr
 {
     class CWatch_Dog
     {
+    public:
         using Time_t = std::chrono::time_point<std::chrono::system_clock>;
+        using Thread_ID_t = std::thread::id;
 
     public:
-        CWatch_Dog(double interval_ms, size_t maximum_number_of_threads);
+        CWatch_Dog(double interval_sec);
         ~CWatch_Dog();
 
-        bool Kick(const std::thread::id& thread_id = std::this_thread::get_id());
-        bool Remove(const std::thread::id& thread_id = std::this_thread::get_id());
-        size_t Get_Number_Of_Active_Threads() const noexcept;
-        bool Reached_Maximum_Number_Of_Clients() const noexcept;
+        bool Register(const Thread_ID_t& thread_id = std::this_thread::get_id());
+        bool Kick(const Thread_ID_t& thread_id = std::this_thread::get_id());
+        bool Unregister(const Thread_ID_t& thread_id = std::this_thread::get_id());
+        [[nodiscard]] size_t Get_Number_Of_Registered_Threads();
 
     private:
-        bool Is_Expired(std::thread::id& expired_thread_id);
-        auto Get_Next_Expire_Time();
+        [[nodiscard]] const Time_t Get_Expired_Time() const;
+        [[nodiscard]] const Time_t Get_Next_Expire_Time();
+        [[nodiscard]] bool Is_Expired(std::thread::id& expired_thread_id);
         void Run();
 
     private:
-        std::chrono::duration<double> m_interval_ms;
-        size_t m_maximum_number_of_threads;
-        size_t m_number_of_threads;
+        std::chrono::duration<double> m_interval_sec;
         std::atomic<bool> m_watch_dog_thread_enabled;
-        bool m_reached_max_number_of_clients;
         std::thread m_watch_dog_thread;
         std::mutex m_mtx;
-        std::list<std::pair<std::thread::id, Time_t>> m_thread_queue;
-        std::unordered_map<std::thread::id, decltype(m_thread_queue)::iterator> m_thread_iterators;
+        std::unordered_set<Thread_ID_t> m_registered_threads;
+        std::list<std::pair<Thread_ID_t, Time_t>> m_thread_queue;
+        std::unordered_map<Thread_ID_t, decltype(m_thread_queue)::iterator> m_queue_iterators;
     };
 }

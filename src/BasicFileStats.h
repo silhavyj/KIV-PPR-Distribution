@@ -20,6 +20,12 @@ namespace kiv_ppr
             T mean;
         };
 
+        enum class NStatus : uint8_t
+        {
+            SUCCESS,
+            FILE_READING_ERROR,
+        };
+
     public:
         explicit CBasic_File_Stats(CFile_Reader<E>* file, std::function<bool(E)> num_valid_fce);
         ~CBasic_File_Stats() = default;
@@ -33,7 +39,7 @@ namespace kiv_ppr
 
     private:
         void Report_Results(T min, T max, T mean) noexcept;
-        [[nodiscard]] int Worker(const config::TThread_Config& thread_config, CWatch_Dog* watch_dog);
+        [[nodiscard]] int Worker(const config::TThread_Config* thread_config, CWatch_Dog* watch_dog);
 
     private:
         CFile_Reader<E>* m_file;
