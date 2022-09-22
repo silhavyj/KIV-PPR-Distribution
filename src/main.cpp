@@ -12,28 +12,17 @@
 
 int main()
 {
-    /*kiv_ppr::CWatch_Dog watch_dog(0.01, 2);
+    kiv_ppr::CWatch_Dog watch_dog(5, 1);
 
     std::thread t1([&watch_dog]() {
-        for (int i = 0; i < 10; ++i)
-        {
-            watch_dog.Kick();
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-    });
-
-    std::thread t2([&watch_dog]() {
-        for (int i = 0; i < 10; ++i)
-        {
-            watch_dog.Kick();
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
+        watch_dog.Kick();
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        std::cout << "Terminating thread1\n";
     });
 
     t1.join();
-    t2.join();*/
 
-    std::string filename{"data.dat"};
+    /*std::string filename{"data.dat"};
 
     kiv_ppr::config::TThread_Config thread_config = {
         std::thread::hardware_concurrency(), // TODO minus WatchDog, Main thread
@@ -84,5 +73,5 @@ int main()
         {
             std::cerr << "File not open\n";
         }
-    }) << "s\n";
+    }) << "s\n";*/
 }

@@ -37,9 +37,9 @@ namespace kiv_ppr
 
     private:
         CFile_Reader<E>* m_file;
+        std::function<bool(E)> m_num_valid_fce;
         T m_min;
         T m_max;
-        std::function<bool(E)> m_num_valid_fce;
         T m_mean;
         std::mutex m_mtx;
     };

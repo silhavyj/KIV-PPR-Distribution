@@ -4,7 +4,7 @@
 
 namespace kiv_ppr
 {
-    CWatch_Dog::CWatch_Dog(double interval_ms, size_t maximum_number_of_threads)
+    CWatch_Dog::CWatch_Dog(uint32_t interval_ms, size_t maximum_number_of_threads)
         : m_interval_ms(interval_ms),
           m_maximum_number_of_threads(maximum_number_of_threads),
           m_number_of_threads{},
@@ -52,7 +52,7 @@ namespace kiv_ppr
             m_reached_max_number_of_clients = true;
         }
 
-        // std::cout << "Kicked by " << thread_id << "\n";
+        std::cout << "Kicked by " << thread_id << "\n";
 
         return true;
     }
@@ -74,6 +74,7 @@ namespace kiv_ppr
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
         const auto [id, time] = m_thread_queue.back();
+
         if (m_thread_queue.size() && time < std::chrono::system_clock::now())
         {
             expired_thread_id = id;
@@ -85,14 +86,13 @@ namespace kiv_ppr
     auto CWatch_Dog::Get_Next_Expire_Time()
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
-        auto expire_time = std::chrono::system_clock::now();
-        expire_time += std::chrono::duration_cast<std::chrono::milliseconds>(m_interval_ms);
-
         if (m_thread_queue.size())
         {
             const auto [id, time] = m_thread_queue.back();
             return time;
         }
+        auto expire_time = std::chrono::system_clock::now();
+        expire_time += std::chrono::duration_cast<std::chrono::milliseconds>(m_interval_ms);
         return expire_time;
     }
 
@@ -111,7 +111,8 @@ namespace kiv_ppr
                 std::cerr << "Thread " << expired_thread_id << " seems to have not been active enough. Exiting...";
                 exit(1);
             }
-            std::this_thread::sleep_until(Get_Next_Expire_Time());
+            // std::this_thread::sleep_until(Get_Next_Expire_Time());
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
     }
 }

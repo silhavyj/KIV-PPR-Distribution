@@ -7,9 +7,9 @@ namespace kiv_ppr
     template<class T, class E>
     CBasic_File_Stats<T, E>::CBasic_File_Stats(CFile_Reader<E>* file, std::function<bool(E)> num_valid_fce)
         : m_file(file),
+          m_num_valid_fce(num_valid_fce),
           m_min{std::numeric_limits<T>::max()},
           m_max{std::numeric_limits<T>::min()},
-          m_num_valid_fce(num_valid_fce),
           m_mean{}
     {
 
@@ -48,10 +48,9 @@ namespace kiv_ppr
     [[nodiscard]] int CBasic_File_Stats<T, E>::Process(config::TThread_Config thread_config)
     {
         m_file->Seek_Beg();
-
         CWatch_Dog watch_dog(thread_config.watchdog_threshold_ms, thread_config.number_of_threads);
-        std::vector<std::future<int>> workers(thread_config.number_of_threads);
 
+        std::vector<std::future<int>> workers(thread_config.number_of_threads);
         for (auto& worker : workers)
         {
             worker = std::async(std::launch::async, &CBasic_File_Stats::Worker, this, thread_config, &watch_dog);

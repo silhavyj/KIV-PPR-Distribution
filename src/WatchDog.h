@@ -15,7 +15,7 @@ namespace kiv_ppr
         using Time_t = std::chrono::time_point<std::chrono::system_clock>;
 
     public:
-        CWatch_Dog(double interval_ms, size_t maximum_number_of_threads);
+        CWatch_Dog(uint32_t interval_ms, size_t maximum_number_of_threads);
         ~CWatch_Dog();
 
         bool Kick(const std::thread::id& thread_id = std::this_thread::get_id());
@@ -29,7 +29,7 @@ namespace kiv_ppr
         void Run();
 
     private:
-        std::chrono::duration<double> m_interval_ms;
+        std::chrono::duration<uint32_t> m_interval_ms;
         size_t m_maximum_number_of_threads;
         size_t m_number_of_threads;
         std::atomic<bool> m_watch_dog_thread_enabled;
