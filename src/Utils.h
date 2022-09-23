@@ -9,19 +9,28 @@
 
 namespace kiv_ppr::utils
 {
-    template <typename D, typename ...arg>
-    void Generate_Numbers(const char* filename, const size_t count, const arg... a)
+    template <typename Distribution, typename ...Args>
+    void Generate_Numbers(const char* filename, const size_t count, const Args... args)
     {
         std::ofstream output(filename, std::ios::out | std::ios::binary);
+        size_t ten_percent = static_cast<size_t>(0.1f * count);
+        uint32_t percentage = 0;
+
         if (output.is_open())
         {
             std::random_device rd;
-            D dis(a...);
+            Distribution dis(args...);
 
-            for (size_t n = 0; n < count; ++n)
+            for (size_t i = 0; i < count; ++i)
             {
                 const double num = dis(rd);
                 output.write(reinterpret_cast<const char*>(&num), sizeof(num));
+
+                if (i % ten_percent == 0)
+                {
+                    std::cout << percentage << "%\n";
+                    percentage += 10;
+                }
             }
         }
     }

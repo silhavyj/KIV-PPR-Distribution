@@ -46,7 +46,7 @@ namespace kiv_ppr
         m_thread_queue.emplace_front(thread_id, expired_time);
         m_queue_iterators[thread_id] = m_thread_queue.begin();
 
-        std::cout << "Kicked by " << thread_id << "\n";
+        // std::cout << "Kicked by " << thread_id << "\n";
         return true;
     }
 
@@ -78,7 +78,7 @@ namespace kiv_ppr
     [[nodiscard]] const CWatch_Dog::Time_t CWatch_Dog::Get_Next_Expire_Time()
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
-        if (Get_Number_Of_Registered_Threads())
+        if (m_thread_queue.size())
         {
             const auto [thread_id, time] = m_thread_queue.back();
             return time;
@@ -90,7 +90,7 @@ namespace kiv_ppr
     [[nodiscard]] bool CWatch_Dog::Is_Expired(std::thread::id& expired_thread_id)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
-        if (Get_Number_Of_Registered_Threads())
+        if (m_thread_queue.size())
         {
             const auto [thread_id, time] = m_thread_queue.back();
             if (time < std::chrono::system_clock::now())

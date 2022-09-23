@@ -37,6 +37,8 @@ namespace kiv_ppr
         [[nodiscard]] bool Is_Open() const;
         [[nodiscard]] size_t Get_Total_Number_Of_Elements() const noexcept;
         [[nodiscard]] size_t Get_Total_Number_Of_Valid_Elements() const noexcept;
+        [[nodiscard]] size_t Get_File_Size() const noexcept;
+        [[nodiscard]] std::string Get_Filename() const noexcept;
         void Seek_Beg();
         void Calculate_Valid_Numbers(std::function<bool(T)> valid_fce, config::TThread_Config thread_config);
 
@@ -47,6 +49,7 @@ namespace kiv_ppr
         size_t Calculate_File_Size();
 
     private:
+        std::string m_filename;
         std::ifstream m_file;
         std::mutex m_mtx;
         size_t m_file_size;

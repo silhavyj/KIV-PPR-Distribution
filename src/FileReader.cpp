@@ -8,7 +8,8 @@ namespace kiv_ppr
 {
     template<class T>
     CFile_Reader<T>::CFile_Reader(const std::string &filename)
-        : m_total_number_of_valid_elements{}
+        : m_filename(filename),
+          m_total_number_of_valid_elements{}
     {
         m_file = std::ifstream(filename, std::ios::in | std::ios::binary);
 
@@ -71,6 +72,18 @@ namespace kiv_ppr
         const auto size = m_file.tellg();
         m_file.seekg(0, std::ios::beg);
         return size;
+    }
+
+    template<class T>
+    [[nodiscard]] size_t CFile_Reader<T>::Get_File_Size() const noexcept
+    {
+        return m_file_size;
+    }
+
+    template<class T>
+    [[nodiscard]] std::string CFile_Reader<T>::Get_Filename() const noexcept
+    {
+        return m_filename;
     }
 
     template<class T>

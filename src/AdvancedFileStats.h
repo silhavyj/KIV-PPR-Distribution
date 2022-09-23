@@ -6,6 +6,7 @@
 #include "FileReader.h"
 #include "Histogram.h"
 #include "BasicFileStats.h"
+#include "WatchDog.h"
 
 namespace kiv_ppr
 {
@@ -35,7 +36,7 @@ namespace kiv_ppr
 
     private:
         void Report_Results(T standard_deviation, CHistogram<T>& histogram) noexcept;
-        [[nodiscard]] int Worker(const config::TThread_Config& thread_config) noexcept;
+        [[nodiscard]] int Worker(const config::TThread_Config* thread_config, CWatch_Dog* watch_dog) noexcept;
 
     private:
         CFile_Reader<T>* m_file;

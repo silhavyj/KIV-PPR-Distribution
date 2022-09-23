@@ -2,6 +2,7 @@
 #include <thread>
 #include <cmath>
 #include <cassert>
+#include <iomanip>
 
 #include "Utils.h"
 #include "Config.h"
@@ -30,13 +31,16 @@ int main()
     kiv_ppr::config::TThread_Config thread_config = {
         std::thread::hardware_concurrency(), // TODO minus WatchDog, Main thread
         1024 * 1024 * 10,
-        0.5
+        10
     };
 
-    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 134217728, 100, 20);
+    // std::cout << "Generating...\n";
+    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 1342177280, 100, 20);
 
     std::cout << kiv_ppr::utils::Time_Call([&filename, &thread_config]() {
         kiv_ppr::CFile_Reader<double> file(filename);
+
+        std::cout << "Processing " << file.Get_Filename() << " (" << file.Get_File_Size() << " [B])\n";
         if (file.Is_Open())
         {
             // std::cout << file << "\n";
@@ -48,9 +52,9 @@ int main()
             {
                 const auto [min, max, mean] = basic_stats.Get_Values();
 
-                std::cout << "min = " << min << "\n";
-                std::cout << "max = " << max << "\n";
-                std::cout << "mean = " << mean << "\n";
+                std::cout << "min = " << std::setprecision(9) << min << "\n";
+                std::cout << "max = " << std::setprecision(9) << max << "\n";
+                std::cout << "mean = " << std::setprecision(9) << mean << "\n";
 
                 kiv_ppr::CHistogram<double>::TConfig histogram_config = {kiv_ppr::CHistogram<double>::DEFAULT_NUMBER_OF_SLOTS, min, max };
 
@@ -59,7 +63,7 @@ int main()
                 {
                     const auto [sd, histogram2] = advanced_stats.Get_Values();
 
-                    std::cout << "standard deviation = " << sd << "\n";
+                    std::cout << "standard deviation = " << std::setprecision(9) << sd << "\n";
                     std::cout << "histogram: " << *histogram2 << "\n";
                 }
                 else

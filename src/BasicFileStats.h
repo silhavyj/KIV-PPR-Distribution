@@ -20,12 +20,6 @@ namespace kiv_ppr
             T mean;
         };
 
-        enum class NStatus : uint8_t
-        {
-            SUCCESS,
-            FILE_READING_ERROR,
-        };
-
     public:
         explicit CBasic_File_Stats(CFile_Reader<E>* file, std::function<bool(E)> num_valid_fce);
         ~CBasic_File_Stats() = default;

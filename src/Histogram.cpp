@@ -1,5 +1,6 @@
 #include <vector>
 #include <future>
+#include <iostream>
 
 #include "Histogram.h"
 
@@ -8,7 +9,7 @@ namespace kiv_ppr
     template<class T>
     CHistogram<T>::CHistogram(TConfig config)
         : m_config(config),
-          m_slots(config.number_of_slots)
+          m_slots(config.number_of_slots + 1)
     {
 
     }
