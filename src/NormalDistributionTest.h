@@ -4,11 +4,10 @@
 
 namespace kiv_ppr
 {
-    template<class T, class E>
     class CNormal_Distribution_Test
     {
     public:
-        CNormal_Distribution_Test(CFile_Reader<E>* file, std::function<bool(E)> num_valid_fce, T mean, T SD);
+        CNormal_Distribution_Test(CFile_Reader<double>* file, std::function<bool(double)> num_valid_fce, double mean, double SD);
         ~CNormal_Distribution_Test() = default;
 
         [[nodiscard]] int Process(config::TThread_Config thread_config);
@@ -23,10 +22,10 @@ namespace kiv_ppr
         [[nodiscard]] static bool Is_Within_Tolerance(double expected, double actual, double percentage) noexcept;
 
     private:
-        CFile_Reader<E>* m_file;
-        std::function<bool(E)> m_num_valid_fce;
-        T m_mean;
-        T m_SD;
+        CFile_Reader<double>* m_file;
+        std::function<bool(double)> m_num_valid_fce;
+        double m_mean;
+        double m_SD;
         size_t m_category_68;
         size_t m_category_95;
         size_t m_category_99_7;

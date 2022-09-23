@@ -29,14 +29,20 @@ int main()
 
     std::string filename{"data.dat"};
 
+    unsigned int cpu_cores = std::thread::hardware_concurrency();
+    if (cpu_cores > 2)
+    {
+        cpu_cores -= 2; // Main thread + WatchDog
+    }
+
     kiv_ppr::config::TThread_Config thread_config = {
-        std::thread::hardware_concurrency(), // TODO minus WatchDog, Main thread
+        cpu_cores,
         1024 * 1024 * 10,
         2
     };
 
     // std::cout << "Generating...\n";
-    kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 5000, 0, 100);
+    kiv_ppr::utils::Generate_Numbers<std::uniform_real_distribution<>>(filename.c_str(), 5000, 0, 1000000);
 
     std::cout << kiv_ppr::utils::Time_Call([&filename, &thread_config]() {
         kiv_ppr::CFile_Reader<double> file(filename);
@@ -66,9 +72,9 @@ int main()
 
                     std::cout << "standard deviation = " << std::setprecision(9) << sd << "\n";
                     std::cout << "histogram: " << *histogram << "\n";
-                    // std::cout << "Uniform distribution: " << kiv_ppr::utils::Is_Uniform_Distribution(histogram) << "\n";
+                    std::cout << "Uniform distribution: " << kiv_ppr::utils::Is_Uniform_Distribution(histogram) << "\n";
 
-                    kiv_ppr::CNormal_Distribution_Test<double, double> normal_test(&file, &kiv_ppr::utils::Double_Valid_Function, mean, sd);
+                    kiv_ppr::CNormal_Distribution_Test normal_test(&file, &kiv_ppr::utils::Double_Valid_Function, mean, sd);
                     if (0 == normal_test.Process(thread_config))
                     {
                         std::cout << "Normal distribution = " << normal_test.Is_Normal_Distribution(0.1) << "\n";

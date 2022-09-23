@@ -19,10 +19,10 @@ namespace kiv_ppr::utils
 
         const double diff = highest_freq - lowest_freq;
 
-        std::cout << "lo = " << lowest_freq << "\n";
+        /* std::cout << "lo = " << lowest_freq << "\n";
         std::cout << "hi = " << highest_freq << "\n";
         std::cout << "diff = " << diff << "\n";
-        std::cout << "limit = " << (highest_freq * PERCENTAGE_LIMIT) << "\n";
+        std::cout << "limit = " << (highest_freq * PERCENTAGE_LIMIT) << "\n"; */
 
         return diff <= (highest_freq * PERCENTAGE_LIMIT);
     }
