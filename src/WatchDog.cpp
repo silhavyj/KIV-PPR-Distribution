@@ -9,12 +9,12 @@ namespace kiv_ppr
           m_watch_dog_thread_enabled{true}
     {
         m_watch_dog_thread = std::thread(&CWatch_Dog::Run, this);
+        m_watch_dog_thread.detach();
     }
 
     CWatch_Dog::~CWatch_Dog()
     {
         m_watch_dog_thread_enabled = false;
-        m_watch_dog_thread.join();
     }
 
     bool CWatch_Dog::Register(const Thread_ID_t& thread_id)

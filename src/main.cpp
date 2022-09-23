@@ -35,7 +35,7 @@ int main()
     };
 
     // std::cout << "Generating...\n";
-    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 1342177280, 100, 20);
+    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 100, 100, 20);
 
     std::cout << kiv_ppr::utils::Time_Call([&filename, &thread_config]() {
         kiv_ppr::CFile_Reader<double> file(filename);
