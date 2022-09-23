@@ -1,7 +1,6 @@
 #include <vector>
 #include <future>
 #include <cmath>
-#include <execution>
 
 #include "AdvancedFileStats.h"
 

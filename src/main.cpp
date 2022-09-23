@@ -31,7 +31,7 @@ int main()
     kiv_ppr::config::TThread_Config thread_config = {
         std::thread::hardware_concurrency(), // TODO minus WatchDog, Main thread
         1024 * 1024 * 10,
-        10
+        2
     };
 
     // std::cout << "Generating...\n";

@@ -16,7 +16,7 @@ namespace kiv_ppr
         using Thread_ID_t = std::thread::id;
 
     public:
-        CWatch_Dog(double interval_sec);
+        explicit CWatch_Dog(double interval_sec);
         ~CWatch_Dog();
 
         bool Register(const Thread_ID_t& thread_id = std::this_thread::get_id());
@@ -25,8 +25,8 @@ namespace kiv_ppr
         [[nodiscard]] size_t Get_Number_Of_Registered_Threads();
 
     private:
-        [[nodiscard]] const Time_t Get_Expired_Time() const;
-        [[nodiscard]] const Time_t Get_Next_Expire_Time();
+        [[nodiscard]] Time_t Get_Expired_Time() const;
+        [[nodiscard]] Time_t Get_Next_Expire_Time();
         [[nodiscard]] bool Is_Expired(std::thread::id& expired_thread_id);
         void Run();
 
