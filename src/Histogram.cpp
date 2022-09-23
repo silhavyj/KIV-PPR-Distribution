@@ -1,6 +1,7 @@
 #include <vector>
 #include <future>
 #include <iostream>
+#include <cmath>
 
 #include "Histogram.h"
 
@@ -42,6 +43,18 @@ namespace kiv_ppr
         {
             (*this)[i] += other[i];
         }
+    }
+
+    template<class T>
+    [[nodiscard]] T CHistogram<T>::Get_Lowest_Frequency() const noexcept
+    {
+        return *std::min_element(m_slots.begin(), m_slots.end() - 1);
+    }
+
+    template<class T>
+    [[nodiscard]] T CHistogram<T>::Get_Highest_Frequency() const noexcept
+    {
+        return *std::max_element(m_slots.begin(), m_slots.end() - 1);
     }
 
     template<class E>

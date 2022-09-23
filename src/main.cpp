@@ -10,6 +10,7 @@
 #include "BasicFileStats.h"
 #include "Histogram.h"
 #include "AdvancedFileStats.h"
+#include "NormalDistributionTest.h"
 #include "WatchDog.h"
 
 int main()
@@ -35,7 +36,7 @@ int main()
     };
 
     // std::cout << "Generating...\n";
-    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 100, 100, 20);
+    kiv_ppr::utils::Generate_Numbers<std::uniform_real_distribution<>>(filename.c_str(), 1000, 20, 100);
 
     std::cout << kiv_ppr::utils::Time_Call([&filename, &thread_config]() {
         kiv_ppr::CFile_Reader<double> file(filename);
@@ -61,10 +62,21 @@ int main()
                 kiv_ppr::CAdvanced_File_Stats<double, double> advanced_stats(&file, &kiv_ppr::utils::Double_Valid_Function, basic_stats.Get_Values(), histogram_config);
                 if (0 == advanced_stats.Process(thread_config))
                 {
-                    const auto [sd, histogram2] = advanced_stats.Get_Values();
+                    const auto [sd, histogram] = advanced_stats.Get_Values();
 
                     std::cout << "standard deviation = " << std::setprecision(9) << sd << "\n";
-                    std::cout << "histogram: " << *histogram2 << "\n";
+                    std::cout << "histogram: " << *histogram << "\n";
+                    // std::cout << "Uniform distribution: " << kiv_ppr::utils::Is_Uniform_Distribution(histogram) << "\n";
+
+                    kiv_ppr::CNormal_Distribution_Test<double, double> normal_test(&file, &kiv_ppr::utils::Double_Valid_Function, mean, sd);
+                    if (0 == normal_test.Process(thread_config))
+                    {
+
+                    }
+                    else
+                    {
+                        std::cerr << "Error while performing a normal distribution test\n";
+                    }
                 }
                 else
                 {

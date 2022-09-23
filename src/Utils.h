@@ -7,6 +7,8 @@
 #include <chrono>
 #include <cstdint>
 
+#include "Histogram.h"
+
 namespace kiv_ppr::utils
 {
     template <typename Distribution, typename ...Args>
@@ -45,4 +47,6 @@ namespace kiv_ppr::utils
     }
 
     bool Double_Valid_Function(double value);
+
+    bool Is_Uniform_Distribution(std::shared_ptr<CHistogram<double>> histogram);
 }
