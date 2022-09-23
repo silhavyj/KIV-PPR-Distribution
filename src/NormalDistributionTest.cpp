@@ -11,9 +11,9 @@ namespace kiv_ppr
           m_num_valid_fce(num_valid_fce),
           m_mean(mean),
           m_SD(SD),
-          m_category1{},
-          m_category2{},
-          m_category3{}
+          m_category_68{},
+          m_category_95{},
+          m_category_99_7{}
     {
 
     }
@@ -38,31 +38,66 @@ namespace kiv_ppr
         {
             return 1;
         }
-
-        const size_t N = m_file->Get_Total_Number_Of_Valid_Elements();
-
-        std::cout << "68 -> " << (static_cast<double>(m_category1) / N * 100.0) << "\n";
-        std::cout << "95 -> " << (static_cast<double>(m_category2) / N * 100.0) << "\n";
-        std::cout << "99.7 -> " << (static_cast<double>(m_category3) / N * 100.0) << "\n";
-
         return 0;
     }
 
     template<class T, class E>
-    void CNormal_Distribution_Test<T, E>::Report_Results(size_t category1, size_t category2, size_t category3)
+    void CNormal_Distribution_Test<T, E>::Report_Results(size_t category_68, size_t category_95, size_t category_99_7)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
-        m_category1 += category1;
-        m_category2 += category2;
-        m_category3 += category3;
+        m_category_68 += category_68;
+        m_category_95 += category_95;
+        m_category_99_7 += category_99_7;
+    }
+
+    template<class T, class E>
+    bool CNormal_Distribution_Test<T, E>::Is_Normal_Distribution(double tolerance)
+    {
+        return Is_Within_Tolerance(0.68, Get_Category_68(), tolerance) &&
+               Is_Within_Tolerance(0.95, Get_Category_95(), tolerance) &&
+               Is_Within_Tolerance(0.997, Get_Category_99_7(), tolerance);
+    }
+
+    template<class T, class E>
+    [[nodiscard]] bool CNormal_Distribution_Test<T, E>::Is_Within_Tolerance(double expected, double actual, double percentage) noexcept
+    {
+        const double tolerance = expected * percentage;
+        return (actual >= (expected - tolerance)) && (actual <= (expected + tolerance));
+    }
+
+    template<class T, class E>
+    [[nodiscard]] double CNormal_Distribution_Test<T, E>::Get_Category_68() const noexcept
+    {
+        return static_cast<double>(m_category_68) / m_file->Get_Total_Number_Of_Valid_Elements();
+    }
+
+    template<class T, class E>
+    [[nodiscard]] double CNormal_Distribution_Test<T, E>::Get_Category_95() const noexcept
+    {
+        return static_cast<double>(m_category_95) / m_file->Get_Total_Number_Of_Valid_Elements();
+    }
+
+    template<class T, class E>
+    [[nodiscard]] double CNormal_Distribution_Test<T, E>::Get_Category_99_7() const noexcept
+    {
+        return static_cast<double>(m_category_99_7) / m_file->Get_Total_Number_Of_Valid_Elements();
     }
 
     template<class T, class E>
     [[nodiscard]] int CNormal_Distribution_Test<T, E>::Worker(const config::TThread_Config* thread_config) noexcept
     {
-        size_t category1{};
-        size_t category2{};
-        size_t category3{};
+        size_t category_68{};
+        size_t category_95{};
+        size_t category_99_7{};
+
+        T min_val_category_68 = m_mean - m_SD;
+        T max_val_category_68 = m_mean + m_SD;
+
+        T min_val_category_95 = m_mean - 2 * m_SD;
+        T max_val_category_95 = m_mean + 2 * m_SD;
+
+        T min_val_category_99_7 = m_mean - 3 * m_SD;
+        T max_val_category_99_7 = m_mean + 3 * m_SD;
 
         while (true)
         {
@@ -76,25 +111,16 @@ namespace kiv_ppr
                         {
                             const T value = static_cast<T>(data[i]);
 
-                            if (value >= m_mean - m_SD && value <= m_mean + m_SD)
-                            {
-                                category1++;
-                            }
-                            if (value >= m_mean - 2 * m_SD && value <= m_mean + 2 * m_SD)
-                            {
-                                category2++;
-                            }
-                            if (value >= m_mean - 3 * m_SD && value <= m_mean + 3 * m_SD)
-                            {
-                                category3++;
-                            }
+                            category_68 += value >= min_val_category_68 && value <= max_val_category_68;
+                            category_95 += value >= min_val_category_95 && value <= max_val_category_95;
+                            category_99_7 += value >= min_val_category_99_7 && value <= max_val_category_99_7;
                         }
                     }
                     break;
                 case CFile_Reader<E>::NStatus::ERROR:
                     return 1;
                 case CFile_Reader<E>::NStatus::EOF_:
-                    Report_Results(category1, category2, category3);
+                    Report_Results(category_68, category_95, category_99_7);
                     return 0;
             }
         }

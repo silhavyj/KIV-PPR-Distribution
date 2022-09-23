@@ -36,7 +36,7 @@ int main()
     };
 
     // std::cout << "Generating...\n";
-    kiv_ppr::utils::Generate_Numbers<std::uniform_real_distribution<>>(filename.c_str(), 1000, 20, 100);
+    kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 5000, 0, 100);
 
     std::cout << kiv_ppr::utils::Time_Call([&filename, &thread_config]() {
         kiv_ppr::CFile_Reader<double> file(filename);
@@ -71,7 +71,10 @@ int main()
                     kiv_ppr::CNormal_Distribution_Test<double, double> normal_test(&file, &kiv_ppr::utils::Double_Valid_Function, mean, sd);
                     if (0 == normal_test.Process(thread_config))
                     {
-
+                        std::cout << "Normal distribution = " << normal_test.Is_Normal_Distribution(0.1) << "\n";
+                        std::cout << "68 -> " << normal_test.Get_Category_68() * 100 << '\n';
+                        std::cout << "95 -> " << normal_test.Get_Category_95() * 100 << '\n';
+                        std::cout << "99.5 -> " << normal_test.Get_Category_99_7() * 100 << '\n';
                     }
                     else
                     {
