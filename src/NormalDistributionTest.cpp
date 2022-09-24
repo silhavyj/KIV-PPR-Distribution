@@ -96,7 +96,7 @@ namespace kiv_ppr
             switch (status)
             {
                 case kiv_ppr::CFile_Reader<double>::NStatus::OK:
-                    for (size_t i = 0; i < count; ++i)
+                    for (long i = 0; i < count; ++i)
                     {
                         if (m_num_valid_fce(data[i]))
                         {

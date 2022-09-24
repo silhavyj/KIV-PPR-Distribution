@@ -10,7 +10,7 @@ namespace kiv_ppr::utils
         return type == FP_NORMAL || type == FP_ZERO;
     }
 
-    bool Is_Uniform_Distribution(std::shared_ptr<CHistogram<double>> histogram)
+    bool Is_Uniform_Distribution(std::shared_ptr<CHistogram> histogram)
     {
         static constexpr double PERCENTAGE_LIMIT = 0.5; // 10%
 

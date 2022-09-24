@@ -1,41 +1,38 @@
 #include <limits>
 #include <iostream>
+#include <utility>
 
 #include "BasicFileStats.h"
 
 namespace kiv_ppr
 {
-    template<class T, class E>
-    CBasic_File_Stats<T, E>::CBasic_File_Stats(CFile_Reader<E>* file, std::function<bool(E)> num_valid_fce)
+    CBasic_File_Stats::CBasic_File_Stats(CFile_Reader<double>* file,
+                                         std::function<bool(double)> num_valid_fce)
         : m_file(file),
-          m_num_valid_fce(num_valid_fce),
-          m_min{std::numeric_limits<T>::max()},
-          m_max{std::numeric_limits<T>::min()},
+          m_num_valid_fce(std::move(num_valid_fce)),
+          m_min{std::numeric_limits<double>::max()},
+          m_max{std::numeric_limits<double>::min()},
           m_mean{}
     {
 
     }
 
-    template<class T, class E>
-    [[nodiscard]] T CBasic_File_Stats<T, E>::Get_Min() const noexcept
+    [[nodiscard]] double CBasic_File_Stats::Get_Min() const noexcept
     {
         return m_min;
     }
 
-    template<class T, class E>
-    [[nodiscard]] T CBasic_File_Stats<T, E>::Get_Max() const noexcept
+    [[nodiscard]] double CBasic_File_Stats::Get_Max() const noexcept
     {
         return m_max;
     }
 
-    template<class T, class E>
-    [[nodiscard]] T CBasic_File_Stats<T, E>::Get_Mean() const noexcept
+    [[nodiscard]] double CBasic_File_Stats::Get_Mean() const noexcept
     {
         return m_mean;
     }
 
-    template<class T, class E>
-    [[nodiscard]] typename CBasic_File_Stats<T, E>::TValues CBasic_File_Stats<T, E>::Get_Values() const noexcept
+    [[nodiscard]] typename CBasic_File_Stats::TValues CBasic_File_Stats::Get_Values() const noexcept
     {
         return
         {
@@ -45,8 +42,7 @@ namespace kiv_ppr
         };
     }
 
-    template<class T, class E>
-    [[nodiscard]] int CBasic_File_Stats<T, E>::Process(config::TThread_Config thread_config)
+    [[nodiscard]] int CBasic_File_Stats::Process(config::TThread_Config thread_config)
     {
         m_file->Seek_Beg();
         CWatch_Dog watch_dog(thread_config.watchdog_expiration_sec);
@@ -69,8 +65,7 @@ namespace kiv_ppr
         return 0;
     }
 
-    template<class T, class E>
-    void CBasic_File_Stats<T, E>::Report_Results(T min, T max, T mean) noexcept
+    void CBasic_File_Stats::Report_Results(double min, double max, double mean) noexcept
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
 
@@ -79,12 +74,11 @@ namespace kiv_ppr
         m_mean += mean;
     }
 
-    template<class T, class E>
-    [[nodiscard]] int CBasic_File_Stats<T, E>::Worker(const config::TThread_Config* thread_config, CWatch_Dog* watch_dog)
+    [[nodiscard]] int CBasic_File_Stats::Worker(const config::TThread_Config* thread_config, CWatch_Dog* watch_dog)
     {
-        T min = std::numeric_limits<T>::max();
-        T max = std::numeric_limits<T>::min();
-        T mean{};
+        double min = std::numeric_limits<double>::max();
+        double max = std::numeric_limits<double>::min();
+        double mean{};
 
         watch_dog->Register();
         while (true)
@@ -94,27 +88,26 @@ namespace kiv_ppr
             const auto [status, count, data] = m_file->Read_Data(thread_config->number_of_elements_per_file_read);
             switch (status)
             {
-                case kiv_ppr::CFile_Reader<E>::NStatus::OK:
-                    for (size_t i = 0; i < count; ++i)
+                case kiv_ppr::CFile_Reader<double>::NStatus::OK:
+                    for (long i = 0; i < count; ++i)
                     {
-                        if (m_num_valid_fce(data[i]))
+                        const double value = data[i];
+                        if (m_num_valid_fce(value))
                         {
-                            min = std::min(min, static_cast<T>(data[i]));
-                            max = std::max(max, static_cast<T>(data[i]));
-                            mean += static_cast<T>(data[i]) / m_file->Get_Total_Number_Of_Valid_Elements();
+                            min = std::min(min, value);
+                            max = std::max(max, value);
+                            mean += value / static_cast<double>(m_file->Get_Total_Number_Of_Valid_Elements());
                         }
                     }
                     break;
-                case CFile_Reader<E>::NStatus::ERROR:
+                case CFile_Reader<double>::NStatus::ERROR:
                     watch_dog->Unregister();
                     return 1;
-                case CFile_Reader<E>::NStatus::EOF_:
+                case CFile_Reader<double>::NStatus::EOF_:
                     watch_dog->Unregister();
                     Report_Results(min, max, mean);
                     return 0;
             }
         }
     }
-
-    template class CBasic_File_Stats<double, double>;
 }

@@ -55,7 +55,7 @@ namespace kiv_ppr
         {
             return { NStatus::EOF_, 0, nullptr };
         }
-        return { NStatus::OK, static_cast<size_t>(m_file.gcount()) / sizeof(T), buffer };
+        return { NStatus::OK, static_cast<long>(m_file.gcount() / sizeof(T)), buffer };
     }
 
     template<class T>
@@ -113,7 +113,7 @@ namespace kiv_ppr
                     switch (status)
                     {
                         case kiv_ppr::CFile_Reader<T>::NStatus::OK:
-                            for (size_t i = 0; i < count; ++i)
+                            for (long i = 0; i < count; ++i)
                             {
                                 if (valid_fce(data[i]))
                                 {
@@ -146,7 +146,7 @@ namespace kiv_ppr
             switch (status)
             {
                 case kiv_ppr::CFile_Reader<E>::NStatus::OK:
-                    for (size_t i = 0; i < count; ++i)
+                    for (long i = 0; i < count; ++i)
                     {
                         out << std::setprecision(9) << data[i] << " ";
                     }

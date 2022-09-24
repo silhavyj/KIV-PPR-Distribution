@@ -8,34 +8,30 @@
 
 namespace kiv_ppr
 {
-    template<class T>
     class CHistogram
     {
     public:
-        static constexpr uint32_t DEFAULT_NUMBER_OF_SLOTS = 10;
-
         struct TConfig
         {
             uint32_t number_of_slots;
-            T min;
-            T max;
+            double min;
+            double max;
         };
 
     public:
         explicit CHistogram(TConfig config);
         ~CHistogram() = default;
 
-        void Add(T value);
+        void Add(double value);
         [[nodiscard]] uint32_t Get_Size() const noexcept;
 
         [[nodiscard]] size_t& operator[](uint32_t index);
         void operator+=(CHistogram& other);
 
-        [[nodiscard]] T Get_Lowest_Frequency() const noexcept;
-        [[nodiscard]] T Get_Highest_Frequency() const noexcept;
+        [[nodiscard]] size_t Get_Lowest_Frequency() const noexcept;
+        [[nodiscard]] size_t Get_Highest_Frequency() const noexcept;
 
-        template<class E>
-        friend std::ostream& operator<<(std::ostream& out, CHistogram<E>& histogram);
+        friend std::ostream& operator<<(std::ostream& out, CHistogram& histogram);
 
     private:
         TConfig m_config;

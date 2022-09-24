@@ -25,7 +25,7 @@ namespace kiv_ppr
         struct TData_Block
         {
             NStatus status;
-            size_t count;
+            long count;
             std::shared_ptr<T[]> data;
         };
 

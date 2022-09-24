@@ -42,7 +42,7 @@ int main()
     };
 
     // std::cout << "Generating...\n";
-    kiv_ppr::utils::Generate_Numbers<std::uniform_real_distribution<>>(filename.c_str(), 5000, 0, 1000000);
+    kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 5000, 0, 100);
 
     std::cout << kiv_ppr::utils::Time_Call([&filename, &thread_config]() {
         kiv_ppr::CFile_Reader<double> file(filename);
@@ -53,7 +53,7 @@ int main()
             // std::cout << file << "\n";
 
             file.Calculate_Valid_Numbers(&kiv_ppr::utils::Double_Valid_Function, thread_config);
-            kiv_ppr::CBasic_File_Stats<double, double> basic_stats(&file, &kiv_ppr::utils::Double_Valid_Function);
+            kiv_ppr::CBasic_File_Stats basic_stats(&file, &kiv_ppr::utils::Double_Valid_Function);
 
             if (0 == basic_stats.Process(thread_config))
             {
@@ -63,9 +63,9 @@ int main()
                 std::cout << "max = " << std::setprecision(9) << max << "\n";
                 std::cout << "mean = " << std::setprecision(9) << mean << "\n";
 
-                kiv_ppr::CHistogram<double>::TConfig histogram_config = {kiv_ppr::CHistogram<double>::DEFAULT_NUMBER_OF_SLOTS, min, max };
+                kiv_ppr::CHistogram::TConfig histogram_config = {10, min, max };
 
-                kiv_ppr::CAdvanced_File_Stats<double, double> advanced_stats(&file, &kiv_ppr::utils::Double_Valid_Function, basic_stats.Get_Values(), histogram_config);
+                kiv_ppr::CAdvanced_File_Stats advanced_stats(&file, &kiv_ppr::utils::Double_Valid_Function, basic_stats.Get_Values(), histogram_config);
                 if (0 == advanced_stats.Process(thread_config))
                 {
                     const auto [sd, histogram] = advanced_stats.Get_Values();
