@@ -11,7 +11,7 @@ namespace kiv_ppr
         ~CNormal_Distribution_Test() = default;
 
         [[nodiscard]] int Process(config::TThread_Config thread_config);
-        bool Is_Normal_Distribution(double tolerance);
+        [[nodiscard]] bool Is_Normal_Distribution(double tolerance) const;
         [[nodiscard]] double Get_Category_68() const noexcept;
         [[nodiscard]] double Get_Category_95() const noexcept;
         [[nodiscard]] double Get_Category_99_7() const noexcept;
