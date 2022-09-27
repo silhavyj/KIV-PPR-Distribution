@@ -26,4 +26,11 @@ namespace kiv_ppr::utils
 
         return diff <= (highest_freq * PERCENTAGE_LIMIT);
     }
+
+    uint32_t Get_Number_Of_Intervals(size_t n)
+    {
+        // TODO add an upper limit!!!
+        static constexpr size_t MAX_LIMIT = 1024 * 1024 * 5; // 5 MB
+        return std::max(static_cast<size_t>(2.82 * std::pow(n, 2.0 / 5.0)), MAX_LIMIT);
+    }
 }

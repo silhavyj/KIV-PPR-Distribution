@@ -49,4 +49,6 @@ namespace kiv_ppr::utils
     bool Double_Valid_Function(double value);
 
     bool Is_Uniform_Distribution(std::shared_ptr<CHistogram> histogram);
+
+    uint32_t Get_Number_Of_Intervals(size_t n);
 }

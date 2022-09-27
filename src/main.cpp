@@ -38,11 +38,11 @@ int main()
     kiv_ppr::config::TThread_Config thread_config = {
         cpu_cores,
         1024 * 1024 * 10,
-        2
+        10
     };
 
-    // std::cout << "Generating...\n";
-    kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), 5000, 0, 100);
+    std::cout << "Generating...\n";
+    kiv_ppr::utils::Generate_Numbers<std::exponential_distribution<>>(filename.c_str(), 1000, 5);
 
     std::cout << kiv_ppr::utils::Time_Call([&filename, &thread_config]() {
         kiv_ppr::CFile_Reader<double> file(filename);
@@ -63,7 +63,7 @@ int main()
                 std::cout << "max = " << std::setprecision(9) << max << "\n";
                 std::cout << "mean = " << std::setprecision(9) << mean << "\n";
 
-                kiv_ppr::CHistogram::TConfig histogram_config = {10, min, max };
+                kiv_ppr::CHistogram::TConfig histogram_config = {kiv_ppr::utils::Get_Number_Of_Intervals(file.Get_Total_Number_Of_Valid_Elements()), min, max };
 
                 kiv_ppr::CAdvanced_File_Stats advanced_stats(&file, &kiv_ppr::utils::Double_Valid_Function, basic_stats.Get_Values(), histogram_config);
                 if (0 == advanced_stats.Process(thread_config))
@@ -72,6 +72,9 @@ int main()
 
                     std::cout << "standard deviation = " << std::setprecision(9) << sd << "\n";
                     std::cout << "histogram: " << *histogram << "\n";
+                    auto histogram_mean = histogram->Get_Mean();
+                    std::cout << "histogram mean: " << histogram->Get_Mean() << '\n';
+                    std::cout << "histogram standard deviation: " << histogram->Get_Standard_Deviation(histogram_mean) << '\n';
                     std::cout << "Uniform distribution: " << kiv_ppr::utils::Is_Uniform_Distribution(histogram) << "\n";
 
                     kiv_ppr::CNormal_Distribution_Test normal_test(&file, &kiv_ppr::utils::Double_Valid_Function, mean, sd);
@@ -86,6 +89,12 @@ int main()
                     {
                         std::cerr << "Error while performing a normal distribution test\n";
                     }
+
+                    histogram->Merge_Sparse_Intervals(5);
+                    std::cout << "merged histogram: " << *histogram << "\n";
+                    histogram_mean = histogram->Get_Mean();
+                    std::cout << "histogram mean: " << histogram->Get_Mean() << '\n';
+                    std::cout << "histogram standard deviation: " << histogram->Get_Standard_Deviation(histogram_mean) << '\n';
                 }
                 else
                 {
