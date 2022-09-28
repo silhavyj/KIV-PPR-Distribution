@@ -2,9 +2,9 @@
 
 #include <cstdint>
 
-namespace kiv_ppr::config
+namespace kiv_ppr::params
 {
-    struct TThread_Config
+    struct TThread_Params
     {
         uint32_t number_of_threads;
         uint32_t number_of_elements_per_file_read;

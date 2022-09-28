@@ -1,21 +1,17 @@
 #pragma once
 
 #include <cstdint>
-#include <mutex>
-#include <fstream>
-#include <string>
 #include <memory>
-#include <functional>
-
-#include "Config.h"
+#include <fstream>
+#include <mutex>
 
 namespace kiv_ppr
 {
-    template<class T>
+    template<typename T>
     class CFile_Reader
     {
     public:
-        enum class NStatus : uint8_t
+        enum class [[nodiscard]] NRead_Status : uint8_t
         {
             OK,
             ERROR,
@@ -24,8 +20,8 @@ namespace kiv_ppr
 
         struct TData_Block
         {
-            NStatus status;
-            long count;
+            NRead_Status status;
+            size_t count;
             std::shared_ptr<T[]> data;
         };
 
@@ -33,14 +29,12 @@ namespace kiv_ppr
         explicit CFile_Reader(const std::string& filename);
         ~CFile_Reader();
 
-        [[nodiscard]] TData_Block Read_Data(size_t number_of_elements);
         [[nodiscard]] bool Is_Open() const;
-        [[nodiscard]] size_t Get_Total_Number_Of_Elements() const noexcept;
-        [[nodiscard]] size_t Get_Total_Number_Of_Valid_Elements() const noexcept;
         [[nodiscard]] size_t Get_File_Size() const noexcept;
         [[nodiscard]] std::string Get_Filename() const noexcept;
+
         void Seek_Beg();
-        void Calculate_Valid_Numbers(std::function<bool(T)> valid_fce, config::TThread_Config thread_config);
+        [[nodiscard]] TData_Block Read_Data(size_t number_of_elements);
 
         template<class E>
         friend std::ostream& operator<<(std::ostream& out, CFile_Reader<E>& file);
@@ -53,7 +47,5 @@ namespace kiv_ppr
         std::ifstream m_file;
         std::mutex m_mtx;
         size_t m_file_size;
-        size_t m_total_number_of_elements;
-        size_t m_total_number_of_valid_elements;
     };
 }

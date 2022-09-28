@@ -1,137 +1,46 @@
 #include <iostream>
 #include <thread>
-#include <cmath>
-#include <cassert>
-#include <iomanip>
 
-#include "Utils.h"
-#include "Config.h"
+#include "utils/Utils.h"
+#include "utils/Params.h"
 #include "FileReader.h"
-#include "BasicFileStats.h"
-#include "Histogram.h"
-#include "AdvancedFileStats.h"
-#include "NormalDistributionTest.h"
-#include "WatchDog.h"
-#include "cdfs/Cdf.h"
-#include "cdfs/NormalCDF.h"
-#include "cdfs/UniformCDF.h"
-#include "cdfs/ExponentialCDF.h"
-#include "stat_tests/ChiSquared.h"
+#include "file_processing/FileStats1.h"
 
 int main()
 {
-    /*kiv_ppr::CWatch_Dog watch_dog(5);
-
-    std::thread t1([&watch_dog]() {
-        assert(true == watch_dog.Register());
-        assert(true == watch_dog.Kick());
-        std::this_thread::sleep_for(std::chrono::seconds(6));
-        assert(true == watch_dog.Unregister());
-        std::cout << "Terminating thread1\n";
-    });
-
-    t1.join();*/
-
-    std::string filename{"data.dat"};
-
     unsigned int cpu_cores = std::thread::hardware_concurrency();
     if (cpu_cores > 2)
     {
         cpu_cores -= 2; // Main thread + WatchDog
     }
 
-    kiv_ppr::config::TThread_Config thread_config = {
+    kiv_ppr::params::TThread_Params thread_params {
         cpu_cores,
-        1024 * 1024 * 10,
+        1024,
         10
     };
 
-    std::cout << "Generating...\n";
-    kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), (1024 * 1024 * 1024) / 2 / sizeof(double), 50, 15);
+    std::string filename{"data.dat"};
+    kiv_ppr::utils::Generate_Numbers<std::uniform_real_distribution<>>(filename.c_str(), true, 1024*1024*10, -300, 300);
 
-    std::cout << kiv_ppr::utils::Time_Call([&filename, &thread_config]() {
-        kiv_ppr::CFile_Reader<double> file(filename);
+    kiv_ppr::CFile_Reader<double> file(filename);
+    if (file.Is_Open())
+    {
+        // std::cout << file << "\n";
 
-        std::cout << "Processing " << file.Get_Filename() << " (" << file.Get_File_Size() << " [B])\n";
-        if (file.Is_Open())
+        kiv_ppr::CFile_Stats_1 file_stats_1(&file, kiv_ppr::utils::Is_Valid_Double);
+        if (0 != file_stats_1.Run(thread_params))
         {
-            // std::cout << file << "\n";
-
-            file.Calculate_Valid_Numbers(&kiv_ppr::utils::Double_Valid_Function, thread_config);
-            kiv_ppr::CBasic_File_Stats basic_stats(&file, &kiv_ppr::utils::Double_Valid_Function);
-
-            if (0 == basic_stats.Process(thread_config))
-            {
-                const auto [min, max, mean] = basic_stats.Get_Values();
-
-                std::cout << "min = " << std::setprecision(9) << min << "\n";
-                std::cout << "max = " << std::setprecision(9) << max << "\n";
-                std::cout << "mean = " << std::setprecision(9) << mean << "\n";
-
-                kiv_ppr::CHistogram::TConfig histogram_config = {kiv_ppr::utils::Get_Number_Of_Intervals(file.Get_Total_Number_Of_Valid_Elements()), min, max };
-
-                kiv_ppr::CAdvanced_File_Stats advanced_stats(&file, &kiv_ppr::utils::Double_Valid_Function, basic_stats.Get_Values(), histogram_config);
-                if (0 == advanced_stats.Process(thread_config))
-                {
-                    const auto [sd, histogram] = advanced_stats.Get_Values();
-
-                    std::cout << "standard deviation = " << std::setprecision(9) << sd << "\n";
-                    std::cout << "histogram: " << *histogram << "\n";
-                    auto histogram_mean = histogram->Get_Mean();
-                    std::cout << "histogram mean: " << histogram->Get_Mean() << '\n';
-                    std::cout << "histogram standard deviation: " << histogram->Get_Standard_Deviation(histogram_mean) << '\n';
-                    std::cout << "Uniform distribution: " << kiv_ppr::utils::Is_Uniform_Distribution(histogram) << "\n";
-
-                    kiv_ppr::CNormal_Distribution_Test normal_test(&file, &kiv_ppr::utils::Double_Valid_Function, mean, sd);
-                    if (0 == normal_test.Process(thread_config))
-                    {
-                        std::cout << "Normal distribution = " << normal_test.Is_Normal_Distribution(0.1) << "\n";
-                        std::cout << "68 -> " << normal_test.Get_Category_68() * 100 << '\n';
-                        std::cout << "95 -> " << normal_test.Get_Category_95() * 100 << '\n';
-                        std::cout << "99.5 -> " << normal_test.Get_Category_99_7() * 100 << '\n';
-                    }
-                    else
-                    {
-                        std::cerr << "Error while performing a normal distribution test\n";
-                    }
-
-                    histogram->Merge_Sparse_Intervals(5);
-                    std::cout << "merged histogram: " << *histogram << "\n";
-                    histogram_mean = histogram->Get_Mean();
-                    std::cout << "histogram mean: " << histogram->Get_Mean() << '\n';
-                    std::cout << "histogram standard deviation: " << histogram->Get_Standard_Deviation(histogram_mean) << '\n';
-
-                    std::cout << "\n";
-
-                    kiv_ppr::CChi_Squared chi_squared("Normal", histogram, std::make_shared<kiv_ppr::CNormal_CDF>(mean, sd*sd));
-                    chi_squared.Run();
-
-                    std::cout << "\n";
-
-                    kiv_ppr::CChi_Squared chi_squared1("Uniform", histogram, std::make_shared<kiv_ppr::CUniform_CDF>(histogram->Get_Min(), histogram->Get_Max()));
-                    chi_squared1.Run();
-
-
-                    if (histogram->Get_Min() >= 0)
-                    {
-                        std::cout << "\n";
-                        kiv_ppr::CChi_Squared chi_squared2("Exponential", histogram, std::make_shared<kiv_ppr::CExponential_CDF>(1.0 / mean));
-                        chi_squared2.Run();
-                    }
-                }
-                else
-                {
-                    std::cerr << "Error while processing the file (2)\n";
-                }
-            }
-            else
-            {
-                std::cerr << "Error while processing the file (1)\n";
-            }
+            std::cerr << L"Failed to process the input file (1)\n";
         }
-        else
-        {
-            std::cerr << "File not open\n";
-        }
-    }) << "s\n";
+        std::cout << file_stats_1.Get_Values() << "\n";
+
+        std::cout << file_stats_1.Get_Mean() << "\n";
+        std::cout << kiv_ppr::utils::Calculate_Mean_Sequential(file, thread_params.number_of_elements_per_file_read) << '\n';
+    }
+    else
+    {
+        std::cerr << L"Failed to open the input file\n";
+        return 1;
+    }
 }
