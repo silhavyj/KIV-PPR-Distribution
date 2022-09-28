@@ -14,7 +14,7 @@ namespace kiv_ppr
         {
             double min;
             double max;
-            uint32_t number_of_intervals;
+            size_t number_of_intervals;
         };
 
     public:

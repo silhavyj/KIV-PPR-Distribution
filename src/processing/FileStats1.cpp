@@ -123,7 +123,7 @@ namespace kiv_ppr
         out << "min = " << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << values.min << '\n';
         out << "max = " << values.max << '\n';
         out << "mean = " << values.mean << '\n';
-        out << "valid numbers = " << values.count;
+        out << "count = " << values.count;
         return out;
     }
 }

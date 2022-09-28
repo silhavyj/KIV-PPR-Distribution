@@ -19,4 +19,5 @@ namespace kiv_ppr::config
     };
 
     static constexpr uint32_t DOUBLE_PRECISION = 20;
+    static constexpr uint32_t BUCKET_MIN_LIMIT = 5;
 }
