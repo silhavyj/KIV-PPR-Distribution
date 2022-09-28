@@ -34,9 +34,9 @@ namespace kiv_ppr
         [[nodiscard]] int Run(config::TThread_Params* thread_config);
 
     private:
-        void Report_Worker_Results(TValues values);
+        void Report_Worker_Results(const TValues& values);
         [[nodiscard]] int Worker(config::TThread_Params* thread_config);
-        size_t Calculate_Number_Of_Intervals(size_t n);
+        static size_t Calculate_Number_Of_Intervals(size_t n);
 
     private:
         CFile_Reader<double>* m_file;

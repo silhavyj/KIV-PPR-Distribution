@@ -17,7 +17,7 @@ namespace kiv_ppr
         }
     }
 
-    [[nodiscard]] double CNormal_CDF::operator()(double x) const
+    double CNormal_CDF::operator()(double x) const
     {
         return 0.5 * (1 + std::erf((x - m_mean) / (m_sd * M_SQRT2)));
     }

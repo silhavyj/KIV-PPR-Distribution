@@ -20,7 +20,7 @@ namespace kiv_ppr::utils
             std::cout << "Generating data...\n";
         }
         std::ofstream output(filename, std::ios::out | std::ios::binary);
-        size_t ten_percent = static_cast<size_t>(0.1f * count);
+        auto ten_percent = static_cast<size_t>(0.1f * static_cast<double>(count));
         uint32_t percentage = 0;
 
         if (output.is_open())

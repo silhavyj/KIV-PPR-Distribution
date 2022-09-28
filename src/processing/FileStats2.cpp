@@ -12,7 +12,8 @@ namespace kiv_ppr
         : m_file(file),
           m_is_valid_number(std::move(is_valid_number)),
           m_basic_values(basic_values),
-          m_values{}
+          m_values{},
+          m_histogram_params{}
     {
         m_histogram_params = {
             m_basic_values.min,
@@ -59,7 +60,7 @@ namespace kiv_ppr
         return 0;
     }
 
-    void CFile_Stats_2::Report_Worker_Results(TValues values)
+    void CFile_Stats_2::Report_Worker_Results(const TValues& values)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
         m_values.variance += values.variance;
@@ -81,7 +82,7 @@ namespace kiv_ppr
             switch (status)
             {
                 case kiv_ppr::CFile_Reader<double>::NRead_Status::OK:
-                    for (size_t i = 0; i < count; ++i)
+                    for (auto i = 0; i < count; ++i)
                     {
                         const double value = data[i];
                         if (m_is_valid_number(value))

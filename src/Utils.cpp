@@ -21,12 +21,12 @@ namespace kiv_ppr::utils
             {
                 break;
             }
-            for (size_t i = 0; i < count; ++i)
+            for (auto i = 0; i < count; ++i)
             {
                 sum += data[i];
             }
             total_count += count;
         }
-        return sum / total_count;
+        return sum / static_cast<double>(total_count);
     }
 }

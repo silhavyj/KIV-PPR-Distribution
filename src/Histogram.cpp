@@ -4,7 +4,7 @@ namespace kiv_ppr
 {
     CHistogram::CHistogram(TParams params)
         : m_intervals(params.number_of_intervals + 1),
-          m_interval_size((params.max - params.min) / params.number_of_intervals),
+          m_interval_size((params.max - params.min) / static_cast<double>(params.number_of_intervals)),
           m_params(params),
           m_count{}
     {

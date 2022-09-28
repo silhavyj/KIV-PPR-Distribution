@@ -70,7 +70,7 @@ namespace kiv_ppr
         {
             return { NRead_Status::EOF_, 0, nullptr };
         }
-        return { NRead_Status::OK, static_cast<long>(m_file.gcount()) / sizeof(T), buffer };
+        return { NRead_Status::OK, static_cast<long>(m_file.gcount() / sizeof(T)), buffer };
     }
 
     template<class E>
@@ -91,7 +91,7 @@ namespace kiv_ppr
             switch (status)
             {
                 case kiv_ppr::CFile_Reader<E>::NRead_Status::OK:
-                    for (size_t i = 0; i < count; ++i)
+                    for (auto i = 0; i < count; ++i)
                     {
                         out << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << data[i] << " ";
                     }

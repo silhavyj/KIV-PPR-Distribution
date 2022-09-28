@@ -21,7 +21,7 @@ namespace kiv_ppr
         struct TData_Block
         {
             NRead_Status status;
-            size_t count;
+            long count;
             std::shared_ptr<T[]> data;
         };
 

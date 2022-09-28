@@ -58,7 +58,7 @@ namespace kiv_ppr
         {
             return_values += worker.get();
         }
-        m_values.mean /= m_values.count;
+        m_values.mean /= static_cast<double>(m_values.count);
 
         if (return_values != 0)
         {
@@ -92,7 +92,7 @@ namespace kiv_ppr
             switch (status)
             {
                 case kiv_ppr::CFile_Reader<double>::NRead_Status::OK:
-                    for (size_t i = 0; i < count; ++i)
+                    for (auto i = 0; i < count; ++i)
                     {
                         const double value = data[i];
                         if (m_is_valid_number(value))
@@ -102,7 +102,7 @@ namespace kiv_ppr
 
                             ++local_values.count;
                             delta = value - local_values.mean;
-                            local_values.mean += delta / local_values.count;
+                            local_values.mean += delta / static_cast<double>(local_values.count);
                         }
                     }
                     break;
@@ -111,7 +111,7 @@ namespace kiv_ppr
                     return 1;
 
                 case CFile_Reader<double>::NRead_Status::EOF_:
-                    local_values.mean *= local_values.count;
+                    local_values.mean *= static_cast<double>(local_values.count);
                     Report_Worker_Results(local_values);
                     return 0;
             }
