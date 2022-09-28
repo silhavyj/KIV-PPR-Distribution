@@ -15,6 +15,7 @@ namespace kiv_ppr
         struct TValues
         {
             double variance;
+            double sd;
             std::shared_ptr<CHistogram> histogram;
 
             friend std::ostream& operator<<(std::ostream& out, const TValues& values);
@@ -28,6 +29,7 @@ namespace kiv_ppr
         ~CFile_Stats_2() = default;
 
         [[nodiscard]] double Get_Variance() const noexcept;
+        [[nodiscard]] double Get_SD() const noexcept;
         [[nodiscard]] std::shared_ptr<CHistogram> Get_Histogram() const noexcept;
         [[nodiscard]] TValues Get_Values() const noexcept;
 

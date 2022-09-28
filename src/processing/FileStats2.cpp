@@ -1,5 +1,6 @@
 #include <future>
 #include <iomanip>
+#include <cmath>
 
 #include "FileStats2.h"
 #include "../utils/Utils.h"
@@ -28,6 +29,11 @@ namespace kiv_ppr
         return m_values.variance;
     }
 
+    double CFile_Stats_2::Get_SD() const noexcept
+    {
+        return m_values.sd;
+    }
+
     std::shared_ptr<CHistogram> CFile_Stats_2::Get_Histogram() const noexcept
     {
         return m_values.histogram;
@@ -53,6 +59,7 @@ namespace kiv_ppr
             return_values += worker.get();
         }
 
+        m_values.sd = std::sqrt(m_values.variance);
         if (return_values != 0)
         {
             return 1;
@@ -71,6 +78,7 @@ namespace kiv_ppr
     {
         TValues local_values {
             0.0,
+            0,
             std::make_shared<CHistogram>(m_histogram_params)
         };
         double delta;
@@ -117,7 +125,7 @@ namespace kiv_ppr
     std::ostream& operator<<(std::ostream& out, const CFile_Stats_2::TValues& values)
     {
         out << "var = " << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << values.variance << '\n';
-        out << "histogram = " << *(values.histogram);
+        out << "sd = " << values.sd;
         return out;
     }
 }

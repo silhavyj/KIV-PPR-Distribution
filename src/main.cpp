@@ -10,7 +10,7 @@
 int main()
 {
     std::string filename{"data.dat"};
-    kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), true, 10000, 200, 20);
+    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), true, 10000, 200, 20);
 
     kiv_ppr::CFile_Reader<double> file(filename);
     if (file.Is_Open())
@@ -38,6 +38,7 @@ int main()
         std::cout << file_stats_2.Get_Values() << "\n";
 
         auto histogram = file_stats_2.Get_Histogram();
+        std::cout << "histogram = " << *histogram << '\n';
         histogram->Merge_Sparse_Intervals(kiv_ppr::config::BUCKET_MIN_LIMIT);
         std::cout << "histogram = " << *histogram << '\n';
     }
