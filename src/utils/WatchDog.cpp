@@ -62,19 +62,19 @@ namespace kiv_ppr
         return false;
     }
 
-    [[nodiscard]] size_t CWatch_Dog::Get_Number_Of_Registered_Threads()
+    size_t CWatch_Dog::Get_Number_Of_Registered_Threads()
     {
         return m_registered_threads.size();
     }
 
-    [[nodiscard]] CWatch_Dog::Time_t CWatch_Dog::Get_Expired_Time() const
+    CWatch_Dog::Time_t CWatch_Dog::Get_Expired_Time() const
     {
         auto expired_time = std::chrono::system_clock::now();
         expired_time += std::chrono::duration_cast<std::chrono::milliseconds>(m_interval_sec);
         return expired_time;
     }
 
-    [[nodiscard]] CWatch_Dog::Time_t CWatch_Dog::Get_Next_Expire_Time()
+    CWatch_Dog::Time_t CWatch_Dog::Get_Next_Expire_Time()
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
         if (!m_thread_queue.empty())
@@ -86,7 +86,7 @@ namespace kiv_ppr
         return expired_time;
     }
 
-    [[nodiscard]] bool CWatch_Dog::Is_Expired(std::thread::id& expired_thread_id)
+    bool CWatch_Dog::Is_Expired(std::thread::id& expired_thread_id)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
         if (!m_thread_queue.empty())

@@ -7,11 +7,10 @@
 #include "processing/FileStats1.h"
 #include "processing/FileStats2.h"
 
-int main()
-{
-    std::string filename{"data.dat"};
-    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), true, 10000, 200, 20);
+static std::string filename{"data.dat"};
 
+static void Run()
+{
     kiv_ppr::CFile_Reader<double> file(filename);
     if (file.Is_Open())
     {
@@ -22,6 +21,7 @@ int main()
         if (0 != file_stats_1.Run(&kiv_ppr::config::default_thread_params))
         {
             std::cerr << L"Failed to process the input file (1)\n";
+            std::exit(1);
         }
         std::cout << file_stats_1.Get_Values() << "\n";
 
@@ -34,17 +34,27 @@ int main()
         if (0 != file_stats_2.Run(&kiv_ppr::config::default_thread_params))
         {
             std::cerr << L"Failed to process the input file (2)\n";
+            std::exit(1);
         }
         std::cout << file_stats_2.Get_Values() << "\n";
 
-        auto histogram = file_stats_2.Get_Histogram();
-        std::cout << "histogram = " << *histogram << '\n';
-        histogram->Merge_Sparse_Intervals(kiv_ppr::config::BUCKET_MIN_LIMIT);
-        std::cout << "histogram = " << *histogram << '\n';
+        /* auto histogram = file_stats_2.Get_Histogram();
+         std::cout << "histogram = " << *histogram << '\n';
+         histogram->Merge_Sparse_Intervals(kiv_ppr::config::BUCKET_MIN_LIMIT);
+         std::cout << "histogram = " << *histogram << '\n';*/
     }
     else
     {
         std::cerr << L"Failed to open the input file\n";
-        return 1;
+        std::exit(1);
     }
+}
+
+int main()
+{
+    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), true, 1000, 200, 20);
+
+    std::cout << kiv_ppr::utils::Time_Call([]() {
+        Run();
+    }) << " sec\n";
 }
