@@ -3,8 +3,8 @@
 #include <mutex>
 #include <functional>
 
+#include "../Config.h"
 #include "../FileReader.h"
-#include "../utils/Params.h"
 
 namespace kiv_ppr
 {
@@ -33,11 +33,11 @@ namespace kiv_ppr
         [[nodiscard]] size_t Get_Count() const noexcept;
         [[nodiscard]] TValues Get_Values() const noexcept;
 
-        [[nodiscard]] int Run(params::TThread_Params thread_config);
+        [[nodiscard]] int Run(config::TThread_Params* thread_config);
 
     private:
         void Report_Worker_Results(TValues values);
-        [[nodiscard]] int Worker(params::TThread_Params* thread_config);
+        [[nodiscard]] int Worker(config::TThread_Params* thread_config);
 
     private:
         CFile_Reader<double>* m_file;

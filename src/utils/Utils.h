@@ -42,6 +42,15 @@ namespace kiv_ppr::utils
         }
     }
 
+    template<typename Function>
+    uint32_t Time_Call(Function&& function)
+    {
+        const auto start_time = std::chrono::steady_clock::now();
+        function();
+        const auto end_time = std::chrono::steady_clock::now();
+        return std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time).count();
+    }
+
     bool Is_Valid_Double(double value);
 
     double Calculate_Mean_Sequential(kiv_ppr::CFile_Reader<double>& file, uint32_t number_of_elements_per_file_read);

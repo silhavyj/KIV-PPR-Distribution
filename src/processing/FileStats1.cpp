@@ -5,7 +5,6 @@
 #include <iomanip>
 
 #include "FileStats1.h"
-#include "../utils/Config.h"
 
 namespace kiv_ppr
 {
@@ -44,14 +43,14 @@ namespace kiv_ppr
         return m_values;
     }
 
-    int CFile_Stats_1::Run(params::TThread_Params thread_config)
+    int CFile_Stats_1::Run(config::TThread_Params* thread_config)
     {
         m_file->Seek_Beg();
 
-        std::vector<std::future<int>> workers(thread_config.number_of_threads);
+        std::vector<std::future<int>> workers(thread_config->number_of_threads);
         for (auto& worker : workers)
         {
-            worker = std::async(std::launch::async, &CFile_Stats_1::Worker, this, &thread_config);
+            worker = std::async(std::launch::async, &CFile_Stats_1::Worker, this, thread_config);
         }
 
         int return_values = 0;
@@ -77,7 +76,7 @@ namespace kiv_ppr
         m_values.count += values.count;
     }
 
-    int CFile_Stats_1::Worker(params::TThread_Params* thread_config)
+    int CFile_Stats_1::Worker(config::TThread_Params* thread_config)
     {
         TValues local_values {
             std::numeric_limits<double>::max(),

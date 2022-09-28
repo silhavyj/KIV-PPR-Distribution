@@ -2,7 +2,7 @@
 #include <iomanip>
 
 #include "FileReader.h"
-#include "utils/Config.h"
+#include "Config.h"
 
 namespace kiv_ppr
 {
