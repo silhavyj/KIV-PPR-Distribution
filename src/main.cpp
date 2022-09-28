@@ -12,6 +12,11 @@
 #include "AdvancedFileStats.h"
 #include "NormalDistributionTest.h"
 #include "WatchDog.h"
+#include "cdfs/Cdf.h"
+#include "cdfs/NormalCDF.h"
+#include "cdfs/UniformCDF.h"
+#include "cdfs/ExponentialCDF.h"
+#include "stat_tests/ChiSquared.h"
 
 int main()
 {
@@ -42,7 +47,7 @@ int main()
     };
 
     std::cout << "Generating...\n";
-    kiv_ppr::utils::Generate_Numbers<std::exponential_distribution<>>(filename.c_str(), 1000, 5);
+    kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), (1024 * 1024 * 1024) / 2 / sizeof(double), 50, 15);
 
     std::cout << kiv_ppr::utils::Time_Call([&filename, &thread_config]() {
         kiv_ppr::CFile_Reader<double> file(filename);
@@ -95,6 +100,24 @@ int main()
                     histogram_mean = histogram->Get_Mean();
                     std::cout << "histogram mean: " << histogram->Get_Mean() << '\n';
                     std::cout << "histogram standard deviation: " << histogram->Get_Standard_Deviation(histogram_mean) << '\n';
+
+                    std::cout << "\n";
+
+                    kiv_ppr::CChi_Squared chi_squared("Normal", histogram, std::make_shared<kiv_ppr::CNormal_CDF>(mean, sd*sd));
+                    chi_squared.Run();
+
+                    std::cout << "\n";
+
+                    kiv_ppr::CChi_Squared chi_squared1("Uniform", histogram, std::make_shared<kiv_ppr::CUniform_CDF>(histogram->Get_Min(), histogram->Get_Max()));
+                    chi_squared1.Run();
+
+
+                    if (histogram->Get_Min() >= 0)
+                    {
+                        std::cout << "\n";
+                        kiv_ppr::CChi_Squared chi_squared2("Exponential", histogram, std::make_shared<kiv_ppr::CExponential_CDF>(1.0 / mean));
+                        chi_squared2.Run();
+                    }
                 }
                 else
                 {

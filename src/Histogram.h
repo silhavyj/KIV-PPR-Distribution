@@ -33,6 +33,9 @@ namespace kiv_ppr
         [[nodiscard]] size_t Get_Highest_Frequency() const noexcept;
         [[nodiscard]] size_t Get_Sum_Of_All_Frequencies() const noexcept;
         [[nodiscard]] double Get_Mean() const noexcept;
+        [[nodiscard]] double Get_Min() const noexcept;
+        [[nodiscard]] double Get_Max() const noexcept;
+        [[nodiscard]] double Get_Interval_Size() const noexcept;
         [[nodiscard]] double Get_Standard_Deviation(double mean) const noexcept;
 
         friend std::ostream& operator<<(std::ostream& out, CHistogram& histogram);

@@ -60,7 +60,6 @@ namespace kiv_ppr
                 if (it == m_slots.end() - 1)
                 {
                     m_config.max -= m_interval_size;
-                    std::cout << "A\n";
                 }
                 m_slots.erase(it);
             }
@@ -89,17 +88,32 @@ namespace kiv_ppr
 
     [[nodiscard]] size_t CHistogram::Get_Lowest_Frequency() const noexcept
     {
-        return *std::min_element(m_slots.begin(), m_slots.end() - 1);
+        return *std::min_element(m_slots.begin(), m_slots.end());
     }
 
     [[nodiscard]] size_t CHistogram::Get_Highest_Frequency() const noexcept
     {
-        return *std::max_element(m_slots.begin(), m_slots.end() - 1);
+        return *std::max_element(m_slots.begin(), m_slots.end());
     }
 
     [[nodiscard]] size_t CHistogram::Get_Sum_Of_All_Frequencies() const noexcept
     {
-        return std::accumulate(m_slots.begin(), m_slots.end() - 1, 0);
+        return std::accumulate(m_slots.begin(), m_slots.end(), 0);
+    }
+
+    [[nodiscard]] double CHistogram::Get_Min() const noexcept
+    {
+        return m_config.min;
+    }
+
+    [[nodiscard]] double CHistogram::Get_Max() const noexcept
+    {
+        return m_config.max;
+    }
+
+    [[nodiscard]] double CHistogram::Get_Interval_Size() const noexcept
+    {
+        return m_interval_size;
     }
 
     [[nodiscard]] double CHistogram::Get_Mean() const noexcept

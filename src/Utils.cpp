@@ -31,6 +31,6 @@ namespace kiv_ppr::utils
     {
         // TODO add an upper limit!!!
         static constexpr size_t MAX_LIMIT = 1024 * 1024 * 5; // 5 MB
-        return std::max(static_cast<size_t>(2.82 * std::pow(n, 2.0 / 5.0)), MAX_LIMIT);
+        return std::min(static_cast<size_t>(2.82 * std::pow(n, 2.0 / 5.0)), MAX_LIMIT);
     }
 }
