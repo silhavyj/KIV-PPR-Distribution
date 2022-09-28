@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 
-#include "utils/Utils.h"
+#include "Utils.h"
 #include "Config.h"
 #include "FileReader.h"
 #include "processing/FileStats1.h"
@@ -15,14 +15,13 @@ int main()
     if (file.Is_Open())
     {
         std::cout << "Processing file " << file.Get_Filename() << " [" << file.Get_File_Size() << " B]\n";
-        // std::cout << file << "\n";
 
         kiv_ppr::CFile_Stats_1 file_stats_1(&file, kiv_ppr::utils::Is_Valid_Double);
         if (0 != file_stats_1.Run(&kiv_ppr::config::default_thread_params))
         {
             std::cerr << L"Failed to process the input file (1)\n";
         }
-        std::cout << file_stats_1.Get_Values() << "\n";
+        std::cout << file_stats_1.Get_Values() << "\n\n";
 
         std::cout << file_stats_1.Get_Mean() << "\n";
         std::cout << kiv_ppr::utils::Calculate_Mean_Sequential(file, kiv_ppr::config::default_thread_params.number_of_elements_per_file_read) << '\n';

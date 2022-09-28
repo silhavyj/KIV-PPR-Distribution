@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../FileReader.h"
+#include "FileReader.h"
 
 namespace kiv_ppr::utils
 {
@@ -54,4 +54,6 @@ namespace kiv_ppr::utils
     bool Is_Valid_Double(double value);
 
     double Calculate_Mean_Sequential(kiv_ppr::CFile_Reader<double>& file, uint32_t number_of_elements_per_file_read);
+
+    uint32_t Get_Number_Of_Intervals(size_t n);
 }
