@@ -72,8 +72,8 @@ namespace kiv_ppr
             0.0,
             std::make_shared<CHistogram>(m_histogram_params)
         };
-        double tmp_value1;
-        double tmp_value2;
+        double delta;
+        double tmp_value;
 
         while (true)
         {
@@ -86,12 +86,12 @@ namespace kiv_ppr
                         const double value = data[i];
                         if (m_is_valid_number(value))
                         {
-                            tmp_value1 = value - m_basic_values.mean;
-                            tmp_value2 = tmp_value1;
-                            tmp_value1 /= static_cast<double>(m_basic_values.count - 1);
-                            tmp_value1 *= tmp_value2;
+                            delta = value - m_basic_values.mean;
+                            tmp_value = delta;
+                            delta /= static_cast<double>(m_basic_values.count - 1);
+                            delta *= tmp_value;
 
-                            local_values.variance += tmp_value1;
+                            local_values.variance += delta;
                             local_values.histogram->Add(value);
                         }
                     }
@@ -109,7 +109,7 @@ namespace kiv_ppr
 
     size_t CFile_Stats_2::Calculate_Number_Of_Intervals(size_t n)
     {
-        static constexpr size_t MAX_LIMIT = 1024 * 1024 * 50;
+        static constexpr size_t MAX_LIMIT = 1024 * 1024 * 50; // 50 MB
         return std::min(static_cast<size_t>(2.82 * std::pow(n, 2.0 / 5.0)), MAX_LIMIT);
     }
 
