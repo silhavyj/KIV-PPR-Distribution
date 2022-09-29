@@ -6,10 +6,11 @@
 #include "FileReader.h"
 #include "processing/FileStats1.h"
 #include "processing/FileStats2.h"
+#include "processing/FileStats.h"
 
 static std::string filename{"data.dat"};
 
-static void Run()
+/*static void Run()
 {
     kiv_ppr::CFile_Reader<double> file(filename);
     if (file.Is_Open())
@@ -38,10 +39,30 @@ static void Run()
         }
         std::cout << file_stats_2.Get_Values() << "\n";
 
-        /* auto histogram = file_stats_2.Get_Histogram();
+         auto histogram = file_stats_2.Get_Histogram();
          std::cout << "histogram = " << *histogram << '\n';
          histogram->Merge_Sparse_Intervals(kiv_ppr::config::BUCKET_MIN_LIMIT);
-         std::cout << "histogram = " << *histogram << '\n';*/
+         std::cout << "histogram = " << *histogram << '\n';
+    }
+    else
+    {
+        std::cerr << L"Failed to open the input file\n";
+        std::exit(1);
+    }
+}*/
+
+static void Run()
+{
+    kiv_ppr::CFile_Reader<double> file(filename);
+    if (file.Is_Open())
+    {
+        kiv_ppr::CFile_Stats file_stats(&file, kiv_ppr::utils::Is_Valid_Double);
+        if (0 != file_stats.Run(&kiv_ppr::config::default_thread_params))
+        {
+            std::cerr << L"Failed to process the input file\n";
+            std::exit(1);
+        }
+        std::cout << file_stats.Get_Values() << '\n';
     }
     else
     {
@@ -52,7 +73,7 @@ static void Run()
 
 int main()
 {
-    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), true, 1000, 200, 20);
+    kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), true, 1000, 200, 20);
 
     std::cout << kiv_ppr::utils::Time_Call([]() {
         Run();

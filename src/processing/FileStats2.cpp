@@ -24,9 +24,9 @@ namespace kiv_ppr
         m_values.histogram = std::make_shared<CHistogram>(m_histogram_params);
     }
 
-    double CFile_Stats_2::Get_Variance() const noexcept
+    double CFile_Stats_2::Get_Var() const noexcept
     {
-        return m_values.variance;
+        return m_values.var;
     }
 
     double CFile_Stats_2::Get_SD() const noexcept
@@ -59,7 +59,7 @@ namespace kiv_ppr
             return_values += worker.get();
         }
 
-        m_values.sd = std::sqrt(m_values.variance);
+        m_values.sd = std::sqrt(m_values.var);
         if (return_values != 0)
         {
             return 1;
@@ -70,7 +70,7 @@ namespace kiv_ppr
     void CFile_Stats_2::Report_Worker_Results(const TValues& values)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
-        m_values.variance += values.variance;
+        m_values.var += values.var;
         m_values.histogram->operator+=(*values.histogram);
     }
 
@@ -100,7 +100,7 @@ namespace kiv_ppr
                             delta /= static_cast<double>(m_basic_values.count - 1);
                             delta *= tmp_value;
 
-                            local_values.variance += delta;
+                            local_values.var += delta;
                             local_values.histogram->Add(value);
                         }
                     }
@@ -124,7 +124,7 @@ namespace kiv_ppr
 
     std::ostream& operator<<(std::ostream& out, const CFile_Stats_2::TValues& values)
     {
-        out << "var = " << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << values.variance << '\n';
+        out << "var = " << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << values.var << '\n';
         out << "sd = " << values.sd;
         return out;
     }
