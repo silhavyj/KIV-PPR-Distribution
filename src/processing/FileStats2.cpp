@@ -1,5 +1,4 @@
 #include <future>
-#include <iomanip>
 #include <cmath>
 
 #include "FileStats2.h"
@@ -120,12 +119,5 @@ namespace kiv_ppr
     {
         static constexpr size_t MAX_LIMIT = 1024 * 1024 * 50; // 50 MB
         return std::min(static_cast<size_t>(2.82 * std::pow(n, 2.0 / 5.0)), MAX_LIMIT);
-    }
-
-    std::ostream& operator<<(std::ostream& out, const CFile_Stats_2::TValues& values)
-    {
-        out << "var = " << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << values.var << '\n';
-        out << "sd = " << values.sd;
-        return out;
     }
 }

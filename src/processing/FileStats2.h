@@ -17,8 +17,6 @@ namespace kiv_ppr
             double var;
             double sd;
             std::shared_ptr<CHistogram> histogram;
-
-            friend std::ostream& operator<<(std::ostream& out, const TValues& values);
         };
 
     public:

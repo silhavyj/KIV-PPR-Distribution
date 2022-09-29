@@ -2,7 +2,6 @@
 #include <future>
 #include <vector>
 #include <cmath>
-#include <iomanip>
 
 #include "FileStats1.h"
 
@@ -116,14 +115,5 @@ namespace kiv_ppr
                     return 0;
             }
         }
-    }
-
-    std::ostream& operator<<(std::ostream& out, const CFile_Stats_1::TValues& values)
-    {
-        out << "min = " << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << values.min << '\n';
-        out << "max = " << values.max << '\n';
-        out << "mean = " << values.mean << '\n';
-        out << "count = " << values.count;
-        return out;
     }
 }

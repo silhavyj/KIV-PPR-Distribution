@@ -17,8 +17,6 @@ namespace kiv_ppr
             double max;
             double mean;
             size_t count;
-
-            friend std::ostream& operator<<(std::ostream& out, const TValues& values);
         };
 
     public:
