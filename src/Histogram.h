@@ -36,8 +36,8 @@ namespace kiv_ppr
         friend std::ostream& operator<<(std::ostream& out, CHistogram& histogram);
 
     private:
-        void Merge_Sparse_Intervals_Forward(uint32_t min_number);
-        void Merge_Sparse_Intervals_Backward(uint32_t min_number);
+        void Merge_Sparse_Intervals_Forward(size_t min_number);
+        void Merge_Sparse_Intervals_Backward(size_t min_number);
 
     private:
         std::vector<size_t> m_intervals;

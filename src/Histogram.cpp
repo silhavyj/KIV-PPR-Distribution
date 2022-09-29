@@ -64,7 +64,7 @@ namespace kiv_ppr
         }
     }
 
-    void CHistogram::Merge_Sparse_Intervals_Forward(uint32_t min_number)
+    void CHistogram::Merge_Sparse_Intervals_Forward(size_t min_number)
     {
         auto it = m_intervals.begin();
         while (it != m_intervals.end() - 1)
@@ -85,7 +85,7 @@ namespace kiv_ppr
         }
     }
 
-    void CHistogram::Merge_Sparse_Intervals_Backward(uint32_t min_number)
+    void CHistogram::Merge_Sparse_Intervals_Backward(size_t min_number)
     {
         auto it = m_intervals.end() - 1;
         while (it != m_intervals.begin())
