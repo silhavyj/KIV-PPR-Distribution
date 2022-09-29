@@ -34,7 +34,7 @@ namespace kiv_ppr
         ~CFile_Stats() = default;
 
         [[nodiscard]] TValues Get_Values() const noexcept;
-        [[nodiscard]] int Run(config::TThread_Params* thread_config);
+        [[nodiscard]] int Process(config::TThread_Params* thread_config);
 
     private:
         void Copy_Values_From_File_Stats_1(CFile_Stats_1& file_stats_1);

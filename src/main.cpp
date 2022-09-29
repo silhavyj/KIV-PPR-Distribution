@@ -15,7 +15,7 @@ static void Run()
     {
         std::cout << "Processing file " << file.Get_Filename() << " [" << file.Get_File_Size() << " B]\n";
         kiv_ppr::CFile_Stats file_stats(&file, kiv_ppr::utils::Is_Valid_Double);
-        if (0 != file_stats.Run(&kiv_ppr::config::default_thread_params))
+        if (0 != file_stats.Process(&kiv_ppr::config::default_thread_params))
         {
             std::cerr << L"Failed to process the input file\n";
             std::exit(1);

@@ -13,7 +13,7 @@ namespace kiv_ppr
 
     }
 
-    int CFile_Stats::Run(config::TThread_Params* thread_config)
+    int CFile_Stats::Process(config::TThread_Params* thread_config)
     {
         CFile_Stats_1 file_stats_1(m_file, m_is_valid_number);
         if (0 != file_stats_1.Run(thread_config))
