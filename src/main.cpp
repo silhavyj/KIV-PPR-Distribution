@@ -69,7 +69,7 @@ void Run_Statistical_Tests(kiv_ppr::CFile_Stats::TValues& values)
         std::cout << results[i] << '\n';
     }
     std::sort(results.begin(), results.end());
-    std::cout << "\nResult: " << results.begin()->name << '\n';
+    std::cout << "\nResult: " << results.begin()->name;
 }
 
 static void Run()
@@ -102,9 +102,10 @@ static void Run()
 
 int main()
 {
-    kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), true, 134217728, 7, 2);
+    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), true, 134217728, 7, 2);
 
-    std::cout << kiv_ppr::utils::Time_Call([]() {
+    const auto seconds = kiv_ppr::utils::Time_Call([]() {
         Run();
-    }) << " sec\n";
+    });
+    std::cout << " (" << seconds << " sec)\n";
 }
