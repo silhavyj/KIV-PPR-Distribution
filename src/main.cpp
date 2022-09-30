@@ -102,7 +102,7 @@ static void Run()
 
 int main()
 {
-    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>(filename.c_str(), true, 134217728, 7, 2);
+    kiv_ppr::utils::Generate_Numbers<std::poisson_distribution<>>(filename.c_str(), true, 1000, 10);
 
     const auto seconds = kiv_ppr::utils::Time_Call([]() {
         Run();

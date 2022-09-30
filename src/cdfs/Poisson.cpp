@@ -29,7 +29,7 @@ namespace kiv_ppr
             if (infinity_is_found)
             {
                 double log_6th_tail = std::log(i * (1 + 4 * i * (1 + 2 * i))) / 6;
-                double ln_n = i * std::log(m_lambda) - (i * std::log(i) - i + log_6th_tail + log_pi_div_2);
+                double ln_n = (double)i * std::log(m_lambda) - ((double)i * std::log(i) - (double)i + log_6th_tail + log_pi_div_2);
                 n = std::pow(M_E, ln_n - m_lambda);
             }
             else
@@ -38,7 +38,7 @@ namespace kiv_ppr
                 {
                     infinity_is_found = true;
                     double log_6th_tail = std::log(i * (1 + 4 * i * (1 + 2 * i))) / 6;
-                    double ln_n = i * std::log(m_lambda) - (i * std::log(i) - i + log_6th_tail + log_pi_div_2);
+                    double ln_n = (double)i * std::log(m_lambda) - ((double)i * std::log(i) - (double)i + log_6th_tail + log_pi_div_2);
                     n = std::pow(M_E, ln_n - m_lambda);
                 }
                 else
@@ -62,7 +62,7 @@ namespace kiv_ppr
         double factorial = 1;
         while (count >= 1)
         {
-            factorial = factorial * count;
+            factorial = factorial * static_cast<double>(count);
             --count;
         }
         return factorial;

@@ -1,11 +1,13 @@
 #include "ChiSquare.h"
 
+#include <utility>
+
 namespace kiv_ppr
 {
-    CChi_Square::CChi_Square(const std::string& name, const std::shared_ptr<CHistogram>& histogram, const std::shared_ptr<CCDF>& cdf)
-            : m_name(name),
-              m_histogram(histogram),
-              m_cdf(cdf)
+    CChi_Square::CChi_Square(std::string  name, std::shared_ptr<CHistogram>  histogram, std::shared_ptr<CCDF>  cdf)
+            : m_name(std::move(name)),
+              m_histogram(std::move(histogram)),
+              m_cdf(std::move(cdf))
     {
 
     }
@@ -35,7 +37,7 @@ namespace kiv_ppr
                 E = m_cdf->operator()(middle_value);
             }
             E *= total_count;
-            O = m_histogram->operator[](i);
+            O = static_cast<double>(m_histogram->operator[](i));
 
             if (E != 0)
             {
