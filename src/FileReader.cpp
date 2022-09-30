@@ -100,7 +100,8 @@ namespace kiv_ppr
                 case kiv_ppr::CFile_Reader<E>::NRead_Status::EOF_:
                     return out;
 
-                case kiv_ppr::CFile_Reader<E>::NRead_Status::ERROR:
+                case kiv_ppr::CFile_Reader<E>::NRead_Status::ERROR: [[fallthrough]];
+                default:
                     std::cerr << L"Error occurred printing out the contents of the input file. Exiting...\n";
                     exit(1);
             }
