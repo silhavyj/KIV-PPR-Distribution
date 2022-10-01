@@ -18,12 +18,6 @@ namespace kiv_ppr
         ++m_count;
     }
 
-    void CHistogram::Merge_Sparse_Intervals(size_t min_number)
-    {
-        Merge_Sparse_Intervals_Forward(min_number);
-        Merge_Sparse_Intervals_Backward(min_number);
-    }
-
     size_t CHistogram::Get_Number_Of_Intervals() const noexcept
     {
         return m_intervals.size();
@@ -61,45 +55,6 @@ namespace kiv_ppr
         {
             (*this)[i] += other[i];
             m_count += other[i];
-        }
-    }
-
-    void CHistogram::Merge_Sparse_Intervals_Forward(size_t min_number)
-    {
-        auto it = m_intervals.begin();
-        while (it != m_intervals.end() - 1)
-        {
-            if (*it < min_number)
-            {
-                *(it + 1) += *it;
-                if (it == m_intervals.begin())
-                {
-                    m_params.min += m_interval_size;
-                }
-                m_intervals.erase(it);
-            }
-            else
-            {
-                ++it;
-            }
-        }
-    }
-
-    void CHistogram::Merge_Sparse_Intervals_Backward(size_t min_number)
-    {
-        auto it = m_intervals.end() - 1;
-        while (it != m_intervals.begin())
-        {
-            if (*it < min_number)
-            {
-                *(it - 1) += *it;
-                if (it == m_intervals.end() - 1)
-                {
-                    m_params.max -= m_interval_size;
-                }
-                m_intervals.erase(it);
-            }
-            --it;
         }
     }
 

@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <iostream>
+#include <functional>
 
 namespace kiv_ppr
 {
@@ -18,11 +19,10 @@ namespace kiv_ppr
         };
 
     public:
-        explicit CHistogram(TParams params);
+        CHistogram(TParams params);
         ~CHistogram() = default;
 
         void Add(double value);
-        void Merge_Sparse_Intervals(size_t min_number);
 
         [[nodiscard]] size_t Get_Number_Of_Intervals() const noexcept;
         [[nodiscard]] double Get_Min() const noexcept;
@@ -34,10 +34,6 @@ namespace kiv_ppr
         void operator+=(CHistogram& other);
 
         friend std::ostream& operator<<(std::ostream& out, CHistogram& histogram);
-
-    private:
-        void Merge_Sparse_Intervals_Forward(size_t min_number);
-        void Merge_Sparse_Intervals_Backward(size_t min_number);
 
     private:
         std::vector<size_t> m_intervals;

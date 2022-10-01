@@ -13,7 +13,7 @@
 #include "cdfs/ExponentialCDF.h"
 #include "tests/ChiSquare.h"
 
-static std::string filename{"data.dat"};
+static std::string filename{"../../data/uniform"};
 
 void Run_Statistical_Tests(kiv_ppr::CFile_Stats::TValues& values)
 {
@@ -26,41 +26,41 @@ void Run_Statistical_Tests(kiv_ppr::CFile_Stats::TValues& values)
             values.second_iteration_values.histogram,
             std::make_shared<kiv_ppr::CNormal_CDF>(values.first_iteration_values.mean, values.second_iteration_values.var)
         );
-        return chi_square_normal.Run();
+        return chi_square_normal.Run(2);
     }));
 
     workers.push_back(std::async(std::launch::async, [&]() {
         kiv_ppr::CChi_Square chi_square_uniform(
             "Uniform",
-            values.second_iteration_values.histogram,
+            std::make_shared<kiv_ppr::CHistogram>(*values.second_iteration_values.histogram),
             std::make_shared<kiv_ppr::CUniform_CDF>(values.first_iteration_values.min, values.first_iteration_values.max)
         );
-        return chi_square_uniform.Run();
+        return chi_square_uniform.Run(2); // TODO or 0?
     }));
 
-    if (values.first_iteration_values.mean > 0)
-    {
-        workers.push_back(std::async(std::launch::async, [&]() {
-            kiv_ppr::CChi_Square chi_square_exponential(
-                "Exponential",
-                values.second_iteration_values.histogram,
-                std::make_shared<kiv_ppr::CExponential_CDF>(1.0 / values.first_iteration_values.mean)
-            );
-            return chi_square_exponential.Run();
-        }));
-    }
+     if (values.first_iteration_values.all_numbers_positive)
+     {
+         workers.push_back(std::async(std::launch::async, [&]() {
+             kiv_ppr::CChi_Square chi_square_exponential(
+                 "Exponential",
+                 std::make_shared<kiv_ppr::CHistogram>(*values.second_iteration_values.histogram),
+                 std::make_shared<kiv_ppr::CExponential_CDF>(1.0 / values.first_iteration_values.mean)
+             );
+             return chi_square_exponential.Run(1);
+         }));
+     }
 
-    if (values.first_iteration_values.all_normal_numbers)
-    {
-        workers.push_back(std::async(std::launch::async, [&]() {
-            kiv_ppr::CChi_Square chi_square_poisson(
-                "Poisson",
-                values.second_iteration_values.histogram,
-                std::make_shared<kiv_ppr::CPoisson_CDF>(values.first_iteration_values.mean)
-            );
-            return chi_square_poisson.Run();
-        }));
-    }
+     if (values.first_iteration_values.all_normal_numbers && values.first_iteration_values.mean >= 0)
+     {
+         workers.push_back(std::async(std::launch::async, [&]() {
+             kiv_ppr::CChi_Square chi_square_poisson(
+                 "Poisson",
+                 std::make_shared<kiv_ppr::CHistogram>(*values.second_iteration_values.histogram),
+                 std::make_shared<kiv_ppr::CPoisson_CDF>(values.first_iteration_values.mean)
+             );
+             return chi_square_poisson.Run(1);
+         }));
+     }
 
     std::vector<kiv_ppr::CChi_Square::TResult> results(workers.size());
     for (size_t i = 0; i < workers.size(); ++i)
@@ -69,7 +69,7 @@ void Run_Statistical_Tests(kiv_ppr::CFile_Stats::TValues& values)
         std::cout << results[i] << '\n';
     }
     std::sort(results.begin(), results.end());
-    std::cout << "\nResult: " << results.begin()->name;
+    std::cout << "Result: " << results.begin()->name;
 }
 
 static void Run()
@@ -90,7 +90,6 @@ static void Run()
         std::cout << "Calculated statistics:\n";
         std::cout << values << '\n';
 
-        values.second_iteration_values.histogram->Merge_Sparse_Intervals(5);
         Run_Statistical_Tests(values);
     }
     else
@@ -102,7 +101,7 @@ static void Run()
 
 int main()
 {
-    kiv_ppr::utils::Generate_Numbers<std::poisson_distribution<>>(filename.c_str(), true, 1000, 10);
+    // kiv_ppr::utils::Generate_Numbers<std::poisson_distribution<>>(filename.c_str(), true, 10000, 0.5);
 
     const auto seconds = kiv_ppr::utils::Time_Call([]() {
         Run();

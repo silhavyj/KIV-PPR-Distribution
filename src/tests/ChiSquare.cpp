@@ -1,5 +1,6 @@
 #include "ChiSquare.h"
 
+#include <cmath>
 #include <utility>
 
 namespace kiv_ppr
@@ -12,40 +13,185 @@ namespace kiv_ppr
 
     }
 
-    typename CChi_Square::TResult CChi_Square::Run()
+    typename CChi_Square::TResult CChi_Square::Run(int estimated_parameters)
     {
-        double critical_value = 0.0;
-        const auto total_count = static_cast<double>(m_histogram->Get_Total_Count());
-        const size_t number_of_intervals = m_histogram->Get_Number_Of_Intervals();
+        static constexpr double MIN_EXPECTED_VALUE = 5;
 
-        // TODO make sure there's at least N groups
+        double chi_square_val = 0.0;
+        const auto total_count = static_cast<double>(m_histogram->Get_Total_Count());
+        const size_t original_number_of_intervals = m_histogram->Get_Number_Of_Intervals();
 
         double middle_value;
-        double middle_value_prev;
+        double middle_value_prev{};
         double E;
         double O;
 
-        for (size_t i = 0; i < number_of_intervals; ++i)
+        size_t i = 0;
+        bool first_iteration = true;
+        double left = m_histogram->Get_Min();
+        double right = left;
+        size_t number_of_interval = 0;
+
+        // std::cout << *m_histogram << '\n';
+
+        while (i < original_number_of_intervals)
         {
-            middle_value = m_histogram->Get_Min() + (static_cast<double>(i) * m_histogram->Get_Interval_Size()) + (m_histogram->Get_Interval_Size() / 2.0);
-            if (i != 0)
+            O = 0;
+            do
             {
-                E = (m_cdf->operator()(middle_value) - m_cdf->operator()(middle_value_prev));
+                right += m_histogram->Get_Interval_Size();
+                middle_value = left + (right - left);
+                E = Calculate_Expected_Value(middle_value, middle_value_prev, total_count, first_iteration);
+                O += static_cast<double>(m_histogram->operator[](i));
+                ++i;
+            } while (i < original_number_of_intervals && E < MIN_EXPECTED_VALUE);
+
+            if (E < MIN_EXPECTED_VALUE)
+            {
+                break;
+            }
+
+            // std::cout << "O=" << O << "; E=" << E << "\n";
+            chi_square_val += ((O - E) / E) * (O - E);
+
+            left = right;
+            first_iteration = false;
+            middle_value_prev = middle_value;
+            ++number_of_interval;
+        }
+
+        return { chi_square_val, Calculate_P_Value(chi_square_val, number_of_interval - 1 - estimated_parameters), number_of_interval, m_name };
+    }
+
+    double CChi_Square::Calculate_P_Value(double x, int df)
+    {
+        // x = a computed chi-square value.
+        // df = degrees of freedom.
+        // output = prob. x value occurred by chance.
+        // ACM 299.
+        if (x <= 0.0 || df < 1)
+        {
+            // TODO throw an exception
+        }
+        double a = 0.0; // 299 variable names
+        double y = 0.0;
+        double s = 0.0;
+        double z = 0.0;
+        double ee = 0.0; // change from e
+        double c;
+        bool even; // Is df even?
+        a = 0.5 * x;
+        if (df % 2 == 0) even = true; else even = false;
+        if (df > 1) y = Exp(-a); // ACM update remark (4)
+        if (even == true) s = y;
+        else s = 2.0 * Gauss(-std::sqrt(x));
+        if (df > 2)
+        {
+            x = 0.5 * (df - 1.0);
+            if (even == true) z = 1.0; else z = 0.5;
+            if (a > 40.0) // ACM remark (5)
+            {
+                if (even == true) ee = 0.0;
+                else ee = 0.5723649429247000870717135;
+                c = std::log(a); // log base e
+                while (z <= x) {
+                    ee = std::log(z) + ee;
+                    s = s + Exp(c * z - a - ee); // ACM update remark (6)
+                    z = z + 1.0;
+                }
+                return s;
+            } // a > 40.0
+            else
+            {
+                if (even == true) ee = 1.0;
+                else
+                    ee = 0.5641895835477562869480795 / std::sqrt(a);
+                c = 0.0;
+                while (z <= x) {
+                    ee = ee * (a / z); // ACM update remark (7)
+                    c = c + ee;
+                    z = z + 1.0;
+                }
+                return c * y + s;
+            }
+        } // df > 2
+        else {
+            return s;
+        }
+    }
+
+    double CChi_Square::Gauss(double z)
+    {
+        // input = z-value (-inf to +inf)
+        // output = p under Normal curve from -inf to z
+        // ACM Algorithm #209
+        double y; // 209 scratch variable
+        double p; // result. called ‘z’ in 209
+        double w; // 209 scratch variable
+        if (z == 0.0)
+        {
+            p = 0.0;
+        }
+        else
+        {
+            y = std::abs(z) / 2;
+            if (y >= 3.0)
+            {
+                p = 1.0;
+            }
+            else if (y < 1.0)
+            {
+                w = y * y;
+                p = ((((((((0.000124818987 * w
+                            - 0.001075204047) * w + 0.005198775019) * w
+                            - 0.019198292004) * w + 0.059054035642) * w
+                            - 0.151968751364) * w + 0.319152932694) * w
+                            - 0.531923007300) * w + 0.797884560593) * y
+                            * 2.0;
             }
             else
             {
-                E = m_cdf->operator()(middle_value);
+                y = y - 2.0;
+                p = (((((((((((((-0.000045255659 * y
+                                + 0.000152529290) * y - 0.000019538132) * y
+                                - 0.000676904986) * y + 0.001390604284) * y
+                                - 0.000794620820) * y - 0.002034254874) * y
+                                + 0.006549791214) * y - 0.010557625006) * y
+                                + 0.011630447319) * y - 0.009279453341) * y
+                                + 0.005353579108) * y - 0.002141268741) * y
+                                + 0.000535310849) * y + 0.999936657524;
             }
-            E *= total_count;
-            O = static_cast<double>(m_histogram->operator[](i));
-
-            if (E != 0)
-            {
-                critical_value += ((O - E) * (O - E)) / E;
-            }
-            middle_value_prev = middle_value;
         }
-        return { critical_value, m_name };
+        if (z > 0.0)
+        {
+            return (p + 1.0) / 2;
+        }
+        else
+        {
+            return (1.0 - p) / 2;
+        }
+    }
+
+    inline double CChi_Square::Exp(double x)
+    {
+        if (x < -40.0) // ACM update remark (8)
+            return 0.0;
+        else
+            return std::exp(x);
+    }
+
+    inline double CChi_Square::Calculate_Expected_Value(double x, double x_prev, double total_count, bool first_interval)
+    {
+        double E;
+        if (first_interval)
+        {
+            E = m_cdf->operator()(x);
+        }
+        else
+        {
+            E = (m_cdf->operator()(x) - m_cdf->operator()(x_prev));
+        }
+        return E * total_count;
     }
 
     bool CChi_Square::TResult::operator<(const TResult& other) const
@@ -55,7 +201,7 @@ namespace kiv_ppr
 
     std::ostream& operator<<(std::ostream& out, const CChi_Square::TResult& result)
     {
-        out << "[test_name=" << result.name << "; cv=" << result.critical_value << "]";
+        out << "[test_name=" << result.name << "; chi_square=" << result.critical_value  << "; categories=" << result.categories << "; p_value=" << result.p_value << "]";
         return out;
     }
 }

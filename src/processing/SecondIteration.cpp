@@ -119,8 +119,9 @@ namespace kiv_ppr
 
     size_t CSecond_Iteration::Calculate_Number_Of_Intervals(size_t n)
     {
+        // https://onlinelibrary.wiley.com/doi/full/10.1002/1097-0320%2820011001%2945%3A2%3C141%3A%3AAID-CYTO1156%3E3.0.CO%3B2-M#bib11
         static constexpr size_t MAX_LIMIT = 1024 * 1024 * 50; // 50 MB
-        return std::min(static_cast<size_t>(2.82 * std::pow(n, 2.0 / 5.0)), MAX_LIMIT);
+        return std::min(static_cast<size_t>(2 * std::pow(n, 2.0 / 5.0)), MAX_LIMIT);
     }
 
     std::ostream& operator<<(std::ostream& out, const CSecond_Iteration::TValues& values)
