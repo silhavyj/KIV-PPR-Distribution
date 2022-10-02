@@ -17,22 +17,16 @@ namespace kiv_ppr
     {
         static constexpr double MIN_EXPECTED_VALUE = 5;
 
+        double E;
+        double O;
         double chi_square_val = 0.0;
         const auto total_count = static_cast<double>(m_histogram->Get_Total_Count());
         const size_t original_number_of_intervals = m_histogram->Get_Number_Of_Intervals();
 
-        double middle_value;
-        double middle_value_prev{};
-        double E;
-        double O;
-
         size_t i = 0;
-        bool first_iteration = true;
         double left = m_histogram->Get_Min();
         double right = left;
         size_t number_of_interval = 0;
-
-        // std::cout << *m_histogram << '\n';
 
         while (i < original_number_of_intervals)
         {
@@ -40,27 +34,25 @@ namespace kiv_ppr
             do
             {
                 right += m_histogram->Get_Interval_Size();
-                middle_value = left + (right - left);
-                E = Calculate_Expected_Value(middle_value, middle_value_prev, total_count, first_iteration);
+                E = (m_cdf->operator()(right) - m_cdf->operator()(left)) * total_count;
                 O += static_cast<double>(m_histogram->operator[](i));
                 ++i;
             } while (i < original_number_of_intervals && E < MIN_EXPECTED_VALUE);
 
             if (E < MIN_EXPECTED_VALUE)
             {
+                // TODO merge the last interval with the previous one
                 break;
             }
 
-            // std::cout << "O=" << O << "; E=" << E << "\n";
             chi_square_val += ((O - E) / E) * (O - E);
 
             left = right;
-            first_iteration = false;
-            middle_value_prev = middle_value;
             ++number_of_interval;
         }
 
-        return { chi_square_val, Calculate_P_Value(chi_square_val, number_of_interval - 1 - estimated_parameters), number_of_interval, m_name };
+        const double p_value = Calculate_P_Value(chi_square_val, static_cast<int>(number_of_interval - 1 - estimated_parameters));
+        return { chi_square_val, p_value, number_of_interval, m_name };
     }
 
     double CChi_Square::Calculate_P_Value(double x, int df)
@@ -73,25 +65,25 @@ namespace kiv_ppr
         {
             // TODO throw an exception
         }
-        double a = 0.0; // 299 variable names
+        double a; // 299 variable names
         double y = 0.0;
-        double s = 0.0;
-        double z = 0.0;
-        double ee = 0.0; // change from e
+        double s;
+        double z;
+        double ee; // change from e
         double c;
         bool even; // Is df even?
         a = 0.5 * x;
         if (df % 2 == 0) even = true; else even = false;
         if (df > 1) y = Exp(-a); // ACM update remark (4)
-        if (even == true) s = y;
+        if (even) s = y;
         else s = 2.0 * Gauss(-std::sqrt(x));
         if (df > 2)
         {
             x = 0.5 * (df - 1.0);
-            if (even == true) z = 1.0; else z = 0.5;
+            if (even) z = 1.0; else z = 0.5;
             if (a > 40.0) // ACM remark (5)
             {
-                if (even == true) ee = 0.0;
+                if (even) ee = 0.0;
                 else ee = 0.5723649429247000870717135;
                 c = std::log(a); // log base e
                 while (z <= x) {
@@ -103,7 +95,7 @@ namespace kiv_ppr
             } // a > 40.0
             else
             {
-                if (even == true) ee = 1.0;
+                if (even) ee = 1.0;
                 else
                     ee = 0.5641895835477562869480795 / std::sqrt(a);
                 c = 0.0;
@@ -180,23 +172,9 @@ namespace kiv_ppr
             return std::exp(x);
     }
 
-    inline double CChi_Square::Calculate_Expected_Value(double x, double x_prev, double total_count, bool first_interval)
-    {
-        double E;
-        if (first_interval)
-        {
-            E = m_cdf->operator()(x);
-        }
-        else
-        {
-            E = (m_cdf->operator()(x) - m_cdf->operator()(x_prev));
-        }
-        return E * total_count;
-    }
-
     bool CChi_Square::TResult::operator<(const TResult& other) const
     {
-        return critical_value < other.critical_value;
+        return p_value > other.p_value;
     }
 
     std::ostream& operator<<(std::ostream& out, const CChi_Square::TResult& result)

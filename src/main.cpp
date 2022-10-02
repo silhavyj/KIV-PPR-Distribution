@@ -13,7 +13,7 @@
 #include "cdfs/ExponentialCDF.h"
 #include "tests/ChiSquare.h"
 
-static std::string filename{"../../data/uniform"};
+static std::string filename{"../../data/gauss"};
 
 void Run_Statistical_Tests(kiv_ppr::CFile_Stats::TValues& values)
 {
@@ -101,7 +101,7 @@ static void Run()
 
 int main()
 {
-    // kiv_ppr::utils::Generate_Numbers<std::poisson_distribution<>>(filename.c_str(), true, 10000, 0.5);
+    // kiv_ppr::utils::Generate_Numbers<std::uniform_real_distribution<>>(filename.c_str(), true, 1000000, 5, 10);
 
     const auto seconds = kiv_ppr::utils::Time_Call([]() {
         Run();
