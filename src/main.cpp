@@ -8,7 +8,7 @@
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
 
-static std::string filename{"../../data/poisson"};
+static std::string filename{"../../data_2/explarger"};
 
 static void Run()
 {
@@ -20,7 +20,7 @@ static void Run()
         kiv_ppr::CFile_Stats file_stats(&file, kiv_ppr::utils::Is_Valid_Double);
         if (0 != file_stats.Process(&kiv_ppr::config::default_thread_params))
         {
-            std::cerr << L"Failed to process the input file\n";
+            std::cerr << "Failed to process the input file\n";
             std::exit(1);
         }
         auto values = file_stats.Get_Values();
@@ -35,7 +35,7 @@ static void Run()
     }
     else
     {
-        std::cerr << L"Failed to open the input file\n";
+        std::cerr << "Failed to open the input file\n";
         std::exit(1);
     }
 }

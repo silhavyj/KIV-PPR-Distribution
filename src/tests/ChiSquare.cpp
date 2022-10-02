@@ -29,9 +29,15 @@ namespace kiv_ppr
         double left = m_histogram->Get_Min();
         double right = left;
         size_t number_of_interval = 0;
+        double error;
+        double error_prev = 0;
+        size_t i_last = 0;
+        size_t i_last_tmp;
+        double left_last = 0;
 
         while (i < original_number_of_intervals)
         {
+            i_last_tmp = i;
             O = 0;
             do
             {
@@ -50,11 +56,30 @@ namespace kiv_ppr
 
             if (E < MIN_EXPECTED_VALUE)
             {
-                // TODO merge the last interval with the previous one
+                chi_square_val -= error_prev;
+                O = 0;
+                i = i_last;
+                left = left_last;
+                right = left;
+
+                while (i < original_number_of_intervals)
+                {
+                    right += m_histogram->Get_Interval_Size();
+                    O += static_cast<double>(m_histogram->operator[](i));
+                    ++i;
+                }
+                E = (m_cdf->operator()(right) - m_cdf->operator()(left)) * total_count;
+                chi_square_val += ((O - E) / E) * (O - E);
+
                 break;
             }
 
-            chi_square_val += ((O - E) / E) * (O - E);
+            error = ((O - E) / E) * (O - E);
+            chi_square_val += error;
+
+            error_prev = error;
+            i_last = i_last_tmp;
+            left_last = left;
 
             left = right;
             ++number_of_interval;
