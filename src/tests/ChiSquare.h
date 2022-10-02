@@ -24,9 +24,9 @@ namespace kiv_ppr
         };
 
     public:
-        CChi_Square(std::string  name,
-                    std::shared_ptr<CHistogram>  histogram,
-                    std::shared_ptr<CCDF>  cdf);
+        CChi_Square(std::string name,
+                    std::shared_ptr<CHistogram> histogram,
+                    std::shared_ptr<CCDF> cdf);
 
         ~CChi_Square() = default;
 

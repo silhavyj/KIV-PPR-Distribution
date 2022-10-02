@@ -5,7 +5,9 @@
 
 namespace kiv_ppr
 {
-    CChi_Square::CChi_Square(std::string  name, std::shared_ptr<CHistogram>  histogram, std::shared_ptr<CCDF>  cdf)
+    CChi_Square::CChi_Square(std::string name,
+                             std::shared_ptr<CHistogram> histogram,
+                             std::shared_ptr<CCDF> cdf)
             : m_name(std::move(name)),
               m_histogram(std::move(histogram)),
               m_cdf(std::move(cdf))
