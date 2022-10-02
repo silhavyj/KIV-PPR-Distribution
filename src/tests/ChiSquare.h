@@ -14,7 +14,7 @@ namespace kiv_ppr
     public:
         struct TResult
         {
-            double critical_value;
+            double chi_square;
             double p_value;
             size_t categories;
             std::string name;

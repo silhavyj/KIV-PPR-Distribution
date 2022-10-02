@@ -188,7 +188,7 @@ namespace kiv_ppr
 
     std::ostream& operator<<(std::ostream& out, const CChi_Square::TResult& result)
     {
-        out << "[test_name=" << result.name << "; chi_square=" << result.critical_value  << "; categories=" << result.categories << "; p_value=" << result.p_value << "]";
+        out << "[test_name=" << result.name << "; chi_square=" << result.chi_square << "; categories=" << result.categories << "; p_value=" << result.p_value << "]";
         return out;
     }
 }

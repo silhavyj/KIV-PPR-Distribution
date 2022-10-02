@@ -14,7 +14,7 @@ namespace kiv_ppr
           m_is_valid_number(std::move(is_valid_number)),
           m_values{}
     {
-        m_values.all_normal_numbers = true;
+        m_values.normal_numbers = true;
         m_values.min = std::numeric_limits<double>::max();
         m_values.max = std::numeric_limits<double>::min();
     }
@@ -56,9 +56,9 @@ namespace kiv_ppr
         m_values.mean += values.mean;
         m_values.count += values.count;
 
-        if (m_values.all_normal_numbers && !values.all_normal_numbers)
+        if (m_values.normal_numbers && !values.normal_numbers)
         {
-            m_values.all_normal_numbers = false;
+            m_values.normal_numbers = false;
         }
     }
 
@@ -84,9 +84,9 @@ namespace kiv_ppr
                         const double value = data[i];
                         if (m_is_valid_number(value))
                         {
-                            if (local_values.all_normal_numbers && (std::floor(value) != std::ceil(value)))
+                            if (local_values.normal_numbers && (std::floor(value) != std::ceil(value)))
                             {
-                                local_values.all_normal_numbers = false;
+                                local_values.normal_numbers = false;
                             }
 
                             local_values.min = std::min(local_values.min, value);
