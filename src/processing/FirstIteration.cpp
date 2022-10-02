@@ -116,8 +116,7 @@ namespace kiv_ppr
         out << "min = " << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << values.min << '\n';
         out << "max = " << values.max << '\n';
         out << "mean = " << values.mean << '\n';
-        out << "count = " << values.count << '\n';
-        out << "all normal numbers = " << std::boolalpha << values.all_normal_numbers;
+        out << "count = " << values.count;
         return out;
     }
 }

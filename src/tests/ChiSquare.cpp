@@ -36,7 +36,14 @@ namespace kiv_ppr
             do
             {
                 right += m_histogram->Get_Interval_Size();
-                E = (m_cdf->operator()(right) - m_cdf->operator()(left)) * total_count;
+                if (left == m_histogram->Get_Min())
+                {
+                    E = m_cdf->operator()(right) * total_count;
+                }
+                else
+                {
+                    E = (m_cdf->operator()(right) - m_cdf->operator()(left)) * total_count;
+                }
                 O += static_cast<double>(m_histogram->operator[](i));
                 ++i;
             } while (i < original_number_of_intervals && E < MIN_EXPECTED_VALUE);
