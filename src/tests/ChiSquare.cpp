@@ -22,18 +22,17 @@ namespace kiv_ppr
         double E;
         double O;
         double chi_square_val = 0.0;
-        const auto total_count = static_cast<double>(m_histogram->Get_Total_Count());
         const size_t original_number_of_intervals = m_histogram->Get_Number_Of_Intervals();
 
-        size_t i = 0;
         double left = m_histogram->Get_Min();
+        double left_last = 0;
         double right = left;
         size_t number_of_interval = 0;
         double error;
-        double error_prev = 0;
+        double error_last = 0;
+        size_t i = 0;
         size_t i_last = 0;
         size_t i_last_tmp;
-        double left_last = 0;
 
         while (i < original_number_of_intervals)
         {
@@ -42,21 +41,14 @@ namespace kiv_ppr
             do
             {
                 right += m_histogram->Get_Interval_Size();
-                if (left == m_histogram->Get_Min())
-                {
-                    E = m_cdf->operator()(right) * total_count;
-                }
-                else
-                {
-                    E = (m_cdf->operator()(right) - m_cdf->operator()(left)) * total_count;
-                }
+                E = Calculate_E(right, left, left == m_histogram->Get_Min());
                 O += static_cast<double>(m_histogram->operator[](i));
                 ++i;
             } while (i < original_number_of_intervals && E < MIN_EXPECTED_VALUE);
 
             if (E < MIN_EXPECTED_VALUE)
             {
-                chi_square_val -= error_prev;
+                chi_square_val -= error_last;
                 O = 0;
                 i = i_last;
                 left = left_last;
@@ -68,16 +60,15 @@ namespace kiv_ppr
                     O += static_cast<double>(m_histogram->operator[](i));
                     ++i;
                 }
-                E = (m_cdf->operator()(right) - m_cdf->operator()(left)) * total_count;
+                E = Calculate_E(right, left, left == m_histogram->Get_Min());
                 chi_square_val += ((O - E) / E) * (O - E);
-
                 break;
             }
 
             error = ((O - E) / E) * (O - E);
             chi_square_val += error;
 
-            error_prev = error;
+            error_last = error;
             i_last = i_last_tmp;
             left_last = left;
 
@@ -87,6 +78,22 @@ namespace kiv_ppr
 
         const double p_value = Calculate_P_Value(chi_square_val, static_cast<int>(number_of_interval - 1 - estimated_parameters));
         return { chi_square_val, p_value, number_of_interval, m_name };
+    }
+
+    double CChi_Square::Calculate_E(double x, double x_prev, bool first_interval) const
+    {
+        double E;
+        const auto count = static_cast<double>(m_histogram->Get_Total_Count());
+
+        if (first_interval)
+        {
+            E = m_cdf->operator()(x) * count;
+        }
+        else
+        {
+            E = (m_cdf->operator()(x) - m_cdf->operator()(x_prev)) * count;
+        }
+        return E;
     }
 
     double CChi_Square::Calculate_P_Value(double x, int df)

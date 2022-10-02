@@ -1,6 +1,5 @@
 #include <iostream>
 #include <thread>
-#include <future>
 
 #include "utils/Utils.h"
 #include "Config.h"
@@ -8,7 +7,7 @@
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
 
-static std::string filename{"../../data_2/explarger"};
+static std::string filename{"../../data/exp"};
 
 static void Run()
 {
@@ -16,7 +15,7 @@ static void Run()
     if (file.Is_Open())
     {
         std::cout << "Processing file " << file.Get_Filename() << " [" << file.Get_File_Size() << " B]\n\n";
-        // std::cout << file << "\n";
+
         kiv_ppr::CFile_Stats file_stats(&file, kiv_ppr::utils::Is_Valid_Double);
         if (0 != file_stats.Process(&kiv_ppr::config::default_thread_params))
         {
@@ -28,8 +27,7 @@ static void Run()
         std::cout << "Calculated statistics:\n";
         std::cout << values << '\n';
 
-        // std::cout << *values.second_iteration.histogram << '\n';
-
+        std::cout << "Running Chi Square statistical test...\n";
         kiv_ppr::CTest_Runner test_runner(values);
         test_runner.Run();
     }

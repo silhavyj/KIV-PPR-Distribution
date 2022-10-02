@@ -21,10 +21,10 @@ namespace kiv_ppr::utils
         }
         std::ofstream output(filename, std::ios::out | std::ios::binary);
         auto ten_percent = static_cast<size_t>(0.1f * static_cast<double>(count));
-        uint32_t percentage = 0;
 
         if (output.is_open())
         {
+            uint32_t percentage = 0;
             std::random_device rd;
             Distribution dis(args...);
 

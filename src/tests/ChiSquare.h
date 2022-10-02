@@ -33,6 +33,7 @@ namespace kiv_ppr
         [[nodiscard]] TResult Run(int estimated_parameters);
 
     public:
+        [[nodiscard]] double Calculate_E(double x, double x_prev, bool first_interval) const;
         [[nodiscard]] static double Calculate_P_Value(double x, int df);
         [[nodiscard]] static double Exp(double x);
         [[nodiscard]] static double Gauss(double z);

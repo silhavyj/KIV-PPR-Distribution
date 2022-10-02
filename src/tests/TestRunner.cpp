@@ -19,7 +19,6 @@ namespace kiv_ppr
 
     void CTest_Runner::Run()
     {
-        std::cout << "Running Chi Square statistical test...\n";
         std::vector<std::future<kiv_ppr::CChi_Square::TResult>> workers;
 
         workers.push_back(std::async(std::launch::async, &CTest_Runner::Run_Normal, this));
@@ -42,7 +41,7 @@ namespace kiv_ppr
         std::cout << "Result: " << results.begin()->name;
     }
 
-    CChi_Square::TResult CTest_Runner::Run_Normal() const
+    inline CChi_Square::TResult CTest_Runner::Run_Normal() const
     {
         kiv_ppr::CChi_Square chi_square_normal(
             CNormal_CDF::NAME,
@@ -52,7 +51,7 @@ namespace kiv_ppr
         return chi_square_normal.Run(CNormal_CDF::NUMBER_OF_ESTIMATED_PARAMS);
     }
 
-    CChi_Square::TResult CTest_Runner::Run_Uniform() const
+    inline CChi_Square::TResult CTest_Runner::Run_Uniform() const
     {
         kiv_ppr::CChi_Square chi_square_uniform(
             CUniform_CDF::NAME,
@@ -62,7 +61,7 @@ namespace kiv_ppr
         return chi_square_uniform.Run(CUniform_CDF::NUMBER_OF_ESTIMATED_PARAMS);
     }
 
-    CChi_Square::TResult CTest_Runner::Run_Exponential() const
+    inline CChi_Square::TResult CTest_Runner::Run_Exponential() const
     {
         kiv_ppr::CChi_Square chi_square_exponential(
             CExponential_CDF::NAME,
@@ -72,7 +71,7 @@ namespace kiv_ppr
         return chi_square_exponential.Run(CExponential_CDF::NUMBER_OF_ESTIMATED_PARAMS);
     }
 
-    CChi_Square::TResult CTest_Runner::Run_Poisson() const
+    inline CChi_Square::TResult CTest_Runner::Run_Poisson() const
     {
         kiv_ppr::CChi_Square chi_square_poisson(
             CPoisson_CDF::NAME,

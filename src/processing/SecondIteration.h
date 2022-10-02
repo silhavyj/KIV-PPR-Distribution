@@ -24,7 +24,7 @@ namespace kiv_ppr
     public:
         explicit CSecond_Iteration(CFile_Reader<double>* file,
                                    std::function<bool(double)> is_valid_number,
-                                   typename CFirst_Iteration::TValues basic_values);
+                                   typename CFirst_Iteration::TValues& basic_values);
 
         ~CSecond_Iteration() = default;
 

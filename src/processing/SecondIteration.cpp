@@ -9,7 +9,7 @@ namespace kiv_ppr
 {
     CSecond_Iteration::CSecond_Iteration(CFile_Reader<double>* file,
                                          std::function<bool(double)> is_valid_number,
-                                         typename CFirst_Iteration::TValues basic_values)
+                                         typename CFirst_Iteration::TValues& basic_values)
         : m_file(file),
           m_is_valid_number(std::move(is_valid_number)),
           m_basic_values(basic_values),

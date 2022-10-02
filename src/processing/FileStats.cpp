@@ -22,7 +22,7 @@ namespace kiv_ppr
         }
         m_values.first_iteration = first_iteration.Get_Values();
 
-        CSecond_Iteration second_iteration(m_file, m_is_valid_number, first_iteration.Get_Values());
+        CSecond_Iteration second_iteration(m_file, m_is_valid_number, m_values.first_iteration);
         if (0 != second_iteration.Run(thread_config))
         {
             return 1;
