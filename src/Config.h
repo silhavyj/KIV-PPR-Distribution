@@ -13,7 +13,6 @@ namespace kiv_ppr::config
     };
 
     static constexpr uint32_t DOUBLE_PRECISION = 20;
-    static constexpr uint32_t BUCKET_MIN_LIMIT = 5;
     static constexpr uint32_t BLOCK_SIZE_PER_READ = 1024 * 1024 * 10;
     static constexpr uint32_t WATCHDOG_EXPIRATION_SEC = 10;
 

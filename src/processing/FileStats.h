@@ -16,8 +16,8 @@ namespace kiv_ppr
     public:
         struct TValues
         {
-            CFirst_Iteration::TValues first_iteration_values;
-            CSecond_Iteration::TValues second_iteration_values;
+            CFirst_Iteration::TValues first_iteration;
+            CSecond_Iteration::TValues second_iteration;
 
             friend std::ostream& operator<<(std::ostream& out, const TValues& values);
         };

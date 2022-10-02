@@ -20,14 +20,14 @@ namespace kiv_ppr
         {
             return 1;
         }
-        m_values.first_iteration_values = first_iteration.Get_Values();
+        m_values.first_iteration = first_iteration.Get_Values();
 
         CSecond_Iteration second_iteration(m_file, m_is_valid_number, first_iteration.Get_Values());
         if (0 != second_iteration.Run(thread_config))
         {
             return 1;
         }
-        m_values.second_iteration_values = second_iteration.Get_Values();
+        m_values.second_iteration = second_iteration.Get_Values();
 
         return 0;
     }
@@ -39,8 +39,8 @@ namespace kiv_ppr
 
     std::ostream& operator<<(std::ostream& out, const CFile_Stats::TValues& values)
     {
-        out << values.first_iteration_values << '\n';
-        out << values.second_iteration_values << '\n';
+        out << values.first_iteration << '\n';
+        out << values.second_iteration;
         return out;
     }
 }

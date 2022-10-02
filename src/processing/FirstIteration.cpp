@@ -117,7 +117,7 @@ namespace kiv_ppr
         out << "max = " << values.max << '\n';
         out << "mean = " << values.mean << '\n';
         out << "count = " << values.count << '\n';
-        out << "all normal numbers = " << std::boolalpha << values.all_normal_numbers << '\n';
+        out << "all normal numbers = " << std::boolalpha << values.all_normal_numbers;
         return out;
     }
 }

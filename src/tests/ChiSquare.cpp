@@ -1,7 +1,7 @@
-#include "ChiSquare.h"
-
 #include <cmath>
 #include <utility>
+
+#include "ChiSquare.h"
 
 namespace kiv_ppr
 {

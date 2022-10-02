@@ -61,10 +61,13 @@ namespace kiv_ppr
     std::ostream& operator<<(std::ostream& out, CHistogram& histogram)
     {
         const uint32_t size = histogram.Get_Number_Of_Intervals();
+        size_t sum{};
         for (uint32_t i = 0; i < size; ++i)
         {
-            out << histogram[i] << " ";
+            out << i << ": " << histogram[i] << '\n';
+            sum += histogram[i];
         }
+        out << "sum: " << sum;
         return out;
     }
 }

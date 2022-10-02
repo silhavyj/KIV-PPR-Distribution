@@ -7,6 +7,10 @@ namespace kiv_ppr
     class CUniform_CDF : public CCDF
     {
     public:
+        static constexpr uint32_t DF = 2;
+        static constexpr const char* NAME = "Uniform";
+
+    public:
         explicit CUniform_CDF(double a, double b);
         ~CUniform_CDF() override = default;
 

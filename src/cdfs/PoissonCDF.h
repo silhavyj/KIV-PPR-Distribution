@@ -7,6 +7,10 @@ namespace kiv_ppr
     class CPoisson_CDF : public CCDF
     {
     public:
+        static constexpr uint32_t DF = 1;
+        static constexpr const char* NAME = "Poisson";
+
+    public:
         explicit CPoisson_CDF(double lambda);
         ~CPoisson_CDF() override = default;
 

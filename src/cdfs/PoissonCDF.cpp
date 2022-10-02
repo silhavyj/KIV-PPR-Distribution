@@ -1,7 +1,7 @@
 #include <cmath>
 #include <stdexcept>
 
-#include "Poisson.h"
+#include "PoissonCDF.h"
 
 namespace kiv_ppr
 {
