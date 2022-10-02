@@ -27,7 +27,9 @@ static void Run()
         std::cout << "Calculated statistics:\n";
         std::cout << values << '\n';
 
-        std::cout << "Running Chi Square statistical test...\n";
+        // std::cout << *values.second_iteration.histogram << "\n";
+
+        std::cout << "\nRunning Chi Square statistical test...\n";
         kiv_ppr::CTest_Runner test_runner(values);
         test_runner.Run();
     }

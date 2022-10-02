@@ -16,6 +16,7 @@ namespace kiv_ppr
 
     double CPoisson_CDF::operator()(double x) const
     {
+        // https://www.codeproject.com/Tips/1216237/Csharp-Poisson-Cumulative-Distribution-for-large-L
         auto k = static_cast<long>(x);
         long i = 0;
         double sum = 0.0;
