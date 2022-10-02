@@ -14,10 +14,10 @@ namespace kiv_ppr
         void Run();
 
     private:
-        CChi_Square::TResult Run_Normal();
-        CChi_Square::TResult Run_Uniform();
-        CChi_Square::TResult Run_Exponential();
-        CChi_Square::TResult Run_Poisson();
+        CChi_Square::TResult Run_Normal() const;
+        CChi_Square::TResult Run_Uniform() const;
+        CChi_Square::TResult Run_Exponential() const;
+        CChi_Square::TResult Run_Poisson() const;
 
     private:
         CFile_Stats::TValues m_values;

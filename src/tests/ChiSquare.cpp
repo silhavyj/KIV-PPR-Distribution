@@ -72,7 +72,7 @@ namespace kiv_ppr
         // ACM 299.
         if (x <= 0.0 || df < 1)
         {
-            // TODO throw an exception
+            return 0;
         }
         double a; // 299 variable names
         double y = 0.0;

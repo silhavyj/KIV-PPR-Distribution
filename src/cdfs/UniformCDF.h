@@ -7,7 +7,7 @@ namespace kiv_ppr
     class CUniform_CDF : public CCDF
     {
     public:
-        static constexpr uint32_t DF = 2;
+        static constexpr uint32_t NUMBER_OF_ESTIMATED_PARAMS = 2;
         static constexpr const char* NAME = "Uniform";
 
     public:

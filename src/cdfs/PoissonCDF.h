@@ -7,7 +7,7 @@ namespace kiv_ppr
     class CPoisson_CDF : public CCDF
     {
     public:
-        static constexpr uint32_t DF = 1;
+        static constexpr uint32_t NUMBER_OF_ESTIMATED_PARAMS = 1;
         static constexpr const char* NAME = "Poisson";
 
     public:
