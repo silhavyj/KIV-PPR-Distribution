@@ -15,34 +15,8 @@ namespace kiv_ppr
           m_values{}
     {
         m_values.all_normal_numbers = true;
-        m_values.all_numbers_positive = true;
         m_values.min = std::numeric_limits<double>::max();
         m_values.max = std::numeric_limits<double>::min();
-    }
-
-    double CFirst_Iteration::Get_Min() const noexcept
-    {
-        return m_values.min;
-    }
-
-    double CFirst_Iteration::Get_Max() const noexcept
-    {
-        return m_values.max;
-    }
-
-    double CFirst_Iteration::Get_Mean() const noexcept
-    {
-        return m_values.mean;
-    }
-
-    size_t CFirst_Iteration::Get_Count() const noexcept
-    {
-        return m_values.count;
-    }
-
-    [[nodiscard]] bool CFirst_Iteration::Get_Is_All_Normal_Numbers() const noexcept
-    {
-        return m_values.all_normal_numbers;
     }
 
     typename CFirst_Iteration::TValues CFirst_Iteration::Get_Values() const noexcept
@@ -86,10 +60,6 @@ namespace kiv_ppr
         {
             m_values.all_normal_numbers = false;
         }
-        if (m_values.all_numbers_positive && !values.all_numbers_positive)
-        {
-            m_values.all_numbers_positive = false;
-        }
     }
 
     int CFirst_Iteration::Worker(config::TThread_Params* thread_config)
@@ -99,7 +69,6 @@ namespace kiv_ppr
             std::numeric_limits<double>::min(),
             0.0,
             0,
-            true,
             true
         };
         double delta;
@@ -118,10 +87,6 @@ namespace kiv_ppr
                             if (local_values.all_normal_numbers && (std::floor(value) != std::ceil(value)))
                             {
                                 local_values.all_normal_numbers = false;
-                            }
-                            if (local_values.all_numbers_positive && value < 0)
-                            {
-                                local_values.all_numbers_positive = false;
                             }
 
                             local_values.min = std::min(local_values.min, value);
@@ -153,7 +118,6 @@ namespace kiv_ppr
         out << "mean = " << values.mean << '\n';
         out << "count = " << values.count << '\n';
         out << "all normal numbers = " << std::boolalpha << values.all_normal_numbers << '\n';
-        out << "all numbers positive = " << std::boolalpha << values.all_numbers_positive;
         return out;
     }
 }

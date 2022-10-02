@@ -38,7 +38,7 @@ void Run_Statistical_Tests(kiv_ppr::CFile_Stats::TValues& values)
         return chi_square_uniform.Run(2); // TODO or 0?
     }));
 
-     if (values.first_iteration_values.all_numbers_positive)
+     if (values.first_iteration_values.min >= 0)
      {
          workers.push_back(std::async(std::launch::async, [&]() {
              kiv_ppr::CChi_Square chi_square_exponential(

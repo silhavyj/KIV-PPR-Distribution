@@ -24,21 +24,6 @@ namespace kiv_ppr
         m_values.histogram = std::make_shared<CHistogram>(m_histogram_params);
     }
 
-    double CSecond_Iteration::Get_Var() const noexcept
-    {
-        return m_values.var;
-    }
-
-    double CSecond_Iteration::Get_SD() const noexcept
-    {
-        return m_values.sd;
-    }
-
-    std::shared_ptr<CHistogram> CSecond_Iteration::Get_Histogram() const noexcept
-    {
-        return m_values.histogram;
-    }
-
     typename CSecond_Iteration::TValues CSecond_Iteration::Get_Values() const noexcept
     {
         return m_values;

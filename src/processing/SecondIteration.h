@@ -28,11 +28,7 @@ namespace kiv_ppr
 
         ~CSecond_Iteration() = default;
 
-        [[nodiscard]] double Get_Var() const noexcept;
-        [[nodiscard]] double Get_SD() const noexcept;
-        [[nodiscard]] std::shared_ptr<CHistogram> Get_Histogram() const noexcept;
         [[nodiscard]] TValues Get_Values() const noexcept;
-
         [[nodiscard]] int Run(config::TThread_Params* thread_config);
 
     private:
