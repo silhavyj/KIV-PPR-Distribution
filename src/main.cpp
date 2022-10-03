@@ -1,14 +1,14 @@
-#define CL_USE_DEPRECATED_OPENCL_2_0_APIS
-
 #include <iostream>
 #include <thread>
 
 #include "utils/Utils.h"
+
 #include "Config.h"
 #include "FileReader.h"
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
 
+#define CL_USE_DEPRECATED_OPENCL_2_0_APIS
 #include <CL/cl.hpp>
 
 static std::string filename{"..\\referencni_rozdeleni\\exp"};
@@ -64,7 +64,6 @@ int main(int argc, char* argv[])
             std::cout << device.getInfo<CL_DEVICE_VERSION>() << ")\n";
         }
     }
-
 
     //kiv_ppr::utils::Generate_Numbers<std::exponential_distribution<>>(filename.c_str(), true, 134217728 , 5);
 
