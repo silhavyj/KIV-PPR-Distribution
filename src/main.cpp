@@ -1,3 +1,5 @@
+#define CL_USE_DEPRECATED_OPENCL_2_0_APIS
+
 #include <iostream>
 #include <thread>
 
@@ -6,6 +8,8 @@
 #include "FileReader.h"
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
+
+#include <CL/cl.hpp>
 
 static std::string filename{"..\\referencni_rozdeleni\\exp"};
 // static std::string filename{ "data.dat" };
@@ -45,6 +49,22 @@ int main(int argc, char* argv[])
 {
     (void)argc;
     (void)argv;
+
+    std::vector<cl::Platform> platforms;
+    cl::Platform::get(&platforms);
+
+    for (const auto& platform : platforms)
+    {
+        std::vector<cl::Device> devices;
+        platform.getDevices(CL_DEVICE_TYPE_ALL, &devices);
+
+        for (const auto& device : devices)
+        {
+            std::cout << device.getInfo<CL_DEVICE_VENDOR>() << " (";
+            std::cout << device.getInfo<CL_DEVICE_VERSION>() << ")\n";
+        }
+    }
+
 
     //kiv_ppr::utils::Generate_Numbers<std::exponential_distribution<>>(filename.c_str(), true, 134217728 , 5);
 
