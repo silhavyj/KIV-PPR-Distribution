@@ -12,7 +12,7 @@ namespace kiv_ppr::config
         double watchdog_expiration_sec;
     };
 
-    static constexpr uint32_t DOUBLE_PRECISION = 20;
+    static constexpr uint32_t DOUBLE_PRECISION = 5;
     static constexpr uint32_t BLOCK_SIZE_PER_READ = 1024 * 1024 * 10;
     static constexpr uint32_t WATCHDOG_EXPIRATION_SEC = 10;
 

@@ -110,13 +110,4 @@ namespace kiv_ppr
             }
         }
     }
-
-    std::ostream& operator<<(std::ostream& out, const CFirst_Iteration::TValues& values)
-    {
-        out << "min = " << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << values.min << '\n';
-        out << "max = " << values.max << '\n';
-        out << "mean = " << values.mean << '\n';
-        out << "count = " << values.count;
-        return out;
-    }
 }

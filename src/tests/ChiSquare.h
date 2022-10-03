@@ -14,10 +14,10 @@ namespace kiv_ppr
     public:
         struct TResult
         {
-            double chi_square;
-            double p_value;
-            size_t categories;
-            std::string name;
+            double chi_square{};
+            double p_value{};
+            size_t categories{};
+            std::string name{};
 
             bool operator<(const TResult& other) const;
             friend std::ostream& operator<<(std::ostream& out, const TResult& result);

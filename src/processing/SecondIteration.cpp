@@ -107,11 +107,4 @@ namespace kiv_ppr
         // https://onlinelibrary.wiley.com/doi/full/10.1002/1097-0320%2820011001%2945%3A2%3C141%3A%3AAID-CYTO1156%3E3.0.CO%3B2-M#bib11
         return static_cast<size_t>(2 * std::pow(n, 2.0 / 5.0));
     }
-
-    std::ostream& operator<<(std::ostream& out, const CSecond_Iteration::TValues& values)
-    {
-        out << "var = " << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << values.var << '\n';
-        out << "sd = " << values.sd;
-        return out;
-    }
 }

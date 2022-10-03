@@ -7,7 +7,8 @@
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
 
-static std::string filename{"../../data/exp"};
+static std::string filename{"..\\referencni_rozdeleni\\exp"};
+// static std::string filename{ "data.dat" };
 
 static void Run()
 {
@@ -40,12 +41,17 @@ static void Run()
     }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-    // kiv_ppr::utils::Generate_Numbers<std::exponential_distribution<>>(filename.c_str(), true, 1000000, 5);
+    (void)argc;
+    (void)argv;
+
+    //kiv_ppr::utils::Generate_Numbers<std::exponential_distribution<>>(filename.c_str(), true, 134217728 , 5);
 
     const auto seconds = kiv_ppr::utils::Time_Call([]() {
         Run();
     });
     std::cout << " (" << seconds << " sec)\n";
+
+    std::cin.get();
 }

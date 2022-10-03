@@ -18,8 +18,6 @@ namespace kiv_ppr
             double mean;
             size_t count;
             bool normal_numbers;
-
-            friend std::ostream& operator<<(std::ostream& out, const TValues& values);
         };
 
     public:

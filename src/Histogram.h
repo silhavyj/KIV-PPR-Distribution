@@ -30,7 +30,7 @@ namespace kiv_ppr
         [[nodiscard]] double Get_Interval_Size() const noexcept;
         [[nodiscard]] size_t Get_Total_Count() const;
 
-        [[nodiscard]] size_t& operator[](uint32_t index);
+        [[nodiscard]] size_t& operator[](size_t index);
         void operator+=(CHistogram& other);
 
         friend std::ostream& operator<<(std::ostream& out, CHistogram& histogram);

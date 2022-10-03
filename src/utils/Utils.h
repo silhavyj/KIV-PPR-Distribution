@@ -43,7 +43,7 @@ namespace kiv_ppr::utils
     }
 
     template<typename Function>
-    uint32_t Time_Call(Function&& function)
+    auto Time_Call(Function&& function)
     {
         const auto start_time = std::chrono::steady_clock::now();
         function();
