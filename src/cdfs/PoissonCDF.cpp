@@ -36,7 +36,7 @@ namespace kiv_ppr
             }
             else
             {
-                if (i > 170 || std::numeric_limits<double>::infinity() == std::pow(m_lambda, i))
+                if (i > 10 || std::numeric_limits<double>::infinity() == std::pow(m_lambda, i))
                 {
                     infinity_is_found = true;
                     double log_6th_tail = std::log(i * (1 + 4 * i * (1 + 2 * i))) / 6;
