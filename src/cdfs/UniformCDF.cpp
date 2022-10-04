@@ -10,7 +10,7 @@ namespace kiv_ppr
     {
         if (m_a >= m_b)
         {
-            throw std::runtime_error("a is greater than b");
+            throw std::runtime_error("Uniform distribution (CDF) - min is greater than max");
         }
     }
 

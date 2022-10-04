@@ -11,7 +11,7 @@ namespace kiv_ppr
     {
         if (m_lambda <= 0)
         {
-            throw std::runtime_error("Lambda must be > 0");
+            throw std::runtime_error("Poisson distribution (CDF) - lambda must be > 0");
         }
     }
 

@@ -13,7 +13,7 @@ namespace kiv_ppr
     {
         if (m_variance <= 0)
         {
-            throw std::runtime_error("Variance must be > 0");
+            throw std::runtime_error("Normal distribution (CDF) - variance must be > 0");
         }
     }
 

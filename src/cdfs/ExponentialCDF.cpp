@@ -10,7 +10,7 @@ namespace kiv_ppr
     {
         if (m_lambda <= 0)
         {
-            throw std::runtime_error("Lambda must be > 0");
+            throw std::runtime_error("Exponential distribution (CDF) - lambda must be > 0");
         }
     }
 
