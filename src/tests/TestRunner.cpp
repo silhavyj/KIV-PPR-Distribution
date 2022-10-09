@@ -26,7 +26,7 @@ namespace kiv_ppr
         if (m_values.first_iteration.min >= 0)
         {
             workers.push_back(std::async(std::launch::async, &CTest_Runner::Run_Exponential, this));
-            if (m_values.first_iteration.normal_numbers)
+            if (m_values.first_iteration.all_ints)
             {
                 workers.push_back(std::async(std::launch::async, &CTest_Runner::Run_Poisson, this));
             }

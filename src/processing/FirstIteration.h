@@ -17,7 +17,7 @@ namespace kiv_ppr
             double max;
             double mean;
             size_t count;
-            bool normal_numbers;
+            bool all_ints;
         };
 
     public:
