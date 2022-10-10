@@ -66,7 +66,7 @@ namespace kiv_ppr
             return { NRead_Status::ERROR, 0, nullptr };
         }
         m_file.read(reinterpret_cast<char*>(buffer.get()), number_of_elements * sizeof(T));
-        if (0 == m_file.gcount())
+        if (0 == m_file.gcount() || m_file.gcount() % sizeof(T) != 0)
         {
             return { NRead_Status::EOF_, 0, nullptr };
         }

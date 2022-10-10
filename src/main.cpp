@@ -180,7 +180,7 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
-    // OpenCL_Test();
+    //OpenCL_Test();
 
     // kiv_ppr::utils::Generate_Numbers<std::poisson_distribution<>>(filename.c_str(), true, 10000, 1000);
 
