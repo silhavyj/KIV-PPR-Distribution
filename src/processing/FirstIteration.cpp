@@ -2,7 +2,6 @@
 #include <future>
 #include <vector>
 #include <cmath>
-#include <iomanip>
 
 #include "FirstIteration.h"
 

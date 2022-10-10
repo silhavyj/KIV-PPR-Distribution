@@ -51,7 +51,7 @@ namespace kiv_ppr
     void CHistogram::operator+=(CHistogram& other)
     {
         const size_t size = std::min(Get_Number_Of_Intervals(), other.Get_Number_Of_Intervals());
-        for (auto i = 0; i < size; ++i)
+        for (size_t i = 0; i < size; ++i)
         {
             (*this)[i] += other[i];
             m_count += other[i];
@@ -62,7 +62,7 @@ namespace kiv_ppr
     {
         const size_t size = histogram.Get_Number_Of_Intervals();
         size_t sum{};
-        for (auto i = 0; i < size; ++i)
+        for (size_t i = 0; i < size; ++i)
         {
             out << i << ": " << histogram[i] << '\n';
             sum += histogram[i];

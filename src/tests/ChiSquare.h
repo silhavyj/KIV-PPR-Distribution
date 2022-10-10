@@ -12,19 +12,26 @@ namespace kiv_ppr
     class CChi_Square
     {
     public:
+        enum class ETResult_Status : uint8_t
+        {
+            ACCEPTED,
+            REJECTED
+        };
+
         struct TResult
         {
+            ETResult_Status status;
             double chi_square{};
             double p_value{};
-            size_t categories{};
+            int df{};
             std::string name{};
 
             bool operator<(const TResult& other) const;
-            friend std::ostream& operator<<(std::ostream& out, const TResult& result);
         };
 
     public:
         CChi_Square(std::string name,
+                    double alpha_critical,
                     std::shared_ptr<CHistogram> histogram,
                     std::shared_ptr<CCDF> cdf);
 
@@ -34,12 +41,10 @@ namespace kiv_ppr
 
     public:
         [[nodiscard]] double Calculate_E(double x, double x_prev, bool first_interval) const;
-        [[nodiscard]] static double Calculate_P_Value(double x, int df);
-        [[nodiscard]] static double Exp(double x);
-        [[nodiscard]] static double Gauss(double z);
 
     private:
         std::string m_name;
+        double m_alpha_critical;
         std::shared_ptr<CHistogram> m_histogram;
         std::shared_ptr<CCDF> m_cdf;
     };

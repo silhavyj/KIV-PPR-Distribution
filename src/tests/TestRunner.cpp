@@ -2,6 +2,7 @@
 #include <vector>
 #include <future>
 #include <iostream>
+#include <iomanip>
 
 #include "TestRunner.h"
 #include "../cdfs/NormalCDF.h"
@@ -35,16 +36,54 @@ namespace kiv_ppr
         for (size_t i = 0; i < workers.size(); ++i)
         {
             results[i] = workers[i].get();
-            std::cout << results[i] << '\n';
         }
         std::sort(results.begin(), results.end());
-        std::cout << "Result: " << results.begin()->name;
+        Print_Results(results);
+    }
+
+    void CTest_Runner::Print_Results(std::vector<CChi_Square::TResult>& results)
+    {
+        std::cout << std::setprecision(config::DOUBLE_PRECISION);
+        std::cout << std::left << std::setw(15) << "Distribution"
+                  << std::left << std::setw(15) << "Chi Square"
+                  << std::left << std::setw(10) << "DF"
+                  << std::left << std::setw(10) << "P-value"
+                  << std::left << std::setw(15) << "Accepted" << std::endl;
+
+        std::cout << std::left << std::setw(15) << "------------"
+                  << std::left << std::setw(15) << "----------"
+                  << std::left << std::setw(10) << "--"
+                  << std::left << std::setw(10) << "-------"
+                  << std::left << std::setw(15) << "--------" << std::endl;
+
+        for (const auto& result : results)
+        {
+            std::cout << std::left << std::setw(15) << result.name
+                      << std::left << std::setw(15) << result.chi_square
+                      << std::left << std::setw(10) << result.df
+                      << std::left << std::setw(10) << result.p_value
+                      << std::left << std::setw(15);
+
+            switch (result.status)
+            {
+                case CChi_Square::ETResult_Status::ACCEPTED:
+                    std::cout << "Y";
+                    break;
+                case CChi_Square::ETResult_Status::REJECTED:
+                    std::cout << "N";
+                    break;
+                default:
+                    std::cout << "?";
+            }
+            std::cout << std::endl;
+        }
     }
 
     inline CChi_Square::TResult CTest_Runner::Run_Normal() const
     {
         kiv_ppr::CChi_Square chi_square_normal(
             CNormal_CDF::NAME,
+            config::ALPHA_CRITICAL,
             m_values.second_iteration.histogram,
             std::make_shared<kiv_ppr::CNormal_CDF>(m_values.first_iteration.mean, m_values.second_iteration.var)
         );
@@ -55,6 +94,7 @@ namespace kiv_ppr
     {
         kiv_ppr::CChi_Square chi_square_uniform(
             CUniform_CDF::NAME,
+            config::ALPHA_CRITICAL,
             m_values.second_iteration.histogram,
             std::make_shared<kiv_ppr::CUniform_CDF>(m_values.first_iteration.min, m_values.first_iteration.max)
         );
@@ -65,6 +105,7 @@ namespace kiv_ppr
     {
         kiv_ppr::CChi_Square chi_square_exponential(
             CExponential_CDF::NAME,
+            config::ALPHA_CRITICAL,
             m_values.second_iteration.histogram,
             std::make_shared<kiv_ppr::CExponential_CDF>(1.0 / m_values.first_iteration.mean)
         );
@@ -75,6 +116,7 @@ namespace kiv_ppr
     {
         kiv_ppr::CChi_Square chi_square_poisson(
             CPoisson_CDF::NAME,
+            config::ALPHA_CRITICAL,
             m_values.second_iteration.histogram,
             std::make_shared<kiv_ppr::CPoisson_CDF>(m_values.first_iteration.mean)
         );

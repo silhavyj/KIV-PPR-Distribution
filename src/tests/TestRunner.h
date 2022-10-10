@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "ChiSquare.h"
 #include "../processing/FileStats.h"
 
@@ -14,10 +16,12 @@ namespace kiv_ppr
         void Run();
 
     private:
-        CChi_Square::TResult Run_Normal() const;
-        CChi_Square::TResult Run_Uniform() const;
-        CChi_Square::TResult Run_Exponential() const;
-        CChi_Square::TResult Run_Poisson() const;
+        [[nodiscard]] CChi_Square::TResult Run_Normal() const;
+        [[nodiscard]] CChi_Square::TResult Run_Uniform() const;
+        [[nodiscard]] CChi_Square::TResult Run_Exponential() const;
+        [[nodiscard]] CChi_Square::TResult Run_Poisson() const;
+
+        static void Print_Results(std::vector<CChi_Square::TResult>& results) ;
 
     private:
         CFile_Stats::TValues m_values;

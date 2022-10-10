@@ -54,4 +54,10 @@ namespace kiv_ppr::utils
     bool Is_Valid_Double(double value);
 
     double Calculate_Mean_Sequential(kiv_ppr::CFile_Reader<double>& file, uint32_t number_of_elements_per_file_read);
+
+    double Calculate_P_Value(double x, int df);
+
+    double Gauss(double z);
+
+    double Exp(double x);
 }
