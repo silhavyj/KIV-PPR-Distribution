@@ -7,9 +7,9 @@
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
 
-static std::string filename{"../../data/gauss"};
+// static std::string filename{"../../data/gauss"};
 // static std::string filename{ "data.dat" };
-// static std::string filename{"/home/silhavyj/Downloads/ubuntu-22.04.1-desktop-amd64.iso"};
+static std::string filename{"/home/silhavyj/Downloads/ubuntu-22.04.1-desktop-amd64.iso"};
 
 static void Run()
 {
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
-    //kiv_ppr::utils::Generate_Numbers<std::uniform_real_distribution<>>(filename.c_str(), true, 1000000, 10, 66);
+    // kiv_ppr::utils::Generate_Numbers<std::uniform_real_distribution<>>(filename.c_str(), true, 1000, std::numeric_limits<double>::max() / 2 , std::numeric_limits<double>::max() - 1);
 
     const auto seconds = kiv_ppr::utils::Time_Call([]() {
         Run();

@@ -3,7 +3,7 @@
 namespace kiv_ppr
 {
     CHistogram::CHistogram(TParams params)
-        : m_intervals(params.number_of_intervals + 1),
+        : m_intervals(params.number_of_intervals),
           m_interval_size((params.max - params.min) / static_cast<double>(params.number_of_intervals)),
           m_params(params),
           m_count{}
@@ -13,9 +13,12 @@ namespace kiv_ppr
 
     void CHistogram::Add(double value)
     {
-        const auto slot_id = static_cast<size_t>((value - m_params.min) / m_interval_size);
-        ++m_intervals[slot_id];
-        ++m_count;
+       if (value < m_params.max)
+       {
+            const auto slot_id = static_cast<size_t>((value - m_params.min) / m_interval_size);
+            ++m_intervals[slot_id];
+            ++m_count;
+       }
     }
 
     size_t CHistogram::Get_Number_Of_Intervals() const noexcept
@@ -26,11 +29,6 @@ namespace kiv_ppr
     double CHistogram::Get_Min() const noexcept
     {
         return m_params.min;
-    }
-
-    double CHistogram::Get_Max() const noexcept
-    {
-        return m_params.max;
     }
 
     double CHistogram::Get_Interval_Size() const noexcept

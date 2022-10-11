@@ -11,7 +11,8 @@ namespace kiv_ppr
                                        std::function<bool(double)> is_valid_number)
         : m_file(file),
           m_is_valid_number(std::move(is_valid_number)),
-          m_values{}
+          m_values{},
+          m_worker_means{}
     {
         m_values.all_ints = true;
         m_values.min = std::numeric_limits<double>::max();
@@ -38,7 +39,11 @@ namespace kiv_ppr
         {
             return_values += worker.get();
         }
-        m_values.mean /= static_cast<double>(m_values.count);
+
+        for (const auto& [mean, count] : m_worker_means)
+        {
+            m_values.mean += mean * (static_cast<double>(count) / static_cast<double>(m_values.count));
+        }
 
         if (return_values != 0)
         {
@@ -50,10 +55,12 @@ namespace kiv_ppr
     void CFirst_Iteration::Report_Worker_Results(TValues values)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
+
         m_values.min = std::min(m_values.min, values.min);
         m_values.max = std::max(m_values.max, values.max);
-        m_values.mean += values.mean;
         m_values.count += values.count;
+
+        m_worker_means.emplace_back(values.mean, values.count);
 
         if (m_values.all_ints && !values.all_ints)
         {
@@ -70,7 +77,7 @@ namespace kiv_ppr
             0,
             true
         };
-        double delta;
+        long double delta;
 
         while (true)
         {
@@ -92,14 +99,13 @@ namespace kiv_ppr
                             local_values.max = std::max(local_values.max, value);
 
                             ++local_values.count;
-                            delta = value - local_values.mean;
-                            local_values.mean += delta / static_cast<double>(local_values.count);
+                            delta = static_cast<long double>(value) - local_values.mean;
+                            local_values.mean += static_cast<double>(delta / static_cast<double>(local_values.count));
                         }
                     }
                     break;
 
                 case CFile_Reader<double>::NRead_Status::EOF_:
-                    local_values.mean *= static_cast<double>(local_values.count);
                     Report_Worker_Results(local_values);
                     return 0;
 

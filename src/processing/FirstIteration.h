@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mutex>
+#include <utility>
 #include <functional>
 
 #include "../Config.h"
@@ -11,6 +12,8 @@ namespace kiv_ppr
     class CFirst_Iteration
     {
     public:
+        using Worker_Mean_t = std::pair<double, size_t>;
+
         struct TValues
         {
             double min;
@@ -38,5 +41,6 @@ namespace kiv_ppr
         std::function<bool(double)> m_is_valid_number;
         TValues m_values;
         std::mutex m_mtx;
+        std::vector<Worker_Mean_t> m_worker_means;
     };
 }

@@ -19,14 +19,13 @@ namespace kiv_ppr
         };
 
     public:
-        CHistogram(TParams params);
+        explicit CHistogram(TParams params);
         ~CHistogram() = default;
 
         void Add(double value);
 
         [[nodiscard]] size_t Get_Number_Of_Intervals() const noexcept;
         [[nodiscard]] double Get_Min() const noexcept;
-        [[nodiscard]] double Get_Max() const noexcept;
         [[nodiscard]] double Get_Interval_Size() const noexcept;
         [[nodiscard]] size_t Get_Total_Count() const;
 
