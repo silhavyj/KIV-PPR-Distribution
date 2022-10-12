@@ -14,7 +14,7 @@ namespace kiv_ppr
         explicit CUniform_CDF(double a, double b);
         ~CUniform_CDF() override = default;
 
-        [[nodiscard]] double operator()(double x) const override;
+        [[nodiscard]] double operator()(long double x) const override;
 
     private:
         double m_a;

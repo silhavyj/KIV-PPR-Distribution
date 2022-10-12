@@ -1,10 +1,12 @@
+#include <limits>
+
 #include "Histogram.h"
 
 namespace kiv_ppr
 {
     CHistogram::CHistogram(TParams params)
         : m_intervals(params.number_of_intervals),
-          m_interval_size((params.max - params.min) / static_cast<double>(params.number_of_intervals)),
+          m_interval_size((static_cast<long double>(params.max) - params.min) / static_cast<long double>(params.number_of_intervals)),
           m_params(params),
           m_count{}
     {
@@ -15,7 +17,7 @@ namespace kiv_ppr
     {
        if (value < m_params.max)
        {
-            const auto slot_id = static_cast<size_t>((value - m_params.min) / m_interval_size);
+            const auto slot_id = static_cast<size_t>((static_cast<long double>(value) - m_params.min) / m_interval_size);
             ++m_intervals[slot_id];
             ++m_count;
        }

@@ -29,7 +29,7 @@ namespace kiv_ppr
 
         double left = m_histogram->Get_Min();
         double left_last = 0;
-        double right = left;
+        long double right = left;
         size_t number_of_interval = 0;
         double error;
         double error_last = 0;
@@ -44,6 +44,10 @@ namespace kiv_ppr
             do
             {
                 right += m_histogram->Get_Interval_Size();
+                if (right == std::numeric_limits<long double>::infinity())
+                {
+                    std::cerr << "err\n";
+                }
                 E = Calculate_E(right, left, left == m_histogram->Get_Min());
                 O += static_cast<double>(m_histogram->operator[](i));
                 ++i;

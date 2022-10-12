@@ -17,8 +17,8 @@ namespace kiv_ppr
         }
     }
 
-    double CNormal_CDF::operator()(double x) const
+    double CNormal_CDF::operator()(long double x) const
     {
-        return 0.5 * (1 + std::erf((x - m_mean) / (m_sd * M_SQRT2)));
+        return static_cast<double>(0.5 * (1 + std::erfl((x - m_mean) / (m_sd * M_SQRT2))));
     }
 }

@@ -14,7 +14,7 @@ namespace kiv_ppr
         explicit CPoisson_CDF(double lambda);
         ~CPoisson_CDF() override = default;
 
-        [[nodiscard]] double operator()(double x) const override;
+        [[nodiscard]] double operator()(long double x) const override;
         static double Factorial(long x);
 
     private:

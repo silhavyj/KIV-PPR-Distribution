@@ -7,7 +7,7 @@
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
 
-// static std::string filename{"../../data/gauss"};
+// static std::string filename{"../../data/uniform"};
 // static std::string filename{ "data.dat" };
 static std::string filename{"/home/silhavyj/Downloads/ubuntu-22.04.1-desktop-amd64.iso"};
 

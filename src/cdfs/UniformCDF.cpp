@@ -14,7 +14,7 @@ namespace kiv_ppr
         }
     }
 
-    double CUniform_CDF::operator()(double x) const
+    double CUniform_CDF::operator()(long double x) const
     {
         if (x < m_a)
         {
@@ -24,6 +24,6 @@ namespace kiv_ppr
         {
             return 1;
         }
-        return (x - m_a) / (m_b - m_a);
+        return static_cast<double>((x - m_a) / (m_b - m_a));
     }
 }

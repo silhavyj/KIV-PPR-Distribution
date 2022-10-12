@@ -16,7 +16,7 @@ namespace kiv_ppr
     {
         m_values.all_ints = true;
         m_values.min = std::numeric_limits<double>::max();
-        m_values.max = std::numeric_limits<double>::min();
+        m_values.max = -std::numeric_limits<double>::max();
     }
 
     typename CFirst_Iteration::TValues CFirst_Iteration::Get_Values() const noexcept
@@ -72,7 +72,7 @@ namespace kiv_ppr
     {
         TValues local_values {
             std::numeric_limits<double>::max(),
-            std::numeric_limits<double>::min(),
+            -std::numeric_limits<double>::max(),
             0.0,
             0,
             true
@@ -100,7 +100,7 @@ namespace kiv_ppr
 
                             ++local_values.count;
                             delta = static_cast<long double>(value) - local_values.mean;
-                            local_values.mean += static_cast<double>(delta / static_cast<double>(local_values.count));
+                            local_values.mean += static_cast<double>(delta / local_values.count);
                         }
                     }
                     break;
