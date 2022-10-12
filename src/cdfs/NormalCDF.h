@@ -14,7 +14,7 @@ namespace kiv_ppr
         explicit CNormal_CDF(double mean, double variance);
         ~CNormal_CDF() override = default;
 
-        [[nodiscard]] double operator()(long double x) const override;
+        [[nodiscard]] double operator()(double x) const override;
 
     private:
         double m_mean;

@@ -39,12 +39,12 @@ namespace kiv_ppr
 
     std::ostream& operator<<(std::ostream& out, const CFile_Stats::TValues& values)
     {
-        out << "min   = " << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << values.first_iteration.min << '\n';
-        out << "max   = " << values.first_iteration.max   << '\n';
-        out << "mean  = " << values.first_iteration.mean  << '\n';
+        out << "min   = " << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << (values.first_iteration.min * config::SCALE_FACTOR) << '\n';
+        out << "max   = " << (values.first_iteration.max * config::SCALE_FACTOR)   << '\n';
+        out << "mean  = " << (values.first_iteration.mean * config::SCALE_FACTOR)  << '\n';
         out << "count = " << values.first_iteration.count << '\n';
-        out << "var   = " << values.second_iteration.var  << '\n';
-        out << "sd    = " << values.second_iteration.sd;
+        out << "var   = " << (values.second_iteration.var * config::SCALE_FACTOR) << '\n';
+        out << "sd    = " << (values.second_iteration.sd * config::SCALE_FACTOR);
         return out;
     }
 }

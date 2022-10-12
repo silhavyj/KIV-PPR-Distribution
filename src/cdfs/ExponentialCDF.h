@@ -14,7 +14,7 @@ namespace kiv_ppr
         explicit CExponential_CDF(double lambda);
         ~CExponential_CDF() override = default;
 
-        [[nodiscard]] double operator()(long double x) const override;
+        [[nodiscard]] double operator()(double x) const override;
 
     private:
         double m_lambda;

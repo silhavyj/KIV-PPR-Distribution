@@ -7,6 +7,6 @@ namespace kiv_ppr
     public:
         virtual ~CCDF() = default;
         
-        [[nodiscard]] virtual double operator()(long double x) const = 0;
+        [[nodiscard]] virtual double operator()(double x) const = 0;
     };
 }

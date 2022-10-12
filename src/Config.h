@@ -15,7 +15,8 @@ namespace kiv_ppr::config
     static constexpr uint32_t DOUBLE_PRECISION = 5;
     static constexpr uint32_t BLOCK_SIZE_PER_READ = (1024 * 1024 * 10) / sizeof(double);
     static constexpr uint32_t WATCHDOG_EXPIRATION_SEC = 10;
-    static constexpr double ALPHA_CRITICAL = 0.05;
+    static constexpr double P_CRITICAL = 0.05;
+    static constexpr double SCALE_FACTOR = 2.0;
 
     static TThread_Params default_thread_params {
         std::thread::hardware_concurrency(),

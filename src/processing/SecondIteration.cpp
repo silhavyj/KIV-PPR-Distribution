@@ -77,9 +77,11 @@ namespace kiv_ppr
                 case kiv_ppr::CFile_Reader<double>::NRead_Status::OK:
                     for (auto i = 0; i < count; ++i)
                     {
-                        const double value = data[i];
+                        double value = data[i];
                         if (m_is_valid_number(value))
                         {
+                            value /= config::SCALE_FACTOR;
+
                             delta = value - m_basic_values.mean;
                             tmp_value = delta;
                             delta /= static_cast<double>(m_basic_values.count - 1);
