@@ -1,7 +1,6 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <stdexcept>
-#include <iostream>
 
 #include "PoissonCDF.h"
 
@@ -20,9 +19,9 @@ namespace kiv_ppr
 
     void CPoisson_CDF::Calculate_Factorials()
     {
-        for (double i = 1; i < m_factorials.size(); ++i)
+        for (size_t i = 1; i < m_factorials.size(); ++i)
         {
-            m_factorials[i] = m_factorials[i - 1] * i;
+            m_factorials[i] = m_factorials[i - 1] * static_cast<double>(i);
         }
     }
 
@@ -67,17 +66,5 @@ namespace kiv_ppr
             return 1.0;
         }
         return sum;
-    }
-
-    double CPoisson_CDF::Factorial(long x)
-    {
-        long count = x;
-        double factorial = 1;
-        while (count >= 1)
-        {
-            factorial = factorial * static_cast<double>(count);
-            --count;
-        }
-        return factorial;
     }
 }

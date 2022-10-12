@@ -18,7 +18,6 @@ namespace kiv_ppr
 
         [[nodiscard]] double operator()(double x) const override;
         void Calculate_Factorials();
-        static double Factorial(long x);
 
     private:
         static constexpr int MAX_CALCULABLE_FACTORIAL = 170;
