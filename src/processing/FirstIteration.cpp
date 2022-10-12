@@ -102,7 +102,7 @@ namespace kiv_ppr
 
                             ++local_values.count;
                             delta = value - local_values.mean;
-                            local_values.mean += static_cast<double>(delta / local_values.count);
+                            local_values.mean += delta / static_cast<double>(local_values.count);
                         }
                     }
                     break;

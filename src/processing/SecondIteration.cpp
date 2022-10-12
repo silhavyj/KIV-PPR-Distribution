@@ -1,6 +1,5 @@
 #include <future>
 #include <cmath>
-#include <iomanip>
 
 #include "SecondIteration.h"
 #include "../utils/Utils.h"

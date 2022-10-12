@@ -8,10 +8,10 @@
 #include "tests/TestRunner.h"
 #include "cdfs/PoissonCDF.h"
 
-static std::string filename{"../../data/uniform"};
+// static std::string filename{"../../data/uniform"};
 // static std::string filename{ "data2.dat" };
 // static std::string filename{ "data.dat" };
-// static std::string filename{"/home/silhavyj/Downloads/ubuntu-22.04.1-desktop-amd64.iso"};
+static std::string filename{"/home/silhavyj/Downloads/ubuntu-22.04.1-desktop-amd64.iso"};
 
 static void Run()
 {
@@ -54,13 +54,4 @@ int main(int argc, char* argv[])
         Run();
     });
     std::cout << "\nTime of execution: " << seconds << " sec\n";
-
-
-    std::cout << '\n';
-    kiv_ppr::CPoisson_CDF p(1.01429);
-    std::cout << p(0) << '\n';
-
-    /*int err;
-    std::cout << kiv_ppr::utils::gammad(5, 1000, &err);
-    std::cout << err << '\n';*/
 }
