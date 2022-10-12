@@ -1,17 +1,28 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <stdexcept>
+#include <iostream>
 
 #include "PoissonCDF.h"
 
 namespace kiv_ppr
 {
     CPoisson_CDF::CPoisson_CDF(double lambda)
-        : m_lambda(lambda)
+        : m_lambda(lambda),
+          m_factorials(MAX_CALCULABLE_FACTORIAL + 1, 1)
     {
         if (m_lambda <= 0)
         {
             throw std::runtime_error("Poisson distribution (CDF) - lambda must be > 0");
+        }
+        Calculate_Factorials();
+    }
+
+    void CPoisson_CDF::Calculate_Factorials()
+    {
+        for (double i = 1; i < m_factorials.size(); ++i)
+        {
+            m_factorials[i] = m_factorials[i - 1] * i;
         }
     }
 
@@ -36,7 +47,7 @@ namespace kiv_ppr
             }
             else
             {
-                if (i > 170 || std::numeric_limits<double>::infinity() == std::pow(m_lambda, i))
+                if (i > MAX_CALCULABLE_FACTORIAL || std::numeric_limits<double>::infinity() == std::pow(m_lambda, i))
                 {
                     infinity_is_found = true;
                     double log_6th_tail = std::log(i * (1 + 4 * i * (1 + 2 * i))) / 6;
@@ -45,7 +56,7 @@ namespace kiv_ppr
                 }
                 else
                 {
-                    n = e_lambda * std::pow(m_lambda, i) / Factorial(i);
+                    n = e_lambda * std::pow(m_lambda, i) / m_factorials.at(i);
                 }
             }
             sum += n;

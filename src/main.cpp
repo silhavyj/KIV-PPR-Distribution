@@ -7,7 +7,6 @@
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
 #include "cdfs/PoissonCDF.h"
-#include "utils/Utils.h"
 
 static std::string filename{"../../data/poisson"};
 // static std::string filename{ "data2.dat" };
