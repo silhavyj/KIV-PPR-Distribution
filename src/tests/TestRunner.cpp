@@ -67,10 +67,10 @@ namespace kiv_ppr
             switch (result.status)
             {
                 case CChi_Square::ETResult_Status::ACCEPTED:
-                    std::cout << "Y";
+                    std::cout << "YES";
                     break;
                 case CChi_Square::ETResult_Status::REJECTED:
-                    std::cout << "N";
+                    std::cout << "NO";
                     break;
                 default:
                     std::cout << "?";
