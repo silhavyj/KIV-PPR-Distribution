@@ -2,6 +2,7 @@
 #include <utility>
 
 #include "../utils/Utils.h"
+#include "../Config.h"
 #include "ChiSquare.h"
 
 namespace kiv_ppr
@@ -20,8 +21,6 @@ namespace kiv_ppr
 
     typename CChi_Square::TResult CChi_Square::Run(int estimated_parameters)
     {
-        static constexpr double MIN_EXPECTED_VALUE = 5;
-
         double E;
         double O;
         double chi_square_val = 0.0;
@@ -47,9 +46,9 @@ namespace kiv_ppr
                 E = Calculate_E(right, left, left == m_histogram->Get_Min());
                 O += static_cast<double>(m_histogram->operator[](i));
                 ++i;
-            } while (i < original_number_of_intervals && E < MIN_EXPECTED_VALUE);
+            } while (i < original_number_of_intervals && E < config::MIN_EXPECTED_VALUE);
 
-            if (E < MIN_EXPECTED_VALUE)
+            if (E < config::MIN_EXPECTED_VALUE)
             {
                 chi_square_val -= error_last;
                 O = 0;
