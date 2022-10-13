@@ -21,7 +21,8 @@ namespace kiv_ppr
         [[nodiscard]] CChi_Square::TResult Run_Exponential() const;
         [[nodiscard]] CChi_Square::TResult Run_Poisson() const;
 
-        static void Print_Results(std::vector<CChi_Square::TResult>& results) ;
+        static void Print_Results(std::vector<CChi_Square::TResult>& results);
+        static void Print_Result_Reasoning(CChi_Square::TResult& result);
 
     private:
         CFile_Stats::TValues m_values;

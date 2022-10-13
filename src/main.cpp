@@ -29,7 +29,7 @@ static void Run()
         }
         auto values = file_stats.Get_Values();
 
-        std::cout << "Calculated statistics:\n";
+        std::cout << "Calculated statistics (parameters):\n";
         std::cout << values << "\n\n";
 
         // std::cout << *values.second_iteration.histogram << "\n";

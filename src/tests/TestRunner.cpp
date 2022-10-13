@@ -82,18 +82,25 @@ namespace kiv_ppr
 
         if (results.begin()->status == CChi_Square::ETResult_Status::REJECTED)
         {
-            std::cout << "Statistically, none of the tests has been accepted.\n"
-                         "However, based on the chi square error (" << results.begin()->chi_square << "), the data seems to correlate the most to the " << results.begin()->name << " distribution though it is STRONGLY recommended to double verify the answer.\n";
+            std::cout << "Statistically, none of the tests has been accepted.\n\n";
+            Print_Result_Reasoning(*results.begin());
         }
         else if ((results.begin() + 1)->status == CChi_Square::ETResult_Status::ACCEPTED)
         {
-            std::cout << "There are at least two tests that have been accepted." <<
-                         "However, based on the chi square error (" << results.begin()->chi_square << "), the data seems to correlate the most to the " << results.begin()->name << " distribution though it is STRONGLY recommended to double verify the answer.\n";
+            std::cout << "There are at least two tests that have been accepted.\n\n";
+            Print_Result_Reasoning(*results.begin());
         }
         else
         {
             std::cout << "The date correlates the most to the " << results.begin()->name << " distribution.\n";
         }
+    }
+
+    inline void CTest_Runner::Print_Result_Reasoning(CChi_Square::TResult& result)
+    {
+        std::cout << "However, based on the chi square error (" << result.chi_square <<
+                  "), the data seems to correlate the most to the " << result.name <<
+                  " distribution though it is STRONGLY recommended to double verify the answer.\n";
     }
 
     inline CChi_Square::TResult CTest_Runner::Run_Normal() const
