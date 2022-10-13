@@ -83,12 +83,12 @@ namespace kiv_ppr
         if (results.begin()->status == CChi_Square::ETResult_Status::REJECTED)
         {
             std::cout << "Statistically, none of the tests has been accepted.\n"
-                         "However, based on the chi square error (" << results.begin()->chi_square << "), the data seems to correlate the most to the " << results.begin()->name << " distribution but it is STRONGLY recommended to double verify the answer.\n";
+                         "However, based on the chi square error (" << results.begin()->chi_square << "), the data seems to correlate the most to the " << results.begin()->name << " distribution though it is STRONGLY recommended to double verify the answer.\n";
         }
         else if ((results.begin() + 1)->status == CChi_Square::ETResult_Status::ACCEPTED)
         {
             std::cout << "There are at least two tests that have been accepted." <<
-                         "However, based on the chi square error (" << results.begin()->chi_square << "), the data seems to correlate the most to the " << results.begin()->name << " distribution but it is STRONGLY recommended to double verify the answer.\n";
+                         "However, based on the chi square error (" << results.begin()->chi_square << "), the data seems to correlate the most to the " << results.begin()->name << " distribution though it is STRONGLY recommended to double verify the answer.\n";
         }
         else
         {
