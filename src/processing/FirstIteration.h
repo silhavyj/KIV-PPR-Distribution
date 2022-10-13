@@ -6,6 +6,7 @@
 
 #include "../Config.h"
 #include "../FileReader.h"
+#include "../utils/Watchdog.h"
 
 namespace kiv_ppr
 {
@@ -34,7 +35,7 @@ namespace kiv_ppr
 
     private:
         void Report_Worker_Results(TValues values);
-        [[nodiscard]] int Worker(config::TThread_Params* thread_config);
+        [[nodiscard]] int Worker(config::TThread_Params* thread_config, CWatchdog* watchdog);
 
     private:
         CFile_Reader<double>* m_file;

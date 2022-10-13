@@ -2,6 +2,7 @@
 #include <future>
 #include <vector>
 #include <cmath>
+#include <iostream>
 
 #include "FirstIteration.h"
 
@@ -29,9 +30,10 @@ namespace kiv_ppr
         m_file->Seek_Beg();
 
         std::vector<std::future<int>> workers(thread_config->number_of_threads);
+        CWatchdog watchdog(thread_config->watchdog_expiration_sec);
         for (auto& worker : workers)
         {
-            worker = std::async(std::launch::async, &CFirst_Iteration::Worker, this, thread_config);
+            worker = std::async(std::launch::async, &CFirst_Iteration::Worker, this, thread_config, &watchdog);
         }
 
         int return_values = 0;
@@ -39,13 +41,14 @@ namespace kiv_ppr
         {
             return_values += worker.get();
         }
+        watchdog.Stop();
 
         for (const auto& [mean, count] : m_worker_means)
         {
             m_values.mean += mean * (static_cast<double>(count) / static_cast<double>(m_values.count));
         }
 
-        if (return_values != 0)
+        if (return_values != 0 || watchdog.Get_Counter_Value() != (m_file->Get_File_Size() / sizeof(double)))
         {
             return 1;
         }
@@ -68,7 +71,7 @@ namespace kiv_ppr
         }
     }
 
-    int CFirst_Iteration::Worker(config::TThread_Params* thread_config)
+    int CFirst_Iteration::Worker(config::TThread_Params* thread_config, CWatchdog* watchdog)
     {
         TValues local_values {
             std::numeric_limits<double>::max(),
@@ -105,6 +108,7 @@ namespace kiv_ppr
                             local_values.mean += delta / static_cast<double>(local_values.count);
                         }
                     }
+                    watchdog->Kick(count);
                     break;
 
                 case CFile_Reader<double>::NRead_Status::EOF_:

@@ -6,6 +6,7 @@
 #include "FirstIteration.h"
 #include "../Histogram.h"
 #include "../FileReader.h"
+#include "../utils/Watchdog.h"
 
 namespace kiv_ppr
 {
@@ -31,7 +32,7 @@ namespace kiv_ppr
 
     private:
         void Report_Worker_Results(const TValues& values);
-        [[nodiscard]] int Worker(config::TThread_Params* thread_config);
+        [[nodiscard]] int Worker(config::TThread_Params* thread_config, CWatchdog* watchdog);
         static size_t Calculate_Number_Of_Intervals(size_t n);
 
     private:
