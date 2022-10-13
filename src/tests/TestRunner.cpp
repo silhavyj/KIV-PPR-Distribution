@@ -47,13 +47,13 @@ namespace kiv_ppr
         std::cout << std::left << std::setw(15) << "Distribution"
                   << std::left << std::setw(15) << "Chi Square"
                   << std::left << std::setw(10) << "DF"
-                  << std::left << std::setw(10) << "P-value"
+                  << std::left << std::setw(12) << "P-value"
                   << std::left << std::setw(15) << "Accepted" << std::endl;
 
         std::cout << std::left << std::setw(15) << "------------"
                   << std::left << std::setw(15) << "----------"
                   << std::left << std::setw(10) << "--"
-                  << std::left << std::setw(10) << "-------"
+                  << std::left << std::setw(12) << "-------"
                   << std::left << std::setw(15) << "--------" << std::endl;
 
         for (const auto& result : results)
@@ -61,7 +61,7 @@ namespace kiv_ppr
             std::cout << std::left << std::setw(15) << result.name
                       << std::left << std::setw(15) << result.chi_square
                       << std::left << std::setw(10) << result.df
-                      << std::left << std::setw(10) << result.p_value
+                      << std::left << std::setw(12) << result.p_value
                       << std::left << std::setw(15);
 
             switch (result.status)
@@ -77,8 +77,23 @@ namespace kiv_ppr
             }
             std::cout << std::endl;
         }
-        std::cout << std::left << std::setw(15) << "----------------------------------------------------------" << std::endl;
-        std::cout << "Level of significance = " << (config::P_CRITICAL * 100.0) << "%\n";
+        std::cout << std::left << std::setw(15) << "------------------------------------------------------------" << std::endl;
+        std::cout << "Level of significance = " << (config::P_CRITICAL * 100.0) << "%\n\n";
+
+        if (results.begin()->status == CChi_Square::ETResult_Status::REJECTED)
+        {
+            std::cout << "Statistically, none of the tests has been accepted.\n"
+                         "However, based on the chi square error (" << results.begin()->chi_square << "), the data seems to correlate the most to the " << results.begin()->name << " distribution but it is STRONGLY recommended to double verify the answer.\n";
+        }
+        else if ((results.begin() + 1)->status == CChi_Square::ETResult_Status::ACCEPTED)
+        {
+            std::cout << "There are at least two tests that have been accepted." <<
+                         "However, based on the chi square error (" << results.begin()->chi_square << "), the data seems to correlate the most to the " << results.begin()->name << " distribution but it is STRONGLY recommended to double verify the answer.\n";
+        }
+        else
+        {
+            std::cout << "The date correlates the most to the " << results.begin()->name << " distribution.\n";
+        }
     }
 
     inline CChi_Square::TResult CTest_Runner::Run_Normal() const

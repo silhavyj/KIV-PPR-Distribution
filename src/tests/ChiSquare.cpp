@@ -111,6 +111,10 @@ namespace kiv_ppr
 
     bool CChi_Square::TResult::operator<(const TResult& other) const
     {
+        if (p_value == other.p_value)
+        {
+            return chi_square < other.chi_square;
+        }
         return p_value > other.p_value;
     }
 
