@@ -8,12 +8,12 @@ namespace kiv_ppr
           m_counter(0)
     {
         m_watchdog_thread = std::thread(&CWatchdog::Run, this);
-        m_watchdog_thread.detach();
     }
 
     CWatchdog::~CWatchdog()
     {
         Stop();
+        m_watchdog_thread.join();
     }
 
     void CWatchdog::Stop()

@@ -8,13 +8,15 @@ namespace kiv_ppr
 {
     template<typename T>
     CFile_Reader<T>::CFile_Reader(const std::string& filename)
-        : m_filename(filename)
+        : m_filename(filename),
+          m_number_of_read_elements(0)
     {
         m_file = std::ifstream(filename, std::ios::in | std::ios::binary);
 
         if (m_file.is_open())
         {
             m_file_size = Calculate_File_Size();
+            m_number_of_elements = m_file_size / sizeof(T);
         }
     }
 
@@ -40,6 +42,12 @@ namespace kiv_ppr
     }
 
     template<typename T>
+    size_t CFile_Reader<T>::Get_Number_Of_Elements() const noexcept
+    {
+        return m_number_of_elements;
+    }
+
+    template<typename T>
     std::string CFile_Reader<T>::Get_Filename() const noexcept
     {
         return m_filename;
@@ -48,6 +56,7 @@ namespace kiv_ppr
     template<typename T>
     void CFile_Reader<T>::Seek_Beg()
     {
+        m_number_of_read_elements = 0;
         m_file.clear();
         m_file.seekg(0, std::ios::beg);
     }
@@ -56,21 +65,22 @@ namespace kiv_ppr
     typename CFile_Reader<T>::TData_Block CFile_Reader<T>::Read_Data(size_t number_of_elements)
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
-        if (m_file.eof())
+        if (m_number_of_read_elements + number_of_elements > m_number_of_elements)
         {
-            return { NRead_Status::EOF_, 0, nullptr };
+            number_of_elements = m_number_of_elements - m_number_of_read_elements;
+            if (number_of_elements == 0)
+            {
+                return { NRead_Status::EOF_, 0, nullptr };
+            }
         }
+        m_number_of_read_elements += number_of_elements;
         auto buffer = std::shared_ptr<T[]>(new(std::nothrow) T[number_of_elements]);
         if (nullptr == buffer)
         {
             return { NRead_Status::ERROR, 0, nullptr };
         }
         m_file.read(reinterpret_cast<char*>(buffer.get()), number_of_elements * sizeof(T));
-        if (0 == m_file.gcount() || m_file.gcount() % sizeof(T) != 0)
-        {
-            return { NRead_Status::EOF_, 0, nullptr };
-        }
-        return { NRead_Status::OK, static_cast<long>(m_file.gcount() / sizeof(T)), buffer };
+        return { NRead_Status::OK, static_cast<long>(number_of_elements), buffer };
     }
 
     template<class E>

@@ -31,6 +31,7 @@ namespace kiv_ppr
 
         [[nodiscard]] bool Is_Open() const;
         [[nodiscard]] size_t Get_File_Size() const noexcept;
+        [[nodiscard]] size_t Get_Number_Of_Elements() const noexcept;
         [[nodiscard]] std::string Get_Filename() const noexcept;
 
         void Seek_Beg();
@@ -47,5 +48,7 @@ namespace kiv_ppr
         std::ifstream m_file;
         std::mutex m_mtx;
         size_t m_file_size;
+        std::size_t m_number_of_elements;
+        std::size_t m_number_of_read_elements;
     };
 }

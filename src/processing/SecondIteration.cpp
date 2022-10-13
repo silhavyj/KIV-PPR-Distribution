@@ -46,7 +46,7 @@ namespace kiv_ppr
         watchdog.Stop();
 
         m_values.sd = std::sqrt(m_values.var);
-        if (return_values != 0 || watchdog.Get_Counter_Value() != (m_file->Get_File_Size() / sizeof(double)))
+        if (return_values != 0 || watchdog.Get_Counter_Value() != m_file->Get_Number_Of_Elements())
         {
             return 1;
         }

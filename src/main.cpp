@@ -6,25 +6,31 @@
 #include "FileReader.h"
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
-#include "cdfs/PoissonCDF.h"
 
-// static std::string filename{"../../data/uniform"};
+static std::string filename{"../../data/exp"};
 // static std::string filename{"/home/silhavyj/Downloads/poissonlarger"};
 // static std::string filename{ "data2.dat" };
 // static std::string filename{ "data.dat" };
-static std::string filename{"/home/silhavyj/Downloads/ubuntu-22.04.1-desktop-amd64.iso"};
+// static std::string filename{"/home/silhavyj/Downloads/ubuntu-22.04.1-desktop-amd64.iso"};
+// static std::string filename{"/tmp/a"};
 
 static void Run()
 {
     kiv_ppr::CFile_Reader<double> file(filename);
     if (file.Is_Open())
     {
+        if (file.Get_File_Size() < sizeof(double))
+        {
+            std::cerr << "The size of the input file is insufficient\n";
+            std::exit(1);
+        }
+
         std::cout << "Processing file " << file.Get_Filename() << " [" << file.Get_File_Size() << " B]\n";
 
         kiv_ppr::CFile_Stats file_stats(&file, kiv_ppr::utils::Is_Valid_Double);
         if (0 != file_stats.Process(&kiv_ppr::config::default_thread_params))
         {
-            std::cerr << "Failed to process the input file\n";
+            std::cerr << "Failed to process the input file (" << file.Get_Filename() << ")\n";
             std::exit(1);
         }
         auto values = file_stats.Get_Values();
@@ -39,7 +45,7 @@ static void Run()
     }
     else
     {
-        std::cerr << "Failed to open the input file\n";
+        std::cerr << "Failed to open the input file (" << file.Get_Filename() << ")\n";
         std::exit(1);
     }
 }

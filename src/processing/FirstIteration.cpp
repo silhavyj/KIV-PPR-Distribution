@@ -48,7 +48,7 @@ namespace kiv_ppr
             m_values.mean += mean * (static_cast<double>(count) / static_cast<double>(m_values.count));
         }
 
-        if (return_values != 0 || watchdog.Get_Counter_Value() != (m_file->Get_File_Size() / sizeof(double)))
+        if (return_values != 0 || watchdog.Get_Counter_Value() != m_file->Get_Number_Of_Elements())
         {
             return 1;
         }

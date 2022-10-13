@@ -24,7 +24,7 @@ namespace kiv_ppr
         double E;
         double O;
         double chi_square_val = 0.0;
-        const size_t original_number_of_intervals = m_histogram->Get_Number_Of_Intervals();
+        const size_t original_number_of_intervals = m_histogram->Get_Number_Of_Intervals() - 1;
 
         double left = m_histogram->Get_Min();
         double left_last = 0;

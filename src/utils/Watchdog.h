@@ -10,12 +10,12 @@ namespace kiv_ppr
     class CWatchdog
     {
     public:
-        CWatchdog(double interval_sec);
+        explicit CWatchdog(double interval_sec);
         ~CWatchdog();
 
         void Stop();
         void Kick(size_t value);
-        size_t Get_Counter_Value() const;
+        [[nodiscard]] size_t Get_Counter_Value() const;
 
     private:
         void Run();
