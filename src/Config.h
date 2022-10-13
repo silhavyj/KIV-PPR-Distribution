@@ -15,7 +15,7 @@ namespace kiv_ppr::config
     static constexpr double MIN_EXPECTED_VALUE = 5;
     static constexpr uint32_t DOUBLE_PRECISION = 5;
     static constexpr uint32_t BLOCK_SIZE_PER_READ = (1024 * 1024 * 10) / sizeof(double);
-    static constexpr uint32_t WATCHDOG_EXPIRATION_SEC = 1;
+    static constexpr uint32_t WATCHDOG_EXPIRATION_SEC = 2;
     static constexpr double P_CRITICAL = 0.05;
     static constexpr double SCALE_FACTOR = 2.0;
 
