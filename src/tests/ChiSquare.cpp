@@ -113,6 +113,10 @@ namespace kiv_ppr
     {
         if (p_value == other.p_value)
         {
+            if ((df < 0 && other.df > 0) || (df > 0 && other.df < 0))
+            {
+                return df > other.df;
+            }
             return chi_square < other.chi_square;
         }
         return p_value > other.p_value;

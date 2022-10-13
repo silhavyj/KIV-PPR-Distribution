@@ -98,9 +98,9 @@ namespace kiv_ppr
 
     inline void CTest_Runner::Print_Result_Reasoning(CChi_Square::TResult& result)
     {
-        std::cout << "However, based on the chi square error (" << result.chi_square <<
-                  "), the data seems to correlate the most to the " << result.name <<
-                  " distribution though it is STRONGLY recommended to double verify the answer.\n";
+        std::cout << "However, based on the chi square error (" << result.chi_square
+                  << ") and the degrees of freedom (" << result.df << "), the data seems to correlate the most to the " << result.name
+                  << " distribution though it is STRONGLY recommended to double verify the answer.\n";
     }
 
     inline CChi_Square::TResult CTest_Runner::Run_Normal() const
