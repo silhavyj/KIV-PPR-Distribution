@@ -8,10 +8,10 @@
 #include "tests/TestRunner.h"
 #include "cdfs/PoissonCDF.h"
 
-// static std::string filename{"../../data/uniform"};
+static std::string filename{"../../data/uniform"};
 // static std::string filename{ "data2.dat" };
 // static std::string filename{ "data.dat" };
-static std::string filename{"/home/silhavyj/Downloads/ubuntu-22.04.1-desktop-amd64.iso"};
+// static std::string filename{"/home/silhavyj/Downloads/ubuntu-22.04.1-desktop-amd64.iso"};
 
 static void Run()
 {

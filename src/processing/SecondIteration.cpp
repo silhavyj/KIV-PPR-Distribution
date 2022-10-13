@@ -16,8 +16,8 @@ namespace kiv_ppr
           m_histogram_params{}
     {
         m_histogram_params = {
-            m_basic_values.min,
-            m_basic_values.max,
+            m_basic_values.min < 0 ? m_basic_values.min : (m_basic_values.min * config::SCALE_FACTOR),
+            m_basic_values.min < 0 ? m_basic_values.max : (m_basic_values.max * config::SCALE_FACTOR),
             Calculate_Number_Of_Intervals(m_basic_values.count)
         };
         m_values.histogram = std::make_shared<CHistogram>(m_histogram_params);
@@ -87,7 +87,7 @@ namespace kiv_ppr
                             delta *= tmp_value;
 
                             local_values.var += delta;
-                            local_values.histogram->Add(value);
+                            local_values.histogram->Add(m_basic_values.min < 0 ? value : (value * config::SCALE_FACTOR));
                         }
                     }
                     break;
