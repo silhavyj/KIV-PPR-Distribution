@@ -12,8 +12,9 @@
 
 namespace kiv_ppr
 {
-    CTest_Runner::CTest_Runner(CFile_Stats::TValues values)
-        : m_values(std::move(values))
+    CTest_Runner::CTest_Runner(CFile_Stats::TValues values, double p_critical)
+        : m_values(std::move(values)),
+          m_p_critical(p_critical)
     {
 
     }
@@ -78,7 +79,7 @@ namespace kiv_ppr
             std::cout << std::endl;
         }
         std::cout << std::left << std::setw(15) << "------------------------------------------------------------" << std::endl;
-        std::cout << "Level of significance = " << (config::P_CRITICAL * 100.0) << "%\n\n";
+        std::cout << "Level of significance = " << (m_p_critical * 100.0) << "%\n\n";
 
         if (results.begin()->status == CChi_Square::ETResult_Status::REJECTED)
         {
@@ -107,7 +108,7 @@ namespace kiv_ppr
     {
         kiv_ppr::CChi_Square chi_square_normal(
             CNormal_CDF::NAME,
-            config::P_CRITICAL,
+            m_p_critical,
             m_values.second_iteration.histogram,
             std::make_shared<kiv_ppr::CNormal_CDF>(m_values.first_iteration.mean, m_values.second_iteration.var)
         );
@@ -119,7 +120,7 @@ namespace kiv_ppr
     {
         kiv_ppr::CChi_Square chi_square_uniform(
             CUniform_CDF::NAME,
-            config::P_CRITICAL,
+            m_p_critical,
             m_values.second_iteration.histogram,
             std::make_shared<kiv_ppr::CUniform_CDF>(m_values.first_iteration.min, m_values.first_iteration.max)
         );
@@ -131,7 +132,7 @@ namespace kiv_ppr
     {
         kiv_ppr::CChi_Square chi_square_exponential(
             CExponential_CDF::NAME,
-            config::P_CRITICAL,
+            m_p_critical,
             m_values.second_iteration.histogram,
             std::make_shared<kiv_ppr::CExponential_CDF>(1.0 / m_values.first_iteration.mean)
         );
@@ -143,7 +144,7 @@ namespace kiv_ppr
     {
         kiv_ppr::CChi_Square chi_square_poisson(
             CPoisson_CDF::NAME,
-            config::P_CRITICAL,
+            m_p_critical,
             m_values.second_iteration.histogram,
             std::make_shared<kiv_ppr::CPoisson_CDF>(m_values.first_iteration.mean)
         );

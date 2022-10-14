@@ -1,5 +1,6 @@
 #include <iostream>
-#include <thread>
+
+#include "cxxopts/cxxopts.hpp"
 
 #include "utils/Utils.h"
 #include "Config.h"
@@ -7,14 +8,14 @@
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
 
-static std::string filename{"../../data/poisson"};
+// static std::string filename{"../../data/poisson"};
 // static std::string filename{"/home/silhavyj/Downloads/poissonlarger"};
 // static std::string filename{ "data2.dat" };
 // static std::string filename{ "data.dat" };
 // static std::string filename{"/home/silhavyj/Downloads/ubuntu-22.04.1-desktop-amd64.iso"};
-// static std::string filename{"/tmp/a"};
+// static std::string filename{"/home/silhavyj/Downloads/a"};
 
-static void Run()
+static void Run(const char* filename, double p_critical)
 {
     kiv_ppr::CFile_Reader<double> file(filename);
     if (file.Is_Open())
@@ -38,9 +39,7 @@ static void Run()
         std::cout << "Calculated statistics (parameters):\n";
         std::cout << values << "\n\n";
 
-        // std::cout << *values.second_iteration.histogram << "\n";
-
-        kiv_ppr::CTest_Runner test_runner(values);
+        kiv_ppr::CTest_Runner test_runner(values, p_critical);
         test_runner.Run();
     }
     else
@@ -52,13 +51,32 @@ static void Run()
 
 int main(int argc, char* argv[])
 {
-    (void)argc;
-    (void)argv;
+    cxxopts::Options options("./pprsolver <filename> <all | SMP | dev1 dev2 dev3 ...>", "KIV/PPR Semester project - Classification of statistical distributions");
+    options.add_options()
+            ("p,p_critical", "Critical p value used in the chi square test", cxxopts::value<double>()->default_value("0.05"))
+            ("h,help", "Print out this help menu");
 
-    // kiv_ppr::utils::Generate_Numbers<std::poisson_distribution<>>(filename.c_str(), false, 1000, 2);
+    cxxopts::ParseResult args = options.parse(argc, argv);
+    if (args.count("help"))
+    {
+        std::cout << options.help() << std::endl;
+        return 0;
+    }
+    if (argc < 3)
+    {
+        std::cerr << "Invalid number of input parameters\n";
+        std::cerr << "Run './pprsolver --help'\n";
+        return 1;
+    }
+    double p_critical = args["p_critical"].as<double>();
+    if (p_critical < 0)
+    {
+        std::cerr << "p_critical (" << p_critical << ") must be a positive number\n";
+        return 1;
+    }
 
-    const auto seconds = kiv_ppr::utils::Time_Call([]() {
-        Run();
+    const auto seconds = kiv_ppr::utils::Time_Call([&argv, &p_critical]() {
+        Run(argv[1], p_critical);
     });
     std::cout << "\nTime of execution: " << seconds << " sec\n";
 }

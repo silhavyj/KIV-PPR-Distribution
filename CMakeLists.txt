@@ -5,6 +5,10 @@ cmake_minimum_required(VERSION 3.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Add include directories, so there is no need
+# to specify relative paths
+include_directories(lib)
+
 # Add the name of the project, version, description,
 # home URL, and a list of all languages used in the project
 project(
