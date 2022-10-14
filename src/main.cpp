@@ -7,7 +7,7 @@
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
 
-static std::string filename{"../../data/exp"};
+static std::string filename{"../../data/poisson"};
 // static std::string filename{"/home/silhavyj/Downloads/poissonlarger"};
 // static std::string filename{ "data2.dat" };
 // static std::string filename{ "data.dat" };

@@ -8,19 +8,30 @@ namespace kiv_ppr
 {
     CSecond_Iteration::CSecond_Iteration(CFile_Reader<double>* file,
                                          std::function<bool(double)> is_valid_number,
-                                         typename CFirst_Iteration::TValues& basic_values)
+                                         typename CFirst_Iteration::TValues* basic_values)
         : m_file(file),
           m_is_valid_number(std::move(is_valid_number)),
           m_basic_values(basic_values),
           m_values{},
           m_histogram_params{}
     {
+        if (m_basic_values->min >= 0)
+        {
+            Scale_Up_Basic_Values(m_basic_values);
+        }
         m_histogram_params = {
-            m_basic_values.min < 0 ? m_basic_values.min : (m_basic_values.min * config::SCALE_FACTOR),
-            m_basic_values.min < 0 ? m_basic_values.max : (m_basic_values.max * config::SCALE_FACTOR),
-            Calculate_Number_Of_Intervals(m_basic_values.count)
+            m_basic_values->min,
+            m_basic_values->max,
+            Calculate_Number_Of_Intervals(m_basic_values->count)
         };
         m_values.histogram = std::make_shared<CHistogram>(m_histogram_params);
+    }
+
+    void CSecond_Iteration::Scale_Up_Basic_Values(typename CFirst_Iteration::TValues* basic_values)
+    {
+        basic_values->min *= config::SCALE_FACTOR;
+        basic_values->max *= config::SCALE_FACTOR;
+        basic_values->mean *= config::SCALE_FACTOR;
     }
 
     typename CSecond_Iteration::TValues CSecond_Iteration::Get_Values() const noexcept
@@ -81,15 +92,18 @@ namespace kiv_ppr
                         double value = data[i];
                         if (m_is_valid_number(value))
                         {
-                            value /= config::SCALE_FACTOR;
+                            if (m_basic_values->min < 0)
+                            {
+                                value /= config::SCALE_FACTOR;
+                            }
 
-                            delta = value - m_basic_values.mean;
+                            delta = value - m_basic_values->mean;
                             tmp_value = delta;
-                            delta /= static_cast<double>(m_basic_values.count - 1);
+                            delta /= static_cast<double>(m_basic_values->count - 1);
                             delta *= tmp_value;
 
                             local_values.var += delta;
-                            local_values.histogram->Add(m_basic_values.min < 0 ? value : (value * config::SCALE_FACTOR));
+                            local_values.histogram->Add(value);
                         }
                     }
                     watchdog->Kick(count);
