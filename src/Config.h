@@ -19,7 +19,7 @@ namespace kiv_ppr::config
     };
 
     static TThread_Params default_thread_params {
-        std::thread::hardware_concurrency() /  std::thread::hardware_concurrency(),
+        std::thread::hardware_concurrency(),
         BLOCK_SIZE_PER_READ,
         WATCHDOG_EXPIRATION_SEC
     };
