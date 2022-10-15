@@ -7,7 +7,7 @@
 #include "utils/Singleton.h"
 #include "Config.h"
 #include "processing/FileStats.h"
-#include "tests/TestRunner.h"
+#include "chi_square/TestRunner.h"
 
 static void Run(const char* filename, double p_critical)
 {

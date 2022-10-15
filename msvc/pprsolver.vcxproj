@@ -25,8 +25,8 @@
     <ClCompile Include="..\src\utils\WatchDog.cpp" />
     <ClCompile Include="..\src\utils\Utils.cpp" />
     <ClCompile Include="..\src\utils\ArgParser.cpp" />
-    <ClCompile Include="..\src\tests\TestRunner.cpp" />
-    <ClCompile Include="..\src\tests\ChiSquare.cpp" />
+    <ClCompile Include="..\src\chi_square\TestRunner.cpp" />
+    <ClCompile Include="..\src\chi_square\ChiSquare.cpp" />
     <ClCompile Include="..\src\processing\SecondIteration.cpp" />
     <ClCompile Include="..\src\processing\FirstIteration.cpp" />
     <ClCompile Include="..\src\processing\FileStats.cpp" />
@@ -44,8 +44,8 @@
     <ClCompile Include="..\src\utils\WatchDog.h" />
     <ClCompile Include="..\src\utils\Utils.h" />
     <ClCompile Include="..\src\utils\ArgParser.h" />
-    <ClCompile Include="..\src\tests\TestRunner.h" />
-    <ClCompile Include="..\src\tests\ChiSquare.h" />
+    <ClCompile Include="..\src\chi_square\TestRunner.h" />
+    <ClCompile Include="..\src\chi_square\ChiSquare.h" />
     <ClCompile Include="..\src\processing\SecondIteration.h" />
     <ClCompile Include="..\src\processing\FirstIteration.h" />
     <ClCompile Include="..\src\processing\FileStats.h" />
