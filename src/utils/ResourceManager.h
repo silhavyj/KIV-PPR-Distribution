@@ -13,7 +13,8 @@ namespace kiv_ppr
 	{
 	public:
 		void Find_Available_GPUs();
-		void Print_Available_GPUs() const;
+		void Print_Available_GPUs() const
+			;
 
 	private:
 		enum class NDevice_Status : uint8_t
