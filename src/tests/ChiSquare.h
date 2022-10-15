@@ -20,7 +20,7 @@ namespace kiv_ppr
 
         struct TResult
         {
-            ETResult_Status status;
+            ETResult_Status status{};
             double chi_square{};
             double p_value{};
             int df{};

@@ -2,8 +2,10 @@
 
 #include "utils/Utils.h"
 #include "utils/ArgParser.h"
-#include "Config.h"
+#include "utils/ResourceManager.h"
 #include "utils/FileReader.h"
+#include "utils/Singleton.h"
+#include "Config.h"
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
 
@@ -68,10 +70,16 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::cout << "The program is running in '" << arg_parser.Get_Run_Type_Str() << "' mode\n";
+    std::cout << "The program is running in '" << arg_parser.Get_Run_Type_Str() << "' mode\n\n";
+    
+    auto resource_manager = kiv_ppr::Singleton<kiv_ppr::CResource_Manager>::Get_Instance();
+    resource_manager->Find_Available_GPUs();
+    resource_manager->Print_Available_GPUs();
 
     const auto seconds = kiv_ppr::utils::Time_Call([&]() {
         Run(arg_parser.Get_Filename(), p_critical);
     });
     std::cout << "\nTime of execution: " << seconds << " sec\n";
+
+    std::cin.get();
 }
