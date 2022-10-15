@@ -5,7 +5,7 @@
 
 namespace kiv_ppr
 {
-    template<class T>
+    template<typename T>
     class Singleton
     {
     public:
@@ -23,9 +23,9 @@ namespace kiv_ppr
         static std::once_flag m_init_flag;
     };
 
-    template<class T>
+    template<typename T>
     std::unique_ptr<T> Singleton<T>::m_instance = nullptr;
 
-    template<class T>
+    template<typename T>
     std::once_flag Singleton<T>::m_init_flag = {};
 }

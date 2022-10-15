@@ -47,11 +47,11 @@ namespace kiv_ppr
                 found_devices.insert(device.getInfo<CL_DEVICE_NAME>());
             }
         }
-        Inform_User_About_Found_Devs(found_devices, listed_devices);
+        Print_Found_Devs(found_devices, listed_devices);
     }
 
-    void CResource_Manager::Inform_User_About_Found_Devs(const std::unordered_set<std::string>& found_devices,
-                                                         const std::unordered_set<std::string>& listed_devices)
+    void CResource_Manager::Print_Found_Devs(const std::unordered_set<std::string>& found_devices,
+                                             const std::unordered_set<std::string>& listed_devices)
     {
         if (m_run_type == CArg_Parser::NRun_Type::ALL)
         {

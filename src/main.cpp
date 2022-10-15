@@ -83,5 +83,5 @@ int main(int argc, char* argv[])
     });
     std::cout << "\nTime of execution: " << seconds << " sec\n";
 
-    //std::cin.get();
+    // std::cin.get();
 }

@@ -19,8 +19,8 @@ namespace kiv_ppr
         void Find_Available_GPUs(const std::unordered_set<std::string>& listed_devices);
 
     private:
-        void Inform_User_About_Found_Devs(const std::unordered_set<std::string>& found_devices,
-                                          const std::unordered_set<std::string>& listed_devices);
+        void Print_Found_Devs(const std::unordered_set<std::string>& found_devices,
+                              const std::unordered_set<std::string>& listed_devices);
 
     private:
         enum class NDevice_Status : uint8_t
