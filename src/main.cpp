@@ -58,8 +58,8 @@ int main(int argc, char* argv[])
     }
     catch (const std::exception& e)
     {
-        std::cerr << "Error occurred when parsing input parameters - " << e.what();
-        std::cerr << "\nRun './pprsolver --help'\n";
+        std::cerr << "Error occurred when parsing input parameters - " << e.what() << '\n';
+        std::cerr << "Run 'pprsolver.exe --help'\n";
         return 1;
     }
 
@@ -72,14 +72,14 @@ int main(int argc, char* argv[])
 
     std::cout << "The program is running in '" << arg_parser.Get_Run_Type_Str() << "' mode\n\n";
     
+    const auto& listed_devs = arg_parser.Get_OpenCL_Devs();
+
     auto resource_manager = kiv_ppr::Singleton<kiv_ppr::CResource_Manager>::Get_Instance();
-    resource_manager->Find_Available_GPUs();
-    resource_manager->Print_Available_GPUs();
+    resource_manager->Set_Run_Type(arg_parser.Get_Run_Type());
+    resource_manager->Find_Available_GPUs(listed_devs);
 
     const auto seconds = kiv_ppr::utils::Time_Call([&]() {
         Run(arg_parser.Get_Filename(), p_critical);
     });
     std::cout << "\nTime of execution: " << seconds << " sec\n";
-
-    std::cin.get();
 }

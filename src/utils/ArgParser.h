@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <unordered_set>
 
 #include <cxxopts/cxxopts.hpp>
 
@@ -29,8 +30,9 @@ namespace kiv_ppr
         [[nodiscard]] bool Help();
         [[nodiscard]] double Get_P_Critical();
         [[nodiscard]] const char* Get_Filename();
-        [[nodiscard]] std::vector<const char*> Get_OpenCL_Devs();
-        [[nodiscard]]const char* Get_Run_Type_Str();
+        [[nodiscard]] std::unordered_set<std::string> Get_OpenCL_Devs();
+        [[nodiscard]] const char* Get_Run_Type_Str();
+        [[nodiscard]] NRun_Type Get_Run_Type();
 
     private:
         static constexpr const char* ALL_RUN_TYPE = "all";
@@ -41,7 +43,7 @@ namespace kiv_ppr
         char** m_argv;
         const char* m_filename = nullptr;
         NRun_Type m_run_type{};
-        std::vector<const char*> m_opencl_devs;
+        std::unordered_set<std::string> m_opencl_devs;
         cxxopts::Options m_options;
         cxxopts::ParseResult m_args;
     };

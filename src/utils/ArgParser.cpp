@@ -32,7 +32,7 @@ namespace kiv_ppr
         return m_args["p_critical"].as<double>();
     }
 
-    std::vector<const char*> CArg_Parser::Get_OpenCL_Devs()
+    std::unordered_set<std::string> CArg_Parser::Get_OpenCL_Devs()
     {
         return m_opencl_devs;
     }
@@ -45,6 +45,11 @@ namespace kiv_ppr
     void CArg_Parser::Parse_Options()
     {
         m_args = m_options.parse(m_argc, m_argv);
+    }
+
+    CArg_Parser::NRun_Type CArg_Parser::Get_Run_Type()
+    {
+        return m_run_type;
     }
 
     void CArg_Parser::Parse()
@@ -82,7 +87,7 @@ namespace kiv_ppr
                     i += 2;
                     continue;
                 }
-                m_opencl_devs.emplace_back(m_argv[i]);
+                m_opencl_devs.insert(m_argv[i]);
             }
             if (m_opencl_devs.empty())
             {

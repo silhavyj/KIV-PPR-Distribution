@@ -1,20 +1,26 @@
 #pragma once
 
 #include <vector>
+#include <unordered_set>
 
 #define CL_USE_DEPRECATED_OPENCL_2_0_APIS
 #define CL_HPP_ENABLE_EXCEPTIONS
 #define CL_HPP_TARGET_OPENCL_VERSION 200
 #include <CL/opencl.hpp>
 
+#include "ArgParser.h"
+
 namespace kiv_ppr
 {
 	class CResource_Manager
 	{
 	public:
-		void Find_Available_GPUs();
-		void Print_Available_GPUs() const;
-		bool All_Devices_Available(std::vector<std::string>& devices);
+		void Set_Run_Type(CArg_Parser::NRun_Type run_type);
+		void Find_Available_GPUs(const std::unordered_set<std::string>& listed_devices);
+
+	private:
+		void Inform_User_About_Found_Devs(const std::unordered_set<std::string>& found_devices,
+										  const std::unordered_set<std::string>& listed_devices);
 
 	private:
 		enum class NDevice_Status : uint8_t
@@ -31,5 +37,6 @@ namespace kiv_ppr
 
 	private:
 		std::vector<TRecource> m_gpu_devices;
+		CArg_Parser::NRun_Type m_run_type{};
 	};
 }
