@@ -9,7 +9,7 @@ namespace kiv_ppr
     CArg_Parser::CArg_Parser(int argc, char* argv[])
         : m_argc(argc),
           m_argv(argv),
-          m_options("./pprsolver <filename> <all | SMP | dev1 dev2 dev3 ...>", "KIV/PPR Semester project - "
+          m_options("pprsolver.exe <filename> <all | SMP | dev1 dev2 dev3 ...>", "KIV/PPR Semester project - "
                     "Classification of statistical distributions (Chi-Square Goodness of Fit Test)")
     {
         m_options.add_options()

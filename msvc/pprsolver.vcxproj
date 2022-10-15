@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
-	<ClCompile Include="..\src\utils\ResourceManager.cpp" />
+    <ClCompile Include="..\src\utils\ResourceManager.cpp" />
     <ClCompile Include="..\src\utils\FileReader.cpp" />
     <ClCompile Include="..\src\utils\WatchDog.cpp" />
     <ClCompile Include="..\src\utils\Utils.cpp" />
@@ -38,8 +38,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Config.h" />
-	<ClCompile Include="..\src\utils\Singleton.h" />
-	<ClCompile Include="..\src\utils\ResourceManager.h" />
+    <ClCompile Include="..\src\utils\Singleton.h" />
+    <ClCompile Include="..\src\utils\ResourceManager.h" />
     <ClCompile Include="..\src\utils\FileReader.h" />
     <ClCompile Include="..\src\utils\WatchDog.h" />
     <ClCompile Include="..\src\utils\Utils.h" />
@@ -169,6 +169,7 @@
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <AdditionalLibraryDirectories>C:\Users\Kuba\Downloads\semestralni_prace\lib\x86_64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

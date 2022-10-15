@@ -82,4 +82,6 @@ int main(int argc, char* argv[])
         Run(arg_parser.Get_Filename(), p_critical);
     });
     std::cout << "\nTime of execution: " << seconds << " sec\n";
+
+    //std::cin.get();
 }
