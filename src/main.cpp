@@ -1,8 +1,7 @@
 #include <iostream>
 
-#include "cxxopts/cxxopts.hpp"
-
 #include "utils/Utils.h"
+#include "utils/ArgParser.h"
 #include "Config.h"
 #include "FileReader.h"
 #include "processing/FileStats.h"
@@ -36,7 +35,7 @@ static void Run(const char* filename, double p_critical)
         }
         auto values = file_stats.Get_Values();
 
-        std::cout << "Calculated statistics (parameters):\n";
+        std::cout << "\nCalculated statistics (parameters):\n";
         std::cout << values << "\n\n";
 
         kiv_ppr::CTest_Runner test_runner(values, p_critical);
@@ -51,32 +50,35 @@ static void Run(const char* filename, double p_critical)
 
 int main(int argc, char* argv[])
 {
-    cxxopts::Options options("./pprsolver <filename> <all | SMP | dev1 dev2 dev3 ...>", "KIV/PPR Semester project - Classification of statistical distributions");
-    options.add_options()
-            ("p,p_critical", "Critical p value used in the chi square test", cxxopts::value<double>()->default_value("0.05"))
-            ("h,help", "Print out this help menu");
-
-    cxxopts::ParseResult args = options.parse(argc, argv);
-    if (args.count("help"))
+    kiv_ppr::CArg_Parser arg_parser(argc, argv);
+    try
     {
-        std::cout << options.help() << std::endl;
-        return 0;
+        arg_parser.Parse_Options();
+        if (arg_parser.Help())
+        {
+            arg_parser.Print_Help();
+            return 0;
+        }
+        arg_parser.Parse();
     }
-    if (argc < 3)
+    catch (const std::exception& e)
     {
-        std::cerr << "Invalid number of input parameters\n";
-        std::cerr << "Run './pprsolver --help'\n";
+        std::cerr << "Error occurred when parsing input parameters - " << e.what();
+        std::cerr << "\nRun './pprsolver --help'\n";
         return 1;
     }
-    double p_critical = args["p_critical"].as<double>();
+
+    double p_critical = arg_parser.Get_P_Critical();
     if (p_critical < 0)
     {
         std::cerr << "p_critical (" << p_critical << ") must be a positive number\n";
         return 1;
     }
 
-    const auto seconds = kiv_ppr::utils::Time_Call([&argv, &p_critical]() {
-        Run(argv[1], p_critical);
+    std::cout << "The program is running in '" << arg_parser.Get_Run_Type_Str() << "' mode\n";
+
+    const auto seconds = kiv_ppr::utils::Time_Call([&]() {
+        Run(arg_parser.Get_Filename(), p_critical);
     });
     std::cout << "\nTime of execution: " << seconds << " sec\n";
 }
