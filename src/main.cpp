@@ -7,13 +7,6 @@
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
 
-// static std::string filename{"../../data/poisson"};
-// static std::string filename{"/home/silhavyj/Downloads/poissonlarger"};
-// static std::string filename{ "data2.dat" };
-// static std::string filename{ "data.dat" };
-// static std::string filename{"/home/silhavyj/Downloads/ubuntu-22.04.1-desktop-amd64.iso"};
-// static std::string filename{"/home/silhavyj/Downloads/a"};
-
 static void Run(const char* filename, double p_critical)
 {
     kiv_ppr::CFile_Reader<double> file(filename);
