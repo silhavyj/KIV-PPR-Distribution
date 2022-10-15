@@ -44,4 +44,9 @@ namespace kiv_ppr
 		}
 		std::cout << "\n";
 	}
+
+	bool All_Devices_Available(std::vector<std::string>& devices)
+	{
+
+	}
 }
