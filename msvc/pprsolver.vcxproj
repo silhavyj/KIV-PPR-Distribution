@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\utils\ResourceManager.cpp" />
     <ClCompile Include="..\src\utils\FileReader.cpp" />
     <ClCompile Include="..\src\utils\WatchDog.cpp" />
     <ClCompile Include="..\src\utils\Utils.cpp" />
@@ -35,11 +34,11 @@
     <ClCompile Include="..\src\cdfs\NormalCDF.cpp" />
     <ClCompile Include="..\src\cdfs\ExponentialCDF.cpp" />
     <ClCompile Include="..\src\cdfs\PoissonCDF.cpp" />
+    <ClCompile Include="..\src\utils\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Config.h" />
     <ClCompile Include="..\src\utils\Singleton.h" />
-    <ClCompile Include="..\src\utils\ResourceManager.h" />
     <ClCompile Include="..\src\utils\FileReader.h" />
     <ClCompile Include="..\src\utils\WatchDog.h" />
     <ClCompile Include="..\src\utils\Utils.h" />
@@ -55,6 +54,7 @@
     <ClCompile Include="..\src\cdfs\NormalCDF.h" />
     <ClCompile Include="..\src\cdfs\ExponentialCDF.h" />
     <ClCompile Include="..\src\cdfs\PoissonCDF.h" />
+    <ClCompile Include="..\src\utils\ResourceManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -134,7 +134,7 @@
     <Link>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\lib\x86_64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -168,7 +168,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>C:\Users\Kuba\Downloads\semestralni_prace\lib\x86_64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

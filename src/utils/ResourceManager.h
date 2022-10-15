@@ -3,10 +3,10 @@
 #include <vector>
 #include <unordered_set>
 
+// https://stackoverflow.com/questions/56858213/how-to-create-nvidia-opencl-project/57017982#57017982
 #define CL_USE_DEPRECATED_OPENCL_2_0_APIS
-#define CL_HPP_ENABLE_EXCEPTIONS
-#define CL_HPP_TARGET_OPENCL_VERSION 200
-#include <CL/opencl.hpp>
+#define __CL_ENABLE_EXCEPTIONS
+#include <CL/cl.hpp>
 
 #include "ArgParser.h"
 
