@@ -3,7 +3,7 @@
 #include "utils/Utils.h"
 #include "utils/ArgParser.h"
 #include "Config.h"
-#include "FileReader.h"
+#include "utils/FileReader.h"
 #include "processing/FileStats.h"
 #include "tests/TestRunner.h"
 

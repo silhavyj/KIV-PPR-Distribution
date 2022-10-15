@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Add include directories, so there is no need
 # to specify relative paths
-include_directories(lib)
+include_directories(include)
 
 # Add the name of the project, version, description,
 # home URL, and a list of all languages used in the project

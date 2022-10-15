@@ -4,8 +4,8 @@
 #include <functional>
 
 #include "FirstIteration.h"
-#include "../Histogram.h"
-#include "../FileReader.h"
+#include "Histogram.h"
+#include "../utils/FileReader.h"
 #include "../utils/Watchdog.h"
 
 namespace kiv_ppr

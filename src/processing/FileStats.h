@@ -5,8 +5,8 @@
 
 #include "FirstIteration.h"
 #include "SecondIteration.h"
-#include "../FileReader.h"
-#include "../Histogram.h"
+#include "../utils/FileReader.h"
+#include "Histogram.h"
 #include "../Config.h"
 
 namespace kiv_ppr

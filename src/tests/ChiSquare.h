@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "../cdfs/Cdf.h"
-#include "../Histogram.h"
+#include "../processing/Histogram.h"
 
 namespace kiv_ppr
 {
