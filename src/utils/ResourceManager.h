@@ -15,8 +15,8 @@ namespace kiv_ppr
     class CResource_Manager
     {
     public:
-	    void Set_Run_Type(CArg_Parser::NRun_Type run_type);
-	    void Find_Available_GPUs(const std::unordered_set<std::string>& listed_devices);
+        void Set_Run_Type(CArg_Parser::NRun_Type run_type);
+        void Find_Available_GPUs(const std::unordered_set<std::string>& listed_devices);
 
     private:
         void Inform_User_About_Found_Devs(const std::unordered_set<std::string>& found_devices,
