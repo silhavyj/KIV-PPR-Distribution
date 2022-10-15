@@ -25,11 +25,12 @@ namespace kiv_ppr
         void Parse();
         void Parse_Options();
         void Print_Help();
-        bool Help();
-        double Get_P_Critical();
-        const char* Get_Filename();
-        std::vector<const char*> Get_OpenCL_Devs();
-        const char* Get_Run_Type_Str();
+
+        [[nodiscard]] bool Help();
+        [[nodiscard]] double Get_P_Critical();
+        [[nodiscard]] const char* Get_Filename();
+        [[nodiscard]] std::vector<const char*> Get_OpenCL_Devs();
+        [[nodiscard]]const char* Get_Run_Type_Str();
 
     private:
         static constexpr const char* ALL_RUN_TYPE = "all";
@@ -38,8 +39,8 @@ namespace kiv_ppr
     private:
         int m_argc;
         char** m_argv;
-        const char* m_filename;
-        NRun_Type m_run_type;
+        const char* m_filename = nullptr;
+        NRun_Type m_run_type{};
         std::vector<const char*> m_opencl_devs;
         cxxopts::Options m_options;
         cxxopts::ParseResult m_args;
