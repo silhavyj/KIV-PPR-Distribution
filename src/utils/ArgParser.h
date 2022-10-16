@@ -14,9 +14,9 @@ namespace kiv_ppr
     public:
         enum class NRun_Type : uint8_t
         {
-            ALL,
+            All,
             SMP,
-            OPENCL_DEVS
+            OpenCL_Devs
         };
 
     public:
@@ -35,8 +35,8 @@ namespace kiv_ppr
         [[nodiscard]] NRun_Type Get_Run_Type();
 
     private:
-        static constexpr const char* ALL_RUN_TYPE = "all";
-        static constexpr const char* SMP_RUN_TYPE = "smp";
+        static constexpr const char* All_Run_Type_Str = "all";
+        static constexpr const char* SMP_Run_Type_Str = "smp";
 
     private:
         int m_argc;

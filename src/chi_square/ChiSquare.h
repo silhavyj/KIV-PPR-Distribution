@@ -14,8 +14,8 @@ namespace kiv_ppr
     public:
         enum class ETResult_Status : uint8_t
         {
-            ACCEPTED,
-            REJECTED
+            Accepted,
+            Rejected
         };
 
         struct TResult

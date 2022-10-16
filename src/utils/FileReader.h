@@ -14,7 +14,7 @@ namespace kiv_ppr
         enum class [[nodiscard]] NRead_Status : uint8_t
         {
             OK,
-            ERROR,
+            Error,
             EOF_
         };
 

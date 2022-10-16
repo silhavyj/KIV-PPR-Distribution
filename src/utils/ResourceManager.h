@@ -25,8 +25,8 @@ namespace kiv_ppr
     private:
         enum class NDevice_Status : uint8_t
         {
-            AVAILABLE,
-            TAKEN
+            Available,
+            Taken
         };
 
         struct TRecource

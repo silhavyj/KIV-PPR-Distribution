@@ -46,9 +46,9 @@ namespace kiv_ppr
                 E = Calculate_E(right, left, left == m_histogram->Get_Min());
                 O += static_cast<double>(m_histogram->operator[](i));
                 ++i;
-            } while (i < original_number_of_intervals && E < config::MIN_EXPECTED_VALUE);
+            } while (i < original_number_of_intervals && E < config::chi_square::Min_Expected_Value);
 
-            if (E < config::MIN_EXPECTED_VALUE)
+            if (E < config::chi_square::Min_Expected_Value)
             {
                 chi_square_val -= error_last;
                 O = 0;
@@ -84,11 +84,11 @@ namespace kiv_ppr
         ETResult_Status result_status;
         if (p_value > m_alpha_critical)
         {
-            result_status = ETResult_Status::ACCEPTED;
+            result_status = ETResult_Status::Accepted;
         }
         else
         {
-            result_status = ETResult_Status::REJECTED;
+            result_status = ETResult_Status::Rejected;
         }
         return { result_status, chi_square_val, p_value, df, m_name };
     }

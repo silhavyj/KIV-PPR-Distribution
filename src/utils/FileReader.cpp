@@ -77,7 +77,7 @@ namespace kiv_ppr
         auto buffer = std::shared_ptr<T[]>(new(std::nothrow) T[number_of_elements]);
         if (nullptr == buffer)
         {
-            return { NRead_Status::ERROR, 0, nullptr };
+            return { NRead_Status::Error, 0, nullptr };
         }
         m_file.read(reinterpret_cast<char*>(buffer.get()), number_of_elements * sizeof(T));
         return { NRead_Status::OK, static_cast<long>(number_of_elements), buffer };
@@ -90,7 +90,7 @@ namespace kiv_ppr
 
         if (!file.Is_Open())
         {
-            std::cerr << "File has not been opened. Exiting...\n";
+            std::cerr << "File has not been opened. Exiting.." << std::endl;
             exit(1);
         }
 
@@ -103,16 +103,16 @@ namespace kiv_ppr
                 case kiv_ppr::CFile_Reader<E>::NRead_Status::OK:
                     for (auto i = 0; i < count; ++i)
                     {
-                        out << std::setprecision(kiv_ppr::config::DOUBLE_PRECISION) << data[i] << " ";
+                        out << std::setprecision(kiv_ppr::config::Double_Precision) << data[i] << " ";
                     }
                     break;
 
                 case kiv_ppr::CFile_Reader<E>::NRead_Status::EOF_:
                     return out;
 
-                case kiv_ppr::CFile_Reader<E>::NRead_Status::ERROR: [[fallthrough]];
+                case kiv_ppr::CFile_Reader<E>::NRead_Status::Error: [[fallthrough]];
                 default:
-                    std::cerr << "Error occurred printing out the contents of the input file. Exiting...\n";
+                    std::cerr << "Error occurred printing out the contents of the input file. Exiting..." << std::endl;
                     exit(1);
             }
         }

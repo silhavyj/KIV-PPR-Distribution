@@ -13,7 +13,7 @@ namespace kiv_ppr
                     "Classification of statistical distributions (Chi-Square Goodness of Fit Test)")
     {
         m_options.add_options()
-            ("p,p_critical", "Critical p value used in the Chi-square test", cxxopts::value<double>()->default_value(std::to_string(config::DEFAULT_P_CRITICAL)))
+            ("p,p_critical", "Critical p value used in the Chi-square test", cxxopts::value<double>()->default_value(std::to_string(config::chi_square::Default_P_Critical)))
             ("h,help", "Print out this help menu");
     }
 
@@ -24,7 +24,7 @@ namespace kiv_ppr
 
     void CArg_Parser::Print_Help()
     {
-        std::cout << m_options.help() << '\n';
+        std::cout << m_options.help() << std::endl;
     }
 
     double CArg_Parser::Get_P_Critical()
@@ -64,17 +64,17 @@ namespace kiv_ppr
         std::transform(run_type.begin(), run_type.end(), run_type.begin(), [](unsigned char c) {
             return std::tolower(c);
         });
-        if (run_type == ALL_RUN_TYPE)
+        if (run_type == All_Run_Type_Str)
         {
-            m_run_type = NRun_Type::ALL;
+            m_run_type = NRun_Type::All;
         }
-        else if (run_type == SMP_RUN_TYPE)
+        else if (run_type == SMP_Run_Type_Str)
         {
             m_run_type = NRun_Type::SMP;
         }
         else
         {
-            m_run_type = NRun_Type::OPENCL_DEVS;
+            m_run_type = NRun_Type::OpenCL_Devs;
             for (int i = 2; i < m_argc; ++i)
             {
                 const std::string dev = m_argv[i];
@@ -100,13 +100,13 @@ namespace kiv_ppr
     {
         switch (m_run_type)
         {
-            case CArg_Parser::NRun_Type::ALL:
+            case CArg_Parser::NRun_Type::All:
                 return "all";
 
             case CArg_Parser::NRun_Type::SMP:
                 return "SMP";
 
-            case CArg_Parser::NRun_Type::OPENCL_DEVS:
+            case CArg_Parser::NRun_Type::OpenCL_Devs:
                 return "OpenCL devs";
 
             default:

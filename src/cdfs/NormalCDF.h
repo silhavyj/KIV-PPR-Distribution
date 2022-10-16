@@ -7,8 +7,8 @@ namespace kiv_ppr
     class CNormal_CDF : public CCDF
     {
     public:
-        static constexpr int NUMBER_OF_ESTIMATED_PARAMS = 2;
-        static constexpr const char* NAME = "Normal";
+        static constexpr int Number_Of_Estimated_Params = 2;
+        static constexpr const char* Name = "Normal";
 
     public:
         explicit CNormal_CDF(double mean, double variance);

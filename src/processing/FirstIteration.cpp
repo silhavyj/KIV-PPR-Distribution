@@ -98,7 +98,7 @@ namespace kiv_ppr
                                 local_values.all_ints = false;
                             }
 
-                            value /= config::SCALE_FACTOR;
+                            value /= config::processing::Scale_Factor;
 
                             local_values.min = std::min(local_values.min, value);
                             local_values.max = std::max(local_values.max, value);
@@ -115,7 +115,7 @@ namespace kiv_ppr
                     Report_Worker_Results(local_values);
                     return 0;
 
-                case CFile_Reader<double>::NRead_Status::ERROR: [[fallthrough]];
+                case CFile_Reader<double>::NRead_Status::Error: [[fallthrough]];
                 default:
                     return 1;
             }

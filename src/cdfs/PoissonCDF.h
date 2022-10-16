@@ -9,8 +9,8 @@ namespace kiv_ppr
     class CPoisson_CDF : public CCDF
     {
     public:
-        static constexpr int NUMBER_OF_ESTIMATED_PARAMS = 1;
-        static constexpr const char* NAME = "Poisson";
+        static constexpr int Number_Of_Estimated_Params = 1;
+        static constexpr const char* Name = "Poisson";
 
     public:
         explicit CPoisson_CDF(double lambda);

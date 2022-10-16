@@ -5,12 +5,20 @@
 
 namespace kiv_ppr::config
 {
-    static constexpr double MIN_EXPECTED_VALUE = 5;
-    static constexpr uint32_t DOUBLE_PRECISION = 5;
-    static constexpr uint32_t BLOCK_SIZE_PER_READ = (1024 * 1024 * 50) / sizeof(double);
-    static constexpr uint32_t WATCHDOG_EXPIRATION_SEC = 2;
-    static constexpr double SCALE_FACTOR = 2.0;
-    static constexpr double DEFAULT_P_CRITICAL = 0.05;
+    namespace chi_square
+    {
+        static constexpr double Min_Expected_Value = 5;
+        static constexpr double Default_P_Critical = 0.05;
+    }
+
+    namespace processing
+    {
+        static constexpr uint32_t Block_Size_Per_Read = (1024 * 1024 * 50) / sizeof(double);
+        static constexpr uint32_t Watchdog_Sleep_Sec = 2;
+        static constexpr double Scale_Factor = 2.0;
+    }
+    
+    static constexpr uint32_t Double_Precision = 5;
 
     struct TThread_Params
     {
@@ -21,7 +29,7 @@ namespace kiv_ppr::config
 
     static TThread_Params default_thread_params {
         std::thread::hardware_concurrency(),
-        BLOCK_SIZE_PER_READ,
-        WATCHDOG_EXPIRATION_SEC
+        processing::Block_Size_Per_Read,
+        processing::Watchdog_Sleep_Sec
     };
 }

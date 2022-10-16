@@ -16,29 +16,29 @@ static void Run(const char* filename, double p_critical)
     {
         if (file.Get_File_Size() < sizeof(double))
         {
-            std::cerr << "The size of the input file is insufficient\n";
+            std::cerr << "The size of the input file is insufficient" << std::endl;
             std::exit(1);
         }
 
-        std::cout << "Processing file " << file.Get_Filename() << " [" << file.Get_File_Size() << " B]\n";
+        std::cout << "Processing file " << file.Get_Filename() << " [" << file.Get_File_Size() << " B]" << std::endl;
 
         kiv_ppr::CFile_Stats file_stats(&file, kiv_ppr::utils::Is_Valid_Double);
         if (0 != file_stats.Process(&kiv_ppr::config::default_thread_params))
         {
-            std::cerr << "Failed to process the input file (" << file.Get_Filename() << ")\n";
+            std::cerr << "Failed to process the input file (" << file.Get_Filename() << ")" << std::endl;
             std::exit(1);
         }
         auto values = file_stats.Get_Values();
 
-        std::cout << "\nCalculated statistics (parameters):\n";
-        std::cout << values << "\n\n";
+        std::cout << "\nCalculated statistics (parameters):" << std::endl;
+        std::cout << values << "\n" << std::endl;
 
         kiv_ppr::CTest_Runner test_runner(values, p_critical);
         test_runner.Run();
     }
     else
     {
-        std::cerr << "Failed to open the input file (" << file.Get_Filename() << ")\n";
+        std::cerr << "Failed to open the input file (" << file.Get_Filename() << ")" << std::endl;
         std::exit(1);
     }
 }
@@ -58,19 +58,19 @@ int main(int argc, char* argv[])
     }
     catch (const std::exception& e)
     {
-        std::cerr << "Error occurred when parsing input parameters - " << e.what() << '\n';
-        std::cerr << "Run 'pprsolver.exe --help'\n";
+        std::cerr << "Error occurred when parsing input parameters - " << e.what() << std::endl;
+        std::cerr << "Run 'pprsolver.exe --help'" << std::endl;
         return 1;
     }
 
     double p_critical = arg_parser.Get_P_Critical();
     if (p_critical < 0)
     {
-        std::cerr << "p_critical (" << p_critical << ") must be a positive number\n";
+        std::cerr << "p_critical (" << p_critical << ") must be a positive number" << std::endl;
         return 1;
     }
 
-    std::cout << "The program is running in '" << arg_parser.Get_Run_Type_Str() << "' mode\n\n";
+    std::cout << "The program is running in '" << arg_parser.Get_Run_Type_Str() << "' mode\n" << std::endl;
     
     const auto& listed_devs = arg_parser.Get_OpenCL_Devs();
 
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
     const auto seconds = kiv_ppr::utils::Time_Call([&]() {
         Run(arg_parser.Get_Filename(), p_critical);
     });
-    std::cout << "\nTime of execution: " << seconds << " sec\n";
+    std::cout << "\nTime of execution: " << seconds << " sec" << std::endl;
 
-    // std::cin.get();
+    std::cin.get();
 }

@@ -39,10 +39,10 @@ namespace kiv_ppr
                 {
                     continue;
                 }
-                if ((m_run_type == CArg_Parser::NRun_Type::OPENCL_DEVS && listed_devices.count(name)) ||
-                     m_run_type == CArg_Parser::NRun_Type::ALL)
+                if ((m_run_type == CArg_Parser::NRun_Type::OpenCL_Devs && listed_devices.count(name)) ||
+                     m_run_type == CArg_Parser::NRun_Type::All)
                 {
-                    m_gpu_devices.emplace_back(NDevice_Status::AVAILABLE, device);
+                    m_gpu_devices.emplace_back(NDevice_Status::Available, device);
                 }
                 found_devices.insert(device.getInfo<CL_DEVICE_NAME>());
             }
@@ -53,41 +53,41 @@ namespace kiv_ppr
     void CResource_Manager::Print_Found_Devs(const std::unordered_set<std::string>& found_devices,
                                              const std::unordered_set<std::string>& listed_devices)
     {
-        if (m_run_type == CArg_Parser::NRun_Type::ALL)
+        if (m_run_type == CArg_Parser::NRun_Type::All)
         {
             if (m_gpu_devices.empty())
             {
-                std::cerr << "No available GPU devices supported double precision were found\n";
+                std::cerr << "No available GPU devices supported double precision were found" << std::endl;
                 std::exit(6);
             }
-            std::cout << "Available GPU devices supporting double precision:\n";
+            std::cout << "Available GPU devices supporting double precision:" << std::endl;
             for (const auto& [status, device] : m_gpu_devices)
             {
-                std::cout << device.getInfo<CL_DEVICE_NAME>() << '\n';
+                std::cout << device.getInfo<CL_DEVICE_NAME>() << std::endl;
             }
-            std::cout << '\n';
+            std::cout << std::endl;
         }
         else
         {
-            std::cout << "Checking availability of the listed devices:\n";
+            std::cout << "Checking availability of the listed devices:" << std::endl;
             bool terminate_program = false;
             for (const auto& device_name : listed_devices)
             {
                 std::cout << "Name: " << device_name << " (";
                 if (!found_devices.count(device_name))
                 {
-                    std::cout << "ERR)\n";
+                    std::cout << "ERR)" << std::endl;
                     terminate_program = true;
                 }
                 else
                 {
-                    std::cout << "OK)\n";
+                    std::cout << "OK)" << std::endl;
                 }
             }
-            std::cout << '\n';
+            std::cout << std::endl;
             if (terminate_program)
             {
-                std::cerr << "Some of the listed devices are not available or do not support double precision\n";
+                std::cerr << "Some of the listed devices are not available or do not support double precision" << std::endl;
                 std::exit(6);
             }
         }

@@ -29,9 +29,9 @@ namespace kiv_ppr
 
     void CSecond_Iteration::Scale_Up_Basic_Values(typename CFirst_Iteration::TValues* basic_values)
     {
-        basic_values->min *= config::SCALE_FACTOR;
-        basic_values->max *= config::SCALE_FACTOR;
-        basic_values->mean *= config::SCALE_FACTOR;
+        basic_values->min *= config::processing::Scale_Factor;
+        basic_values->max *= config::processing::Scale_Factor;
+        basic_values->mean *= config::processing::Scale_Factor;
     }
 
     typename CSecond_Iteration::TValues CSecond_Iteration::Get_Values() const noexcept
@@ -94,7 +94,7 @@ namespace kiv_ppr
                         {
                             if (m_basic_values->min < 0)
                             {
-                                value /= config::SCALE_FACTOR;
+                                value /= config::processing::Scale_Factor;
                             }
 
                             delta = value - m_basic_values->mean;
@@ -113,7 +113,7 @@ namespace kiv_ppr
                     Report_Worker_Results(local_values);
                     return 0;
 
-                case CFile_Reader<double>::NRead_Status::ERROR: [[fallthrough]];
+                case CFile_Reader<double>::NRead_Status::Error: [[fallthrough]];
                 default:
                     return 1;
             }
