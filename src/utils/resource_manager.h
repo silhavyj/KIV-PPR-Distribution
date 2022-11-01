@@ -8,7 +8,7 @@
 #define __CL_ENABLE_EXCEPTIONS
 #include <CL/cl.hpp>
 
-#include "ArgParser.h"
+#include "arg_parser.h"
 
 namespace kiv_ppr
 {

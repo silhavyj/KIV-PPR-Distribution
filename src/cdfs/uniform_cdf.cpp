@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "UniformCDF.h"
+#include "uniform_cdf.h"
 
 namespace kiv_ppr
 {

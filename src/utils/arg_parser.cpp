@@ -1,8 +1,8 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "../Config.h"
-#include "ArgParser.h"
+#include "../config.h"
+#include "arg_parser.h"
 
 namespace kiv_ppr
 {

@@ -5,7 +5,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>c:\Users\Kuba\Downloads\ubuntu-22.04.1-desktop-amd64.iso all</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>c:\Users\Kuba\Downloads\ubuntu-22.04.1-desktop-amd64.iso smp</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

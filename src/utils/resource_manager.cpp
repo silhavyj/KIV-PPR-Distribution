@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "ResourceManager.h"
+#include "resource_manager.h"
 
 namespace kiv_ppr
 {

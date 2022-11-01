@@ -1,9 +1,9 @@
 #include <cmath>
 #include <utility>
 
-#include "../utils/Utils.h"
-#include "../Config.h"
-#include "ChiSquare.h"
+#include "../utils/utils.h"
+#include "../config.h"
+#include "chi_square.h"
 
 namespace kiv_ppr
 {

@@ -1,7 +1,7 @@
 #include <cmath>
 #include <stdexcept>
 
-#include "ExponentialCDF.h"
+#include "exponential_cdf.h"
 
 namespace kiv_ppr
 {

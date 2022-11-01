@@ -3,11 +3,11 @@
 #include <memory>
 #include <iostream>
 
-#include "FirstIteration.h"
-#include "SecondIteration.h"
-#include "../utils/FileReader.h"
-#include "Histogram.h"
-#include "../Config.h"
+#include "first_iteration.h"
+#include "second_iteration.h"
+#include "../utils/file_reader.h"
+#include "histogram.h"
+#include "../config.h"
 
 namespace kiv_ppr
 {

@@ -2,7 +2,7 @@
 #include <cmath>
 #include <stdexcept>
 
-#include "PoissonCDF.h"
+#include "poisson_cdf.h"
 
 namespace kiv_ppr
 {

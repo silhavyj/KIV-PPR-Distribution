@@ -4,11 +4,11 @@
 #include <iostream>
 #include <iomanip>
 
-#include "TestRunner.h"
-#include "../cdfs/NormalCDF.h"
-#include "../cdfs/UniformCDF.h"
-#include "../cdfs/ExponentialCDF.h"
-#include "../cdfs/PoissonCDF.h"
+#include "test_runner.h"
+#include "../cdfs/normal_cdf.h"
+#include "../cdfs/uniform_cdf.h"
+#include "../cdfs/exponential_cdf.h"
+#include "../cdfs/poisson_cdf.h"
 
 namespace kiv_ppr
 {

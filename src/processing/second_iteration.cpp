@@ -1,8 +1,8 @@
 #include <future>
 #include <cmath>
 
-#include "SecondIteration.h"
-#include "../utils/Utils.h"
+#include "second_iteration.h"
+#include "../utils/utils.h"
 
 namespace kiv_ppr
 {
@@ -57,7 +57,7 @@ namespace kiv_ppr
         watchdog.Stop();
 
         m_values.sd = std::sqrt(m_values.var);
-        if (return_values != 0 || watchdog.Get_Counter_Value() != m_file->Get_Number_Of_Elements())
+        if (return_values != 0 /* || watchdog.Get_Counter_Value() != m_file->Get_Number_Of_Elements()*/)
         {
             return 1;
         }

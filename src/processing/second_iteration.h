@@ -3,10 +3,10 @@
 #include <memory>
 #include <functional>
 
-#include "FirstIteration.h"
-#include "Histogram.h"
-#include "../utils/FileReader.h"
-#include "../utils/Watchdog.h"
+#include "first_iteration.h"
+#include "histogram.h"
+#include "../utils/file_reader.h"
+#include "../utils/watchdog.h"
 
 namespace kiv_ppr
 {

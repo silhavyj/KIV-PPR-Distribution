@@ -20,41 +20,41 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\utils\FileReader.cpp" />
-    <ClCompile Include="..\src\utils\WatchDog.cpp" />
-    <ClCompile Include="..\src\utils\Utils.cpp" />
-    <ClCompile Include="..\src\utils\ArgParser.cpp" />
-    <ClCompile Include="..\src\chi_square\TestRunner.cpp" />
-    <ClCompile Include="..\src\chi_square\ChiSquare.cpp" />
-    <ClCompile Include="..\src\processing\SecondIteration.cpp" />
-    <ClCompile Include="..\src\processing\FirstIteration.cpp" />
-    <ClCompile Include="..\src\processing\FileStats.cpp" />
-    <ClCompile Include="..\src\processing\Histogram.cpp" />
-    <ClCompile Include="..\src\cdfs\UniformCDF.cpp" />
-    <ClCompile Include="..\src\cdfs\NormalCDF.cpp" />
-    <ClCompile Include="..\src\cdfs\ExponentialCDF.cpp" />
-    <ClCompile Include="..\src\cdfs\PoissonCDF.cpp" />
-    <ClCompile Include="..\src\utils\ResourceManager.cpp" />
+    <ClCompile Include="..\src\utils\file_reader.cpp" />
+    <ClCompile Include="..\src\utils\watchdog.cpp" />
+    <ClCompile Include="..\src\utils\utils.cpp" />
+    <ClCompile Include="..\src\utils\arg_parser.cpp" />
+    <ClCompile Include="..\src\chi_square\test_runner.cpp" />
+    <ClCompile Include="..\src\chi_square\chi_square.cpp" />
+    <ClCompile Include="..\src\processing\second_iteration.cpp" />
+    <ClCompile Include="..\src\processing\first_iteration.cpp" />
+    <ClCompile Include="..\src\processing\file_stats.cpp" />
+    <ClCompile Include="..\src\processing\histogram.cpp" />
+    <ClCompile Include="..\src\cdfs\uniform_cdf.cpp" />
+    <ClCompile Include="..\src\cdfs\normal_cdf.cpp" />
+    <ClCompile Include="..\src\cdfs\exponential_cdf.cpp" />
+    <ClCompile Include="..\src\cdfs\poisson_cdf.cpp" />
+    <ClCompile Include="..\src\utils\resource_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Config.h" />
-    <ClCompile Include="..\src\utils\Singleton.h" />
-    <ClCompile Include="..\src\utils\FileReader.h" />
-    <ClCompile Include="..\src\utils\WatchDog.h" />
-    <ClCompile Include="..\src\utils\Utils.h" />
-    <ClCompile Include="..\src\utils\ArgParser.h" />
-    <ClCompile Include="..\src\chi_square\TestRunner.h" />
-    <ClCompile Include="..\src\chi_square\ChiSquare.h" />
-    <ClCompile Include="..\src\processing\SecondIteration.h" />
-    <ClCompile Include="..\src\processing\FirstIteration.h" />
-    <ClCompile Include="..\src\processing\FileStats.h" />
-    <ClCompile Include="..\src\processing\Histogram.h" />
-    <ClCompile Include="..\src\cdfs\Cdf.h" />
-    <ClCompile Include="..\src\cdfs\UniformCDF.h" />
-    <ClCompile Include="..\src\cdfs\NormalCDF.h" />
-    <ClCompile Include="..\src\cdfs\ExponentialCDF.h" />
-    <ClCompile Include="..\src\cdfs\PoissonCDF.h" />
-    <ClCompile Include="..\src\utils\ResourceManager.h" />
+    <ClCompile Include="..\src\config.h" />
+    <ClCompile Include="..\src\utils\singleton.h" />
+    <ClCompile Include="..\src\utils\file_reader.h" />
+    <ClCompile Include="..\src\utils\watchdog.h" />
+    <ClCompile Include="..\src\utils\utils.h" />
+    <ClCompile Include="..\src\utils\arg_parser.h" />
+    <ClCompile Include="..\src\chi_square\test_runner.h" />
+    <ClCompile Include="..\src\chi_square\chi_square.h" />
+    <ClCompile Include="..\src\processing\second_iteration.h" />
+    <ClCompile Include="..\src\processing\first_iteration.h" />
+    <ClCompile Include="..\src\processing\file_stats.h" />
+    <ClCompile Include="..\src\processing\histogram.h" />
+    <ClCompile Include="..\src\cdfs\cdf.h" />
+    <ClCompile Include="..\src\cdfs\uniform_cdf.h" />
+    <ClCompile Include="..\src\cdfs\normal_cdf.h" />
+    <ClCompile Include="..\src\cdfs\exponential_cdf.h" />
+    <ClCompile Include="..\src\cdfs\poisson_cdf.h" />
+    <ClCompile Include="..\src\utils\resource_manager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

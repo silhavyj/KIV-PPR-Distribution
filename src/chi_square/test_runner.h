@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "ChiSquare.h"
-#include "../processing/FileStats.h"
+#include "chi_square.h"
+#include "../processing/file_stats.h"
 
 namespace kiv_ppr
 {

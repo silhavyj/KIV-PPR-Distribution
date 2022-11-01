@@ -4,9 +4,9 @@
 #include <utility>
 #include <functional>
 
-#include "../Config.h"
-#include "../utils/FileReader.h"
-#include "../utils/Watchdog.h"
+#include "../config.h"
+#include "../utils/file_reader.h"
+#include "../utils/watchdog.h"
 
 namespace kiv_ppr
 {

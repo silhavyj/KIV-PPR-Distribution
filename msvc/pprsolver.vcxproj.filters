@@ -18,103 +18,100 @@
     <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\cdfs\UniformCDF.cpp">
+    <ClCompile Include="..\src\cdfs\uniform_cdf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\cdfs\NormalCDF.cpp">
+    <ClCompile Include="..\src\cdfs\normal_cdf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\cdfs\ExponentialCDF.cpp">
+    <ClCompile Include="..\src\cdfs\exponential_cdf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\cdfs\PoissonCDF.cpp">
+    <ClCompile Include="..\src\cdfs\poisson_cdf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\SecondIteration.cpp">
+    <ClCompile Include="..\src\processing\second_iteration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\FirstIteration.cpp">
+    <ClCompile Include="..\src\processing\first_iteration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\FileStats.cpp">
+    <ClCompile Include="..\src\processing\file_stats.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utils\WatchDog.cpp">
+    <ClCompile Include="..\src\utils\watchdog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utils\Utils.cpp">
+    <ClCompile Include="..\src\utils\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Config.h">
+    <ClCompile Include="..\src\config.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\cdfs\Cdf.h">
+    <ClCompile Include="..\src\cdfs\cdf.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\cdfs\UniformCDF.h">
+    <ClCompile Include="..\src\cdfs\uniform_cdf.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\cdfs\NormalCDF.h">
+    <ClCompile Include="..\src\cdfs\normal_cdf.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\cdfs\ExponentialCDF.h">
+    <ClCompile Include="..\src\processing\second_iteration.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\SecondIteration.h">
+    <ClCompile Include="..\src\processing\first_iteration.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\FirstIteration.h">
+    <ClCompile Include="..\src\processing\file_stats.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\FileStats.h">
+    <ClCompile Include="..\src\utils\watchdog.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utils\WatchDog.h">
+    <ClCompile Include="..\src\utils\utils.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utils\Utils.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\utils\FileReader.cpp">
+    <ClCompile Include="..\src\utils\file_reader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utils\ArgParser.cpp">
+    <ClCompile Include="..\src\utils\arg_parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\Histogram.cpp">
+    <ClCompile Include="..\src\processing\histogram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utils\FileReader.h">
+    <ClCompile Include="..\src\utils\file_reader.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utils\ArgParser.h">
+    <ClCompile Include="..\src\utils\arg_parser.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\processing\Histogram.h">
+    <ClCompile Include="..\src\processing\histogram.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\cdfs\PoissonCDF.h">
+    <ClCompile Include="..\src\cdfs\poisson_cdf.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utils\ResourceManager.cpp">
+    <ClCompile Include="..\src\utils\resource_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\chi_square\TestRunner.cpp">
+    <ClCompile Include="..\src\chi_square\test_runner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\chi_square\ChiSquare.cpp">
+    <ClCompile Include="..\src\chi_square\chi_square.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utils\Singleton.h">
+    <ClCompile Include="..\src\utils\singleton.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utils\ResourceManager.h">
+    <ClCompile Include="..\src\utils\resource_manager.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\chi_square\TestRunner.h">
+    <ClCompile Include="..\src\chi_square\test_runner.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\chi_square\ChiSquare.h">
+    <ClCompile Include="..\src\chi_square\chi_square.h">
       <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,13 +1,13 @@
 #include <iostream>
 
-#include "utils/Utils.h"
-#include "utils/ArgParser.h"
-#include "utils/ResourceManager.h"
-#include "utils/FileReader.h"
-#include "utils/Singleton.h"
-#include "Config.h"
-#include "processing/FileStats.h"
-#include "chi_square/TestRunner.h"
+#include "utils/utils.h"
+#include "utils/arg_parser.h"
+#include "utils/resource_manager.h"
+#include "utils/file_reader.h"
+#include "utils/singleton.h"
+#include "config.h"
+#include "processing/file_stats.h"
+#include "chi_square/test_runner.h"
 
 static void Run(const char* filename, double p_critical)
 {
@@ -82,6 +82,4 @@ int main(int argc, char* argv[])
         Run(arg_parser.Get_Filename(), p_critical);
     });
     std::cout << "\nTime of execution: " << seconds << " sec" << std::endl;
-
-    std::cin.get();
 }

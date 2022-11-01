@@ -2,7 +2,7 @@
 #include <cmath>
 #include <stdexcept>
 
-#include "NormalCDF.h"
+#include "normal_cdf.h"
 
 namespace kiv_ppr
 {

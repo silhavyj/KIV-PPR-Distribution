@@ -4,8 +4,8 @@
 #include <memory>
 #include <iostream>
 
-#include "../cdfs/Cdf.h"
-#include "../processing/Histogram.h"
+#include "../cdfs/cdf.h"
+#include "../processing/histogram.h"
 
 namespace kiv_ppr
 {
