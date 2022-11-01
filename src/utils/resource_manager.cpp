@@ -4,6 +4,13 @@
 
 namespace kiv_ppr
 {
+    CResource_Manager::TRecource::TRecource(NDevice_Status status, cl::Device device)
+        : m_status(status),
+          m_device(device)
+    {
+
+    }
+
     void CResource_Manager::Set_Run_Type(CArg_Parser::NRun_Type run_type)
     {
         m_run_type = run_type;

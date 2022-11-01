@@ -15,6 +15,9 @@ namespace kiv_ppr
     class CResource_Manager
     {
     public:
+        CResource_Manager() = default;
+        ~CResource_Manager() = default;
+
         void Set_Run_Type(CArg_Parser::NRun_Type run_type);
         void Find_Available_GPUs(const std::unordered_set<std::string>& listed_devices);
 
@@ -31,8 +34,10 @@ namespace kiv_ppr
 
         struct TRecource
         {
-            NDevice_Status status;
-            cl::Device device;
+            NDevice_Status m_status;
+            cl::Device m_device;
+
+            TRecource(NDevice_Status status, cl::Device device);
         };
 
     private:

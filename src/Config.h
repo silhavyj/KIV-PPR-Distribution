@@ -14,7 +14,7 @@ namespace kiv_ppr::config
     namespace processing
     {
         static constexpr uint32_t Block_Size_Per_Read = (1024 * 1024 * 50) / sizeof(double);
-        static constexpr uint32_t Watchdog_Sleep_Sec = 2;
+        static constexpr uint32_t Watchdog_Sleep_Sec = 4;
         static constexpr double Scale_Factor = 2.0;
     }
     
