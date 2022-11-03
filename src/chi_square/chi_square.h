@@ -43,6 +43,11 @@ namespace kiv_ppr
         [[nodiscard]] double Calculate_E(double x, double x_prev, bool first_interval) const;
 
     private:
+        double Calculate_P_Value(double x, int df);
+        double Gauss(double z);
+        double Exp(double x);
+
+    private:
         std::string m_name;
         double m_alpha_critical;
         std::shared_ptr<CHistogram> m_histogram;

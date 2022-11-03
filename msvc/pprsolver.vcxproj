@@ -55,6 +55,7 @@
     <ClCompile Include="..\src\cdfs\exponential_cdf.h" />
     <ClCompile Include="..\src\cdfs\poisson_cdf.h" />
     <ClCompile Include="..\src\utils\resource_manager.h" />
+    <ClCompile Include="..\src\processing\gpu_kernels.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

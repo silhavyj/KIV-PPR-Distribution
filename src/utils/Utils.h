@@ -50,10 +50,4 @@ namespace kiv_ppr::utils
     }
 
     bool Is_Valid_Double(double value);
-
-    double Calculate_P_Value(double x, int df);
-
-    double Gauss(double z);
-
-    double Exp(double x);
 }
