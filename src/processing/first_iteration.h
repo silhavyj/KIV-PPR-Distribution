@@ -17,11 +17,11 @@ namespace kiv_ppr
 
         struct TValues
         {
-            double min;
-            double max;
-            double mean;
-            size_t count;
-            bool all_ints;
+            double min = std::numeric_limits<double>::max();
+            double max = std::numeric_limits<double>::lowest();
+            double mean = 0.0;
+            size_t count = 0;
+            bool all_ints = true;
         };
 
     public:

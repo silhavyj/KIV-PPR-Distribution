@@ -45,6 +45,8 @@ static void Run(const char* filename, double p_critical)
 
 int main(int argc, char* argv[])
 {
+    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>("test_data.dat", false, 10, 5, 2);
+
     kiv_ppr::CArg_Parser arg_parser(argc, argv);
     try
     {

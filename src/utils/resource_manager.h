@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <mutex>
 #include <unordered_set>
 
 // https://stackoverflow.com/questions/56858213/how-to-create-nvidia-opencl-project/57017982#57017982
@@ -20,6 +21,8 @@ namespace kiv_ppr
 
         void Set_Run_Type(CArg_Parser::NRun_Type run_type);
         void Find_Available_GPUs(const std::unordered_set<std::string>& listed_devices);
+        const cl::Device* Get_Avaliable_Device();
+        void Release_Device(const cl::Device* device);
 
     private:
         void Print_Found_Devs(const std::unordered_set<std::string>& found_devices,
@@ -43,5 +46,6 @@ namespace kiv_ppr
     private:
         std::vector<TRecource> m_gpu_devices;
         CArg_Parser::NRun_Type m_run_type{};
+        std::mutex m_mtx;
     };
 }

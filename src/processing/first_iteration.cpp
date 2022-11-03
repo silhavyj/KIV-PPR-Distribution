@@ -15,9 +15,7 @@ namespace kiv_ppr
           m_values{},
           m_worker_means{}
     {
-        m_values.all_ints = true;
-        m_values.min = std::numeric_limits<double>::max();
-        m_values.max = std::numeric_limits<double>::lowest();
+
     }
 
     typename CFirst_Iteration::TValues CFirst_Iteration::Get_Values() const noexcept
@@ -73,13 +71,7 @@ namespace kiv_ppr
 
     int CFirst_Iteration::Worker(config::TThread_Params* thread_config, CWatchdog* watchdog)
     {
-        TValues local_values {
-            std::numeric_limits<double>::max(),
-            std::numeric_limits<double>::lowest(),
-            0.0,
-            0,
-            true
-        };
+        TValues local_values{};
         double delta;
 
         while (true)

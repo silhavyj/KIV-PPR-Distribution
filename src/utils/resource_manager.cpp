@@ -99,4 +99,30 @@ namespace kiv_ppr
             }
         }
     }
+
+    const cl::Device* CResource_Manager::Get_Avaliable_Device()
+    {
+        const std::lock_guard<std::mutex> lock(m_mtx);
+        for (auto& [status, device] : m_gpu_devices)
+        {
+            if (NDevice_Status::Available == status)
+            {
+                status = NDevice_Status::Taken;
+                return &device;
+            }
+        }
+        return nullptr;
+    }
+
+    void CResource_Manager::Release_Device(const cl::Device* device)
+    {
+        const std::lock_guard<std::mutex> lock(m_mtx);
+        for (auto& [status, m_device] : m_gpu_devices)
+        {
+            if (&m_device == device)
+            {
+                status = NDevice_Status::Available;
+            }
+        }
+    }
 }

@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "watchdog.h"
 
 namespace kiv_ppr
@@ -43,6 +45,7 @@ namespace kiv_ppr
             current_value = m_counter;
             if (!first_check && previous_value == current_value)
             {
+                std::cerr << "Watchodog: Program seems to be inactive. Exiting..." << std::endl;
                 std::exit(5);
             }
             first_check = false;
