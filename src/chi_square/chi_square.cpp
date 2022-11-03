@@ -81,14 +81,14 @@ namespace kiv_ppr
         const auto df = static_cast<int>(number_of_interval - 1 - estimated_parameters);
         const double p_value = Calculate_P_Value(chi_square_val, df);
 
-        ETResult_Status result_status;
+        NTResult_Status result_status;
         if (p_value > m_alpha_critical)
         {
-            result_status = ETResult_Status::Accepted;
+            result_status = NTResult_Status::Accepted;
         }
         else
         {
-            result_status = ETResult_Status::Rejected;
+            result_status = NTResult_Status::Rejected;
         }
         return { result_status, chi_square_val, p_value, df, m_name };
     }

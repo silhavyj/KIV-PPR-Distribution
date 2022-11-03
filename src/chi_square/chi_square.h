@@ -12,7 +12,7 @@ namespace kiv_ppr
     class CChi_Square
     {
     public:
-        enum class ETResult_Status : uint8_t
+        enum class NTResult_Status : uint8_t
         {
             Accepted,
             Rejected
@@ -20,7 +20,7 @@ namespace kiv_ppr
 
         struct TResult
         {
-            ETResult_Status status{};
+            NTResult_Status status{};
             double chi_square{};
             double p_value{};
             int df{};

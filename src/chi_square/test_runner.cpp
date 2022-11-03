@@ -67,12 +67,14 @@ namespace kiv_ppr
 
             switch (result.status)
             {
-                case CChi_Square::ETResult_Status::Accepted:
+                case CChi_Square::NTResult_Status::Accepted:
                     std::cout << "YES";
                     break;
-                case CChi_Square::ETResult_Status::Rejected:
+
+                case CChi_Square::NTResult_Status::Rejected:
                     std::cout << "NO";
                     break;
+
                 default:
                     std::cout << "?";
             }
@@ -81,12 +83,12 @@ namespace kiv_ppr
         std::cout << std::left << std::setw(15) << "------------------------------------------------------------" << std::endl;
         std::cout << "Level of significance = " << (m_p_critical * 100.0) << "%\n" << std::endl;
 
-        if (results.begin()->status == CChi_Square::ETResult_Status::Rejected)
+        if (results.begin()->status == CChi_Square::NTResult_Status::Rejected)
         {
             std::cout << "Statistically, none of the tests has been accepted.\n" << std::endl;
             Print_Result_Reasoning(*results.begin());
         }
-        else if ((results.begin() + 1)->status == CChi_Square::ETResult_Status::Accepted)
+        else if ((results.begin() + 1)->status == CChi_Square::NTResult_Status::Accepted)
         {
             std::cout << "There are at least two tests that have been accepted.\n" << std::endl;
             Print_Result_Reasoning(*results.begin());
@@ -99,9 +101,16 @@ namespace kiv_ppr
 
     inline void CTest_Runner::Print_Result_Reasoning(CChi_Square::TResult& result)
     {
-        std::cout << "However, based on the Chi-Square error (" << result.chi_square
-                  << ") and the degrees of freedom (" << result.df << "), the data seems to correlate the most to the " << result.name
-                  << " distribution though it is STRONGLY recommended to double verify the answer." << std::endl;
+        if (result.df < 0)
+        {
+            std::cout << "Judging by all degrees of freedom being less than 0, you may need to input more data into the program." << std::endl;
+        }
+        else
+        {
+            std::cout << "However, based on the Chi-Square error (" << result.chi_square
+                      << ") and the degrees of freedom (" << result.df << "), the data seems to correlate the most to the " << result.name
+                      << " distribution though it is STRONGLY recommended to double verify the answer." << std::endl;
+        }
     }
 
     inline CChi_Square::TResult CTest_Runner::Run_Normal() const
