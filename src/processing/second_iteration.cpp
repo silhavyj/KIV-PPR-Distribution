@@ -43,10 +43,10 @@ namespace kiv_ppr
     {
         m_file->Seek_Beg();
         std::vector<std::future<int>> workers(thread_config->number_of_threads);
-        CWatchdog watchdog(thread_config->watchdog_expiration_sec);
+        //CWatchdog watchdog(thread_config->watchdog_expiration_sec);
         for (auto& worker : workers)
         {
-            worker = std::async(std::launch::async, &CSecond_Iteration::Worker, this, thread_config, &watchdog);
+            worker = std::async(std::launch::async, &CSecond_Iteration::Worker, this, thread_config);
         }
 
         int return_values = 0;
@@ -54,10 +54,10 @@ namespace kiv_ppr
         {
             return_values += worker.get();
         }
-        watchdog.Stop();
+        //watchdog.Stop();
 
         m_values.sd = std::sqrt(m_values.var);
-        if (return_values != 0 /* || watchdog.Get_Counter_Value() != m_file->Get_Number_Of_Elements()*/)
+        if (return_values != 0 /* || watchdog.Get_Counter_Value() != m_file->Get_Number_Of_Elements() */)
         {
             return 1;
         }
@@ -71,7 +71,7 @@ namespace kiv_ppr
         m_values.histogram->operator+=(*values.histogram);
     }
 
-    int CSecond_Iteration::Worker(config::TThread_Params* thread_config, CWatchdog* watchdog)
+    int CSecond_Iteration::Worker(config::TThread_Params* thread_config)
     {
         TValues local_values {
             0.0,
@@ -106,7 +106,6 @@ namespace kiv_ppr
                             local_values.histogram->Add(value);
                         }
                     }
-                    watchdog->Kick(count);
                     break;
 
                 case CFile_Reader<double>::NRead_Status::EOF_:

@@ -21,8 +21,10 @@ namespace kiv_ppr
 
         void Set_Run_Type(CArg_Parser::NRun_Type run_type);
         void Find_Available_GPUs(const std::unordered_set<std::string>& listed_devices);
-        const cl::Device* Get_Avaliable_Device();
+        [[nodiscard]] const cl::Device* Get_Avaliable_Device();
         void Release_Device(const cl::Device* device);
+        [[nodiscard]] CArg_Parser::NRun_Type Get_Run_Type() const;
+
 
     private:
         void Print_Found_Devs(const std::unordered_set<std::string>& found_devices,

@@ -104,7 +104,7 @@ namespace kiv_ppr
 
         if (!file.Is_Open())
         {
-            std::cerr << "File has not been opened. Exiting.." << std::endl;
+            std::cout << "File has not been opened. Exiting.." << std::endl;
             exit(1);
         }
 
@@ -126,7 +126,7 @@ namespace kiv_ppr
 
                 case kiv_ppr::CFile_Reader<E>::NRead_Status::Error: [[fallthrough]];
                 default:
-                    std::cerr << "Error occurred printing out the contents of the input file. Exiting..." << std::endl;
+                    std::cout << "Error occurred printing out the contents of the input file. Exiting..." << std::endl;
                     exit(1);
             }
         }

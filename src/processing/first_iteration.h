@@ -7,6 +7,7 @@
 #include "../config.h"
 #include "../utils/file_reader.h"
 #include "../utils/watchdog.h"
+#include "gpu_kernels.h"
 
 namespace kiv_ppr
 {
@@ -25,8 +26,7 @@ namespace kiv_ppr
         };
 
     public:
-        explicit CFirst_Iteration(CFile_Reader<double>* file,
-                                  std::function<bool(double)> is_valid_number);
+        explicit CFirst_Iteration(CFile_Reader<double>* file);
 
         ~CFirst_Iteration() = default;
 
@@ -34,12 +34,27 @@ namespace kiv_ppr
         [[nodiscard]] int Run(config::TThread_Params* thread_config);
 
     private:
+        struct TOpenCL_Report
+        {
+            bool success;
+            bool all_processed;
+            TValues values;
+        };
+
+    private:
         void Report_Worker_Results(TValues values);
-        [[nodiscard]] int Worker(config::TThread_Params* thread_config, CWatchdog* watchdog);
+        [[nodiscard]] int Worker(config::TThread_Params* thread_config);
+        TOpenCL_Report Execute_OpenCL(kernels::TOpenCL_Settings& opencl, CFile_Reader<double>::TData_Block& data_block);
+        static TValues Agregate_Results_From_GPU(const std::vector<double>& out_min,
+                                                 const std::vector<double>& out_max, 
+                                                 const std::vector<double>& out_mean);
+        void Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block);
+        void Execute_On_GPU(TValues& local_values, CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl);
+        TValues Process_Data_Block_On_CPU(CFile_Reader<double>::TData_Block& data_block, size_t offset);
+        void Merge_Values(TValues& dest, const TValues& src);
 
     private:
         CFile_Reader<double>* m_file;
-        std::function<bool(double)> m_is_valid_number;
         TValues m_values;
         std::mutex m_mtx;
         std::vector<Worker_Mean_t> m_worker_means;

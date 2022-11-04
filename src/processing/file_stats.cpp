@@ -15,7 +15,7 @@ namespace kiv_ppr
 
     int CFile_Stats::Process(config::TThread_Params* thread_config)
     {
-        CFirst_Iteration first_iteration(m_file, m_is_valid_number);
+        CFirst_Iteration first_iteration(m_file);
         if (0 != first_iteration.Run(thread_config))
         {
             return 1;

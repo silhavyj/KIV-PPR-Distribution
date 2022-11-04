@@ -16,7 +16,7 @@ static void Run(const char* filename, double p_critical)
     {
         if (file.Get_File_Size() < sizeof(double))
         {
-            std::cerr << "The size of the input file is insufficient" << std::endl;
+            std::cout << "The size of the input file is insufficient" << std::endl;
             std::exit(1);
         }
 
@@ -25,7 +25,7 @@ static void Run(const char* filename, double p_critical)
         kiv_ppr::CFile_Stats file_stats(&file, kiv_ppr::utils::Is_Valid_Double);
         if (0 != file_stats.Process(&kiv_ppr::config::default_thread_params))
         {
-            std::cerr << "Failed to process the input file (" << file.Get_Filename() << ")" << std::endl;
+            std::cout << "Failed to process the input file (" << file.Get_Filename() << ")" << std::endl;
             std::exit(1);
         }
         auto values = file_stats.Get_Values();
@@ -38,7 +38,7 @@ static void Run(const char* filename, double p_critical)
     }
     else
     {
-        std::cerr << "Failed to open the input file (" << file.Get_Filename() << ")" << std::endl;
+        std::cout << "Failed to open the input file (" << file.Get_Filename() << ")" << std::endl;
         std::exit(1);
     }
 }
@@ -60,15 +60,15 @@ int main(int argc, char* argv[])
     }
     catch (const std::exception& e)
     {
-        std::cerr << "Error occurred when parsing input parameters - " << e.what() << std::endl;
-        std::cerr << "Run 'pprsolver.exe --help'" << std::endl;
+        std::cout << "Error occurred when parsing input parameters - " << e.what() << std::endl;
+        std::cout << "Run 'pprsolver.exe --help'" << std::endl;
         return 1;
     }
 
     double p_critical = arg_parser.Get_P_Critical();
     if (p_critical < 0)
     {
-        std::cerr << "p_critical (" << p_critical << ") must be a positive number" << std::endl;
+        std::cout << "p_critical (" << p_critical << ") must be a positive number" << std::endl;
         return 1;
     }
 

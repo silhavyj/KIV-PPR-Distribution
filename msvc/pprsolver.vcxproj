@@ -35,6 +35,7 @@
     <ClCompile Include="..\src\cdfs\exponential_cdf.cpp" />
     <ClCompile Include="..\src\cdfs\poisson_cdf.cpp" />
     <ClCompile Include="..\src\utils\resource_manager.cpp" />
+    <ClCompile Include="..\src\processing\gpu_kernels.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\config.h" />

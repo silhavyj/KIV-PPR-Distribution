@@ -38,7 +38,8 @@ namespace kiv_ppr
                     continue;
                 }
 				
-                const std::string name = device.getInfo<CL_DEVICE_NAME>();
+                std::string name = device.getInfo<CL_DEVICE_NAME>();
+                name.pop_back();
                 const std::string extensions = device.getInfo<CL_DEVICE_EXTENSIONS>();
 
                 if (extensions.find("cl_khr_fp64") == std::string::npos &&
@@ -51,7 +52,9 @@ namespace kiv_ppr
                 {
                     m_gpu_devices.emplace_back(NDevice_Status::Available, device);
                 }
-                found_devices.insert(device.getInfo<CL_DEVICE_NAME>());
+                std::string device_name = device.getInfo<CL_DEVICE_NAME>();
+                device_name.pop_back();
+                found_devices.insert(device_name);
             }
         }
         Print_Found_Devs(found_devices, listed_devices);
@@ -64,7 +67,7 @@ namespace kiv_ppr
         {
             if (m_gpu_devices.empty())
             {
-                std::cerr << "No available GPU devices supported double precision were found" << std::endl;
+                std::cout << "No available GPU devices supported double precision were found" << std::endl;
                 std::exit(6);
             }
             std::cout << "Available GPU devices supporting double precision:" << std::endl;
@@ -94,7 +97,7 @@ namespace kiv_ppr
             std::cout << std::endl;
             if (terminate_program)
             {
-                std::cerr << "Some of the listed devices are not available or do not support double precision" << std::endl;
+                std::cout << "Some of the listed devices are not available or do not support double precision" << std::endl;
                 std::exit(6);
             }
         }
@@ -124,5 +127,10 @@ namespace kiv_ppr
                 status = NDevice_Status::Available;
             }
         }
+    }
+
+    CArg_Parser::NRun_Type CResource_Manager::Get_Run_Type() const
+    {
+        return m_run_type;
     }
 }
