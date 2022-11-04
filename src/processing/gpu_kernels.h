@@ -43,7 +43,7 @@ namespace kiv_ppr::kernels
                                            __global double* out_min,
                                            __local double* local_max,
                                            __global double* out_max,
-								           __local int* local_all_ints,
+                                           __local int* local_all_ints,
                                            __global int* out_all_ints,
                                            __local double* local_count,
                                            __global double* out_count)
@@ -57,7 +57,7 @@ namespace kiv_ppr::kernels
             local_min[local_id] = local_mean[local_id];
             local_max[local_id] = local_mean[local_id];
             local_count[local_id] = Is_Valid_Double(data[global_id]);
-	        local_all_ints[local_id] = !local_count[local_id] || ceil(data[global_id]) == floor(data[global_id]);
+            local_all_ints[local_id] = !local_count[local_id] || ceil(data[global_id]) == floor(data[global_id]);
 
             barrier(CLK_LOCAL_MEM_FENCE);
 
@@ -72,7 +72,7 @@ namespace kiv_ppr::kernels
                     valid_2 = Is_Valid_Double(local_mean[local_id + i]);
 
                     local_count[local_id] += local_count[local_id + i];
-			        local_all_ints[local_id] = local_all_ints[local_id] && local_all_ints[local_id + i];
+                    local_all_ints[local_id] = local_all_ints[local_id] && local_all_ints[local_id + i];
 
                     if (!valid_1 && valid_2)
                     {
@@ -98,7 +98,7 @@ namespace kiv_ppr::kernels
                 out_min[group_id] = local_min[0];
                 out_max[group_id] = local_max[0];
                 out_count[group_id] = local_count[0];
-		        out_all_ints[group_id] = local_all_ints[0];
+                out_all_ints[group_id] = local_all_ints[0];
             }
         }
     )CLC";
