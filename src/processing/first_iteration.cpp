@@ -143,7 +143,7 @@ namespace kiv_ppr
         cl::Buffer out_min_buff(opencl.context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, work_groups_count * sizeof(double));
         cl::Buffer out_max_buff(opencl.context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, work_groups_count * sizeof(double));
         cl::Buffer out_count_buff(opencl.context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, work_groups_count * sizeof(double));
-        cl::Buffer out_all_ints_buff(opencl.context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, 1 * sizeof(unsigned long));
+        cl::Buffer out_all_ints_buff(opencl.context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, work_groups_count * sizeof(int));
 
         opencl.kernel.setArg(0, data_buff);
         opencl.kernel.setArg(1, opencl.work_group_size * sizeof(double), nullptr);
@@ -152,15 +152,16 @@ namespace kiv_ppr
         opencl.kernel.setArg(4, out_min_buff);
         opencl.kernel.setArg(5, opencl.work_group_size * sizeof(double), nullptr);
         opencl.kernel.setArg(6, out_max_buff);
-        opencl.kernel.setArg(7, out_all_ints_buff);
-        opencl.kernel.setArg(8, opencl.work_group_size * sizeof(double), nullptr);
-        opencl.kernel.setArg(9, out_count_buff);
+        opencl.kernel.setArg(7, opencl.work_group_size * sizeof(double), nullptr);
+        opencl.kernel.setArg(8, out_all_ints_buff);
+        opencl.kernel.setArg(9, opencl.work_group_size * sizeof(double), nullptr);
+        opencl.kernel.setArg(10, out_count_buff);
 
         std::vector<double> out_min(work_groups_count);
         std::vector<double> out_max(work_groups_count);
         std::vector<double> out_mean(work_groups_count);
         std::vector<double> out_count(work_groups_count);
-        unsigned long all_ints = 0;
+        std::vector<int> out_all_ints(work_groups_count);
 
         cl::CommandQueue cmd_queue(opencl.context, *opencl.device);
 
@@ -170,12 +171,14 @@ namespace kiv_ppr
         cmd_queue.enqueueReadBuffer(out_min_buff, CL_TRUE, 0, out_min.size() * sizeof(double), out_min.data());
         cmd_queue.enqueueReadBuffer(out_max_buff, CL_TRUE, 0, out_max.size() * sizeof(double), out_max.data());
         cmd_queue.enqueueReadBuffer(out_count_buff, CL_TRUE, 0, out_count.size() * sizeof(double), out_count.data());
-        cmd_queue.enqueueReadBuffer(out_all_ints_buff, CL_TRUE, 0, 1 * sizeof(unsigned long), &all_ints);
+        cmd_queue.enqueueReadBuffer(out_all_ints_buff, CL_TRUE, 0, out_all_ints.size() * sizeof(unsigned long), out_all_ints.data());
 
         size_t number_of_valid_doubles = 0;
-        for (const auto& value : out_count)
+        bool all_ints = true;
+        for (size_t i = 0; i < work_groups_count; ++i)
         {
-            number_of_valid_doubles += static_cast<size_t>(value);
+            number_of_valid_doubles += static_cast<size_t>(out_count[i]);
+            all_ints = all_ints && out_all_ints[i];
         }
 
         const auto aggregated_vals = Agregate_Results_From_GPU(out_min, out_max, out_mean, out_count, number_of_valid_doubles);
@@ -185,7 +188,7 @@ namespace kiv_ppr
             aggregated_vals.max,
             aggregated_vals.mean,
             number_of_valid_doubles,
-            all_ints == 0
+            all_ints
         } };
     }
 

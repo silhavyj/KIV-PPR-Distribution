@@ -9,112 +9,99 @@ namespace kiv_ppr::kernels
 {
     static constexpr const char* First_Iteration_Kernel_Name = "First_File_Iteration\0";
 
-    static constexpr const char* First_Iteration_Kernel = 
-        "#pragma OPENCL EXTENSION cl_khr_fp64 : enable\n"
-        "#pragma OPENCL EXTENSION cl_khr_int64_base_atomics : enable\n"
-        "\n"
-        "// https://opensource.apple.com/source/Libm/Libm-315/Source/ARM/fpclassify.c.auto.html\n"
-        "int fpclassify(double x)\n"
-        "{\n"
-        "    ulong u = *(ulong*)&x;\n"
-        "    uint exp = (uint)((u & 0x7fffffffffffffffUL) >> 52);\n"
-        "\n"
-        "    if (0 == exp)\n"
-        "    {\n"
-        "        if (u & 0x000fffffffffffffUL)\n"
-        "        {\n"
-        "            return 0;\n"
-        "        }\n"
-        "        return 1;\n"
-        "    }\n"
-        "    if (0x7ff == exp)\n"
-        "    {\n"
-        "        if (u & 0x000fffffffffffffUL)\n"
-        "        {\n"
-        "            return 2;\n"
-        "        }\n"
-        "        return 3;\n"
-        "    }\n"
-        "    return 4;\n"
-        "}\n"
-        "\n"
-        "int Is_Valid_Double(double x)\n"
-        "{\n"
-        "    int validation_result = fpclassify(x);\n"
-        "    return 4 == validation_result || 1 == validation_result;\n"
-        "}\n"
-        "\n"
-        "__kernel void First_File_Iteration(__global double* data,\n"
-        "                                   __local double* local_mean,\n"
-        "                                   __global double* out_mean,\n"
-        "                                   __local double* local_min,\n"
-        "                                   __global double* out_min,\n"
-        "                                   __local double* local_max,\n"
-        "                                   __global double* out_max,\n"
-        "                                   __global ulong* out_all_ints,\n"
-        "                                   __local double* local_count,\n"
-        "                                   __global double* out_count)\n"
-        "{\n"
-        "    size_t global_id = get_global_id(0);\n"
-        "    size_t local_id = get_local_id(0);\n"
-        "    size_t local_size = get_local_size(0);\n"
-        "    size_t group_id = get_group_id(0);\n"
-        "\n"
-        "    local_mean[local_id] = data[global_id] / 2.0;\n"
-        "    local_min[local_id] = local_mean[local_id];\n"
-        "    local_max[local_id] = local_mean[local_id];\n"
-        "    local_count[local_id] = 0;\n"
-        "\n"
-        "    barrier(CLK_LOCAL_MEM_FENCE);\n"
-        "\n"
-        "    if (Is_Valid_Double(data[global_id]))\n"
-        "    {\n"
-        "        local_count[local_id] = 1;\n"
-        "\n"
-        "        if (ceil(data[global_id]) != floor(data[global_id]))\n"
-        "        {\n"
-        "            atom_inc(&out_all_ints[0]);\n"
-        "        }\n"
-        "    }\n"
-        "\n"
-        "    int valid_1;\n"
-        "    int valid_2;\n"
-        "\n"
-        "    for (size_t i = local_size / 2; i > 0; i /= 2)\n"
-        "    {\n"
-        "        if (local_id < i)\n"
-        "        {\n"
-        "            valid_1 = Is_Valid_Double(local_mean[local_id]);\n"
-        "            valid_2 = Is_Valid_Double(local_mean[local_id + i]);\n"
-        "\n"
-        "            local_count[local_id] += local_count[local_id + i];\n"
-        "\n"
-        "            if (!valid_1 && valid_2)\n"
-        "            {\n"
-        "                local_mean[local_id] = local_mean[local_id + i];\n"
-        "                local_min[local_id] = local_min[local_id + i];\n"
-        "                local_max[local_id] = local_max[local_id + i];\n"
-        "                valid_1 = 1;\n"
-        "            }\n"
-        "            if (valid_1 && valid_2)\n"
-        "            {\n"
-        "                local_mean[local_id] = (local_mean[local_id] / 2.0) + (local_mean[local_id + i] / 2.0);\n"
-        "                local_min[local_id] = min(local_min[local_id], local_min[local_id + i]);\n"
-        "                local_max[local_id] = max(local_max[local_id], local_max[local_id + i]);\n"
-        "            }\n"
-        "        }\n"
-        "\n"
-        "        barrier(CLK_LOCAL_MEM_FENCE);\n"
-        "    }\n"
-        "\n"
-        "    if (0 == local_id)\n"
-        "    {\n"
-        "        out_mean[group_id] = local_mean[0];\n"
-        "        out_min[group_id] = local_min[0];\n"
-        "        out_max[group_id] = local_max[0];\n"
-        "        out_count[group_id] = local_count[0];\n"
-        "    }\n"
-        "}\n";
+    static constexpr const char* First_Iteration_Kernel = R"CLC(
+        #pragma OPENCL EXTENSION cl_khr_fp64 : enable
+
+        int Is_Valid_Double(double x)
+        {
+            ulong u = *(ulong*)&x;
+            uint exp = (uint)((u & 0x7fffffffffffffffUL) >> 52);
+
+            if (0 == exp)
+            {
+                if (u & 0x000fffffffffffffUL)
+                {
+                    return 0;
+                }
+                return 1;
+            }
+            if (0x7ff == exp)
+            {
+                if (u & 0x000fffffffffffffUL)
+                {
+                    return 0;
+                }
+                return 0;
+            }
+            return 1;
+        }
+
+        __kernel void First_File_Iteration(__global double* data,
+                                           __local double* local_mean,
+                                           __global double* out_mean,
+                                           __local double* local_min,
+                                           __global double* out_min,
+                                           __local double* local_max,
+                                           __global double* out_max,
+								           __local int* local_all_ints,
+                                           __global int* out_all_ints,
+                                           __local double* local_count,
+                                           __global double* out_count)
+        {
+            size_t global_id = get_global_id(0);
+            size_t local_id = get_local_id(0);
+            size_t local_size = get_local_size(0);
+            size_t group_id = get_group_id(0);
+
+            local_mean[local_id] = data[global_id] / 2.0;
+            local_min[local_id] = local_mean[local_id];
+            local_max[local_id] = local_mean[local_id];
+            local_count[local_id] = Is_Valid_Double(data[global_id]);
+	        local_all_ints[local_id] = !local_count[local_id] || ceil(data[global_id]) == floor(data[global_id]);
+
+            barrier(CLK_LOCAL_MEM_FENCE);
+
+            int valid_1;
+            int valid_2;
+
+            for (size_t i = local_size / 2; i > 0; i /= 2)
+            {
+                if (local_id < i)
+                {
+                    valid_1 = Is_Valid_Double(local_mean[local_id]);
+                    valid_2 = Is_Valid_Double(local_mean[local_id + i]);
+
+                    local_count[local_id] += local_count[local_id + i];
+			        local_all_ints[local_id] = local_all_ints[local_id] && local_all_ints[local_id + i];
+
+                    if (!valid_1 && valid_2)
+                    {
+                        local_mean[local_id] = local_mean[local_id + i];
+                        local_min[local_id] = local_min[local_id + i];
+                        local_max[local_id] = local_max[local_id + i];
+                        valid_1 = 1;
+                    }
+                    if (valid_1 && valid_2)
+                    {
+                        local_mean[local_id] = (local_mean[local_id] / 2.0) + (local_mean[local_id + i] / 2.0);
+                        local_min[local_id] = min(local_min[local_id], local_min[local_id + i]);
+                        local_max[local_id] = max(local_max[local_id], local_max[local_id + i]);
+                    }
+                }
+
+                barrier(CLK_LOCAL_MEM_FENCE);
+            }
+
+            if (0 == local_id)
+            {
+                out_mean[group_id] = local_mean[0];
+                out_min[group_id] = local_min[0];
+                out_max[group_id] = local_max[0];
+                out_count[group_id] = local_count[0];
+		        out_all_ints[group_id] = local_all_ints[0];
+            }
+        }
+    )CLC";
 
     struct TOpenCL_Settings
     {

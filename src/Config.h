@@ -18,7 +18,7 @@ namespace kiv_ppr::config
         static constexpr double Scale_Factor = 2.0;
     }
     
-    static constexpr uint32_t Double_Precision = 4;
+    static constexpr uint32_t Double_Precision = 5;
 
     struct TThread_Params
     {
