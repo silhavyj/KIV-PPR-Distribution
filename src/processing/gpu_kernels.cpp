@@ -21,7 +21,7 @@ namespace kiv_ppr::kernels
         }
         catch (const cl::Error& e)
         {
-            std::cout << "OpenCL Error (program.build): " << e.what() << std::endl;
+            std::cout << "OpenCL Error (" << e.err() << "): " << e.what() << std::endl;
             std::exit(6);
         }
     }
