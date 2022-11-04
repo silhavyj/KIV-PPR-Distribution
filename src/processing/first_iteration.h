@@ -47,7 +47,9 @@ namespace kiv_ppr
         TOpenCL_Report Execute_OpenCL(kernels::TOpenCL_Settings& opencl, CFile_Reader<double>::TData_Block& data_block);
         static TValues Agregate_Results_From_GPU(const std::vector<double>& out_min,
                                                  const std::vector<double>& out_max, 
-                                                 const std::vector<double>& out_mean);
+                                                 const std::vector<double>& out_mean,
+                                                 const std::vector<double>& out_count,
+                                                 size_t total_count);
         void Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block);
         void Execute_On_GPU(TValues& local_values, CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl);
         TValues Process_Data_Block_On_CPU(CFile_Reader<double>::TData_Block& data_block, size_t offset);
