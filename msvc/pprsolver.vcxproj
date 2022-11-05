@@ -36,6 +36,7 @@
     <ClCompile Include="..\src\cdfs\poisson_cdf.cpp" />
     <ClCompile Include="..\src\utils\resource_manager.cpp" />
     <ClCompile Include="..\src\processing\gpu_kernels.cpp" />
+    <ClCompile Include="..\src\utils\resource_guard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\config.h" />
@@ -57,6 +58,7 @@
     <ClCompile Include="..\src\cdfs\poisson_cdf.h" />
     <ClCompile Include="..\src\utils\resource_manager.h" />
     <ClCompile Include="..\src\processing\gpu_kernels.h" />
+    <ClCompile Include="..\src\utils\resource_guard.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

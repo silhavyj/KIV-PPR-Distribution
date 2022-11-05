@@ -7,6 +7,7 @@
 #include "../utils/utils.h"
 #include "../utils/singleton.h"
 #include "../utils/resource_manager.h"
+#include "../utils/resource_guard.h"
 #include "first_iteration.h"
 
 namespace kiv_ppr
@@ -236,6 +237,7 @@ namespace kiv_ppr
         auto resource_manager = Singleton<CResource_Manager>::Get_Instance();
         const cl::Device* device = nullptr;
         kernels::TOpenCL_Settings opencl;
+        CResource_Guard opencl_device_guard;
         bool use_cpu = false;
 
         const auto run_type = resource_manager->Get_Run_Type();
@@ -259,6 +261,7 @@ namespace kiv_ppr
         {
             opencl = kernels::Init_OpenCL(device, kernels::First_Iteration_Kernel, kernels::First_Iteration_Kernel_Name);
             Adjust_Work_Group_Size(opencl);
+            opencl_device_guard.Set_Device(device);
         }
 
         while (true)
@@ -279,18 +282,10 @@ namespace kiv_ppr
 
                 case CFile_Reader<double>::NRead_Status::EOF_:
                     Report_Worker_Results(local_values);
-                    if (!use_cpu)
-                    {
-                        resource_manager->Release_Device(device);
-                    }
                     return 0;
 
                 case CFile_Reader<double>::NRead_Status::Error: [[fallthrough]];
                 default:
-                    if (!use_cpu)
-                    {
-                        resource_manager->Release_Device(device);
-                    }
                     return 1;
             }
         }
