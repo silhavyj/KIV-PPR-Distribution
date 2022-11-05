@@ -203,7 +203,7 @@ namespace kiv_ppr
             cmd_queue.enqueueReadBuffer(out_min_buff, CL_TRUE, 0, out_min.size() * sizeof(double), out_min.data());
             cmd_queue.enqueueReadBuffer(out_max_buff, CL_TRUE, 0, out_max.size() * sizeof(double), out_max.data());
             cmd_queue.enqueueReadBuffer(out_count_buff, CL_TRUE, 0, out_count.size() * sizeof(double), out_count.data());
-            cmd_queue.enqueueReadBuffer(out_all_ints_buff, CL_TRUE, 0, out_all_ints.size() * sizeof(unsigned long), out_all_ints.data());
+            cmd_queue.enqueueReadBuffer(out_all_ints_buff, CL_TRUE, 0, out_all_ints.size() * sizeof(int), out_all_ints.data());
         }
         catch (const cl::Error& e)
         {
