@@ -44,13 +44,13 @@ namespace kiv_ppr::kernels
                                            __local double* local_max,
                                            __local double* local_mean,
                                            __local int* local_all_ints,
-                                           __local double* local_count,
+                                           __local ulong* local_count,
                                           
                                            __global double* out_min,
                                            __global double* out_max,
                                            __global double* out_mean,
                                            __global int* out_all_ints,
-                                           __global double* out_count)
+                                           __global ulong* out_count)
         {
             size_t global_id = get_global_id(0);
             size_t local_id = get_local_id(0);
