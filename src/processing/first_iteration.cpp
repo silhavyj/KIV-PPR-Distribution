@@ -137,7 +137,9 @@ namespace kiv_ppr
         }
         if (0 == opencl.work_group_size)
         {
-            std::cout << "";
+            std::string device_name = opencl.device->getInfo<CL_DEVICE_NAME>();
+            device_name.pop_back();
+            std::cout << "OpenCL Error [" << device_name << "]: " << "local memory size (" << opencl.local_mem_size << " B) is not sufficient for the kernel to store all __local parameters" << std::endl;
             std::exit(9);
         }
     }
