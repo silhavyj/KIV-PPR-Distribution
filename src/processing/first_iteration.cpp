@@ -1,4 +1,4 @@
-#include <limits>
+﻿#include <limits>
 #include <future>
 #include <vector>
 #include <cmath>
@@ -80,7 +80,6 @@ namespace kiv_ppr
         TValues values{};
         size_t size = out_min.size();
         size_t count = 0;
-        double delta;
 
         for (size_t i = 0; i < size; ++i)
         {
@@ -130,6 +129,21 @@ namespace kiv_ppr
 
     CFirst_Iteration::TOpenCL_Report CFirst_Iteration::Execute_OpenCL(kernels::TOpenCL_Settings& opencl, CFile_Reader<double>::TData_Block& data_block)
     {
+        //std::cout << "CL_DEVICE_LOCAL_MEM_SIZE = " << opencl.local_mem_size << std::endl;
+        //std::cout << "Local mem to be used = " << (opencl.work_group_size * kernels::First_Iteration_Get_Size_Of_Local_Params) << std::endl;
+
+        // TODO think of a better solution
+        while (opencl.work_group_size * kernels::First_Iteration_Get_Size_Of_Local_Params > opencl.local_mem_size)
+        {
+            opencl.work_group_size /= 2;
+        }
+        if (0 == opencl.work_group_size)
+        {
+            // TODO print out an error message
+            std::cout << "";
+            std::exit(9);
+        }
+
         const auto work_groups_count = data_block.count / opencl.work_group_size;
         const size_t count = data_block.count - (data_block.count % opencl.work_group_size);
 
@@ -145,17 +159,25 @@ namespace kiv_ppr
         cl::Buffer out_count_buff(opencl.context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, work_groups_count * sizeof(double));
         cl::Buffer out_all_ints_buff(opencl.context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, work_groups_count * sizeof(int));
 
-        opencl.kernel.setArg(0, data_buff);
-        opencl.kernel.setArg(1, opencl.work_group_size * sizeof(double), nullptr);
-        opencl.kernel.setArg(2, out_mean_buff);
-        opencl.kernel.setArg(3, opencl.work_group_size * sizeof(double), nullptr);
-        opencl.kernel.setArg(4, out_min_buff);
-        opencl.kernel.setArg(5, opencl.work_group_size * sizeof(double), nullptr);
-        opencl.kernel.setArg(6, out_max_buff);
-        opencl.kernel.setArg(7, opencl.work_group_size * sizeof(double), nullptr);
-        opencl.kernel.setArg(8, out_all_ints_buff);
-        opencl.kernel.setArg(9, opencl.work_group_size * sizeof(double), nullptr);
-        opencl.kernel.setArg(10, out_count_buff);
+        try
+        {
+            opencl.kernel.setArg(0, data_buff);
+            opencl.kernel.setArg(1, opencl.work_group_size * sizeof(double), nullptr);
+            opencl.kernel.setArg(2, out_mean_buff);
+            opencl.kernel.setArg(3, opencl.work_group_size * sizeof(double), nullptr);
+            opencl.kernel.setArg(4, out_min_buff);
+            opencl.kernel.setArg(5, opencl.work_group_size * sizeof(double), nullptr);
+            opencl.kernel.setArg(6, out_max_buff);
+            opencl.kernel.setArg(7, opencl.work_group_size * sizeof(int), nullptr);
+            opencl.kernel.setArg(8, out_all_ints_buff);
+            opencl.kernel.setArg(9, opencl.work_group_size * sizeof(double), nullptr);
+            opencl.kernel.setArg(10, out_count_buff);
+        }
+        catch (const cl::Error& e)
+        {
+            kernels::Print_OpenCL_Error(e, *opencl.device);
+            std::exit(7);
+        }
 
         std::vector<double> out_min(work_groups_count);
         std::vector<double> out_max(work_groups_count);
@@ -165,13 +187,29 @@ namespace kiv_ppr
 
         cl::CommandQueue cmd_queue(opencl.context, *opencl.device);
 
-        cmd_queue.enqueueNDRangeKernel(opencl.kernel, cl::NullRange, cl::NDRange(count), cl::NDRange(opencl.work_group_size));
+        try
+        {
+            cmd_queue.enqueueNDRangeKernel(opencl.kernel, cl::NullRange, cl::NDRange(count), cl::NDRange(opencl.work_group_size));
+        }
+        catch (const cl::Error& e)
+        {
+            kernels::Print_OpenCL_Error(e, *opencl.device);
+            std::exit(8);
+        }
 
-        cmd_queue.enqueueReadBuffer(out_mean_buff, CL_TRUE, 0, out_mean.size() * sizeof(double), out_mean.data());
-        cmd_queue.enqueueReadBuffer(out_min_buff, CL_TRUE, 0, out_min.size() * sizeof(double), out_min.data());
-        cmd_queue.enqueueReadBuffer(out_max_buff, CL_TRUE, 0, out_max.size() * sizeof(double), out_max.data());
-        cmd_queue.enqueueReadBuffer(out_count_buff, CL_TRUE, 0, out_count.size() * sizeof(double), out_count.data());
-        cmd_queue.enqueueReadBuffer(out_all_ints_buff, CL_TRUE, 0, out_all_ints.size() * sizeof(unsigned long), out_all_ints.data());
+        try
+        {
+            cmd_queue.enqueueReadBuffer(out_mean_buff, CL_TRUE, 0, out_mean.size() * sizeof(double), out_mean.data());
+            cmd_queue.enqueueReadBuffer(out_min_buff, CL_TRUE, 0, out_min.size() * sizeof(double), out_min.data());
+            cmd_queue.enqueueReadBuffer(out_max_buff, CL_TRUE, 0, out_max.size() * sizeof(double), out_max.data());
+            cmd_queue.enqueueReadBuffer(out_count_buff, CL_TRUE, 0, out_count.size() * sizeof(double), out_count.data());
+            cmd_queue.enqueueReadBuffer(out_all_ints_buff, CL_TRUE, 0, out_all_ints.size() * sizeof(unsigned long), out_all_ints.data());
+        }
+        catch (const cl::Error& e)
+        {
+            kernels::Print_OpenCL_Error(e, *opencl.device);
+            std::exit(9);
+        }
 
         size_t number_of_valid_doubles = 0;
         bool all_ints = true;

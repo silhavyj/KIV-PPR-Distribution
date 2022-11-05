@@ -30,7 +30,7 @@ namespace kiv_ppr
         for (const auto& platform : platforms)
         {
             std::vector<cl::Device> devices;
-            platform.getDevices(CL_DEVICE_TYPE_GPU, &devices);
+            platform.getDevices(CL_DEVICE_TYPE_ALL, &devices);
             for (const auto& device : devices)
             {
                 if (!device.getInfo<CL_DEVICE_AVAILABLE>())

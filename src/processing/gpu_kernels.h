@@ -7,7 +7,9 @@
 
 namespace kiv_ppr::kernels
 {
-    static constexpr const char* First_Iteration_Kernel_Name = "First_File_Iteration\0";
+    static constexpr const char* First_Iteration_Kernel_Name = "First_File_Iteration";
+
+    static constexpr size_t First_Iteration_Get_Size_Of_Local_Params = 4 * sizeof(double) + sizeof(int);
 
     static constexpr const char* First_Iteration_Kernel = R"CLC(
         #pragma OPENCL EXTENSION cl_khr_fp64 : enable
@@ -110,7 +112,10 @@ namespace kiv_ppr::kernels
         const cl::Device* device;
         cl::Kernel kernel;
         size_t work_group_size;
+        size_t local_mem_size;
     };
 
     TOpenCL_Settings Init_OpenCL(const cl::Device* device, const char* src, const char* kernel_name);
+    const char* Get_OpenCL_Error_Desc(cl_int error);
+    void Print_OpenCL_Error(const cl::Error& e, const cl::Device& device);
 }
