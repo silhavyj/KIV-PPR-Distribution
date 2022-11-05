@@ -39,15 +39,17 @@ namespace kiv_ppr::kernels
         }
 
         __kernel void First_File_Iteration(__global double* data,
-                                           __local double* local_mean,
-                                           __global double* out_mean,
+
                                            __local double* local_min,
-                                           __global double* out_min,
                                            __local double* local_max,
-                                           __global double* out_max,
+                                           __local double* local_mean,
                                            __local int* local_all_ints,
-                                           __global int* out_all_ints,
                                            __local double* local_count,
+                                          
+                                           __global double* out_min,
+                                           __global double* out_max,
+                                           __global double* out_mean,
+                                           __global int* out_all_ints,
                                            __global double* out_count)
         {
             size_t global_id = get_global_id(0);

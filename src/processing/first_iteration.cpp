@@ -127,11 +127,8 @@ namespace kiv_ppr
         return values;
     }
 
-    CFirst_Iteration::TOpenCL_Report CFirst_Iteration::Execute_OpenCL(kernels::TOpenCL_Settings& opencl, CFile_Reader<double>::TData_Block& data_block)
+    inline void CFirst_Iteration::Adjust_Work_Group_Size(kernels::TOpenCL_Settings& opencl)
     {
-        //std::cout << "CL_DEVICE_LOCAL_MEM_SIZE = " << opencl.local_mem_size << std::endl;
-        //std::cout << "Local mem to be used = " << (opencl.work_group_size * kernels::First_Iteration_Get_Size_Of_Local_Params) << std::endl;
-
         // TODO think of a better solution
         while (opencl.work_group_size * kernels::First_Iteration_Get_Size_Of_Local_Params > opencl.local_mem_size)
         {
@@ -139,11 +136,13 @@ namespace kiv_ppr
         }
         if (0 == opencl.work_group_size)
         {
-            // TODO print out an error message
             std::cout << "";
             std::exit(9);
         }
+    }
 
+    CFirst_Iteration::TOpenCL_Report CFirst_Iteration::Execute_OpenCL(kernels::TOpenCL_Settings& opencl, CFile_Reader<double>::TData_Block& data_block)
+    {
         const auto work_groups_count = data_block.count / opencl.work_group_size;
         const size_t count = data_block.count - (data_block.count % opencl.work_group_size);
 
@@ -161,16 +160,16 @@ namespace kiv_ppr
 
         try
         {
-            opencl.kernel.setArg(0, data_buff);
-            opencl.kernel.setArg(1, opencl.work_group_size * sizeof(double), nullptr);
-            opencl.kernel.setArg(2, out_mean_buff);
-            opencl.kernel.setArg(3, opencl.work_group_size * sizeof(double), nullptr);
-            opencl.kernel.setArg(4, out_min_buff);
-            opencl.kernel.setArg(5, opencl.work_group_size * sizeof(double), nullptr);
-            opencl.kernel.setArg(6, out_max_buff);
-            opencl.kernel.setArg(7, opencl.work_group_size * sizeof(int), nullptr);
-            opencl.kernel.setArg(8, out_all_ints_buff);
-            opencl.kernel.setArg(9, opencl.work_group_size * sizeof(double), nullptr);
+            opencl.kernel.setArg(0 , data_buff);
+            opencl.kernel.setArg(1 , opencl.work_group_size * sizeof(double), nullptr);
+            opencl.kernel.setArg(2 , opencl.work_group_size * sizeof(double), nullptr);
+            opencl.kernel.setArg(3 , opencl.work_group_size * sizeof(double), nullptr);
+            opencl.kernel.setArg(4 , opencl.work_group_size * sizeof(int), nullptr);
+            opencl.kernel.setArg(5 , opencl.work_group_size * sizeof(double), nullptr);
+            opencl.kernel.setArg(6 , out_min_buff);
+            opencl.kernel.setArg(7 , out_max_buff);
+            opencl.kernel.setArg(8 , out_mean_buff);
+            opencl.kernel.setArg(9 , out_all_ints_buff);
             opencl.kernel.setArg(10, out_count_buff);
         }
         catch (const cl::Error& e)
@@ -259,6 +258,7 @@ namespace kiv_ppr
         if (nullptr != device)
         {
             opencl = kernels::Init_OpenCL(device, kernels::First_Iteration_Kernel, kernels::First_Iteration_Kernel_Name);
+            Adjust_Work_Group_Size(opencl);
         }
 
         while (true)
