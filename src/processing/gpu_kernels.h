@@ -107,11 +107,111 @@ namespace kiv_ppr::kernels
         }
     )CLC";
 
+    static constexpr const char* Second_Iteration_Kernel_Name = "Second_File_Iteration";
+
+    static constexpr size_t Second_Iteration_Get_Size_Of_Local_Params = 2 * sizeof(double) + sizeof(cl_uint);
+
+    static constexpr const char* Second_Iteration_Kernel = R"CLC(
+        #pragma OPENCL EXTENSION cl_khr_fp64 : enable
+
+        int Is_Valid_Double(double x)
+        {
+            ulong u = *(ulong*)&x;
+            uint exp = (uint)((u & 0x7fffffffffffffffUL) >> 52);
+            if (0 == exp)
+            {
+                if (u & 0x000fffffffffffffUL)
+                {
+                    return 0;
+                }
+                return 1;
+            }
+            if (0x7ff == exp)
+            {
+                if (u & 0x000fffffffffffffUL)
+                {
+                    return 0;
+                }
+                return 0;
+            }
+            return 1;
+        }
+
+        __kernel void Second_File_Iteration(__global double* data,
+                                            __local double* local_var,
+                                            __global double* out_var,
+                                            __global uint* histogram,
+                                            double mean,
+                                            ulong count,
+                                            double min,
+                                            double interval_size)
+        {
+            size_t global_id = get_global_id(0);
+            size_t local_id = get_local_id(0);
+            size_t local_size = get_local_size(0);
+            size_t group_id = get_group_id(0);
+
+            double value = data[global_id];
+            local_var[local_id] = value;
+
+            if (Is_Valid_Double(value))
+            {
+                if (min < 0)
+                {
+                    value /= 2;
+                }
+
+                size_t slot_id = (size_t)((value - min) / interval_size);
+
+                uint old = atomic_inc(&histogram[2 * slot_id]);
+                uint carry = old == 0xFFFFFFFF;
+                atomic_add(&histogram[2 * slot_id + 1], carry);
+
+                double delta = value - mean;
+                double tmp_val = delta;
+                delta /= (count - 1);
+                delta *= tmp_val;
+
+                local_var[local_id] = delta;
+            }
+
+            barrier(CLK_LOCAL_MEM_FENCE);
+
+            int valid_1;
+            int valid_2;
+
+            for (size_t i = local_size / 2; i > 0; i /= 2)
+            {
+                if (local_id < i)
+                {
+                    valid_1 = Is_Valid_Double(local_var[local_id]);
+                    valid_2 = Is_Valid_Double(local_var[local_id + i]);
+
+                    if (!valid_1 && valid_2)
+                    {
+                        local_var[local_id] = local_var[local_id + i];
+                    }
+                    if (valid_1 && valid_2)
+                    {
+                        local_var[local_id] += local_var[local_id + i];
+                    }
+                }
+
+                barrier(CLK_LOCAL_MEM_FENCE);
+            }
+
+            if (0 == local_id)
+            {
+                out_var[group_id] = local_var[0];
+            }
+        }        
+    )CLC";
+
     struct TOpenCL_Settings
     {
         cl::Program program;
         cl::Context context;
-        const cl::Device* device;
+        const cl::Device* device = nullptr;
         cl::Kernel kernel;
         size_t work_group_size;
         size_t local_mem_size;
@@ -120,4 +220,5 @@ namespace kiv_ppr::kernels
     TOpenCL_Settings Init_OpenCL(const cl::Device* device, const char* src, const char* kernel_name);
     const char* Get_OpenCL_Error_Desc(cl_int error);
     void Print_OpenCL_Error(const cl::Error& e, const cl::Device& device);
+    void Adjust_Work_Group_Size(kernels::TOpenCL_Settings& opencl, size_t size_of_local_params);
 }

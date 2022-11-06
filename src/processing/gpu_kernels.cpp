@@ -37,6 +37,22 @@ namespace kiv_ppr::kernels
         std::cout << "OpenCL Error [" << device_name << "] (" << error_desc << "): " << e.what() << std::endl;
     }
 
+    void Adjust_Work_Group_Size(kernels::TOpenCL_Settings& opencl, size_t size_of_local_params)
+    {
+        // TODO think of a better solution
+        while (opencl.work_group_size * size_of_local_params > opencl.local_mem_size)
+        {
+            opencl.work_group_size /= 2;
+        }
+        if (0 == opencl.work_group_size)
+        {
+            std::string device_name = opencl.device->getInfo<CL_DEVICE_NAME>();
+            device_name.pop_back();
+            std::cout << "OpenCL Error [" << device_name << "]: " << "local memory size (" << opencl.local_mem_size << " B) is not sufficient for the kernel to store all __local parameters" << std::endl;
+            std::exit(9);
+        }
+    }
+
     const char* Get_OpenCL_Error_Desc(cl_int error)
     {
         switch (error) 

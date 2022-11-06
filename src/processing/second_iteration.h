@@ -15,14 +15,13 @@ namespace kiv_ppr
     public:
         struct TValues
         {
-            double var;
-            double sd;
-            std::shared_ptr<CHistogram> histogram;
+            double var = 0.0;
+            double sd = 0.0;
+            std::shared_ptr<CHistogram> histogram = nullptr;
         };
 
     public:
         explicit CSecond_Iteration(CFile_Reader<double>* file,
-                                   std::function<bool(double)> is_valid_number,
                                    typename CFirst_Iteration::TValues* basic_values);
 
         ~CSecond_Iteration() = default;
@@ -31,14 +30,23 @@ namespace kiv_ppr
         [[nodiscard]] int Run(config::TThread_Params* thread_config);
 
     private:
+        struct TOpenCL_Report
+        {
+            bool success;
+            bool all_processed;
+        };
+
+    private:
         void Report_Worker_Results(const TValues& values);
         [[nodiscard]] int Worker(config::TThread_Params* thread_config);
         static size_t Calculate_Number_Of_Intervals(size_t n);
         void Scale_Up_Basic_Values(typename CFirst_Iteration::TValues* basic_values);
+        void Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, size_t offset = 0);
+        void Execute_On_GPU(TValues& local_values, CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl);
+        TOpenCL_Report Execute_OpenCL(kernels::TOpenCL_Settings& opencl, CFile_Reader<double>::TData_Block& data_block, TValues& local_values);
 
     private:
         CFile_Reader<double>* m_file;
-        std::function<bool(double)> m_is_valid_number;
         typename CFirst_Iteration::TValues* m_basic_values;
         TValues m_values;
         std::mutex m_mtx;

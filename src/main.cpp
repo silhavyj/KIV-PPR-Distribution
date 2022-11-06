@@ -22,7 +22,7 @@ static void Run(const char* filename, double p_critical)
 
         std::cout << "Processing file " << file.Get_Filename() << " [" << file.Get_File_Size() << " B]" << std::endl;
 
-        kiv_ppr::CFile_Stats file_stats(&file, kiv_ppr::utils::Is_Valid_Double);
+        kiv_ppr::CFile_Stats file_stats(&file);
         if (0 != file_stats.Process(&kiv_ppr::config::default_thread_params))
         {
             std::cout << "Failed to process the input file (" << file.Get_Filename() << ")" << std::endl;

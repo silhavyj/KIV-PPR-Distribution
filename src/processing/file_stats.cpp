@@ -4,10 +4,8 @@
 
 namespace kiv_ppr
 {
-    CFile_Stats::CFile_Stats(CFile_Reader<double>* file,
-                             std::function<bool(double)> is_valid_number)
+    CFile_Stats::CFile_Stats(CFile_Reader<double>* file)
         : m_file(file),
-          m_is_valid_number(std::move(is_valid_number)),
           m_values{}
     {
 
@@ -22,7 +20,7 @@ namespace kiv_ppr
         }
         m_values.first_iteration = first_iteration.Get_Values();
 
-        CSecond_Iteration second_iteration(m_file, m_is_valid_number, &m_values.first_iteration);
+        CSecond_Iteration second_iteration(m_file, &m_values.first_iteration);
         if (0 != second_iteration.Run(thread_config))
         {
             return 1;

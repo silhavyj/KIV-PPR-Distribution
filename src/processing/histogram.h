@@ -23,11 +23,13 @@ namespace kiv_ppr
         ~CHistogram() = default;
 
         void Add(double value);
+        bool Add(size_t index, size_t value);
 
         [[nodiscard]] size_t Get_Number_Of_Intervals() const noexcept;
         [[nodiscard]] double Get_Min() const noexcept;
         [[nodiscard]] double Get_Interval_Size() const noexcept;
         [[nodiscard]] size_t Get_Total_Count() const;
+        [[nodiscard]] std::vector<size_t>& Get_Intervals();
 
         [[nodiscard]] size_t& operator[](size_t index);
         void operator+=(CHistogram& other);

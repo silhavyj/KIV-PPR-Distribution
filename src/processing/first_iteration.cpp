@@ -128,22 +128,6 @@ namespace kiv_ppr
         return values;
     }
 
-    inline void CFirst_Iteration::Adjust_Work_Group_Size(kernels::TOpenCL_Settings& opencl)
-    {
-        // TODO think of a better solution
-        while (opencl.work_group_size * kernels::First_Iteration_Get_Size_Of_Local_Params > opencl.local_mem_size)
-        {
-            opencl.work_group_size /= 2;
-        }
-        if (0 == opencl.work_group_size)
-        {
-            std::string device_name = opencl.device->getInfo<CL_DEVICE_NAME>();
-            device_name.pop_back();
-            std::cout << "OpenCL Error [" << device_name << "]: " << "local memory size (" << opencl.local_mem_size << " B) is not sufficient for the kernel to store all __local parameters" << std::endl;
-            std::exit(9);
-        }
-    }
-
     CFirst_Iteration::TOpenCL_Report CFirst_Iteration::Execute_OpenCL(kernels::TOpenCL_Settings& opencl, CFile_Reader<double>::TData_Block& data_block)
     {
         const auto work_groups_count = data_block.count / opencl.work_group_size;
@@ -151,7 +135,7 @@ namespace kiv_ppr
 
         if (0 == work_groups_count)
         {
-            return { false, false, 0, {} };
+            return { false, false, {} };
         }
 
         cl::Buffer data_buff(opencl.context, CL_MEM_READ_ONLY | CL_MEM_HOST_NO_ACCESS | CL_MEM_USE_HOST_PTR, count * sizeof(double), data_block.data.get());
@@ -262,7 +246,7 @@ namespace kiv_ppr
         if (nullptr != device)
         {
             opencl = kernels::Init_OpenCL(device, kernels::First_Iteration_Kernel, kernels::First_Iteration_Kernel_Name);
-            Adjust_Work_Group_Size(opencl);
+            kernels::Adjust_Work_Group_Size(opencl, kernels::First_Iteration_Get_Size_Of_Local_Params);
             opencl_device_guard.Set_Device(device);
         }
 

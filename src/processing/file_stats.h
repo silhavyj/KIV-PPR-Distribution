@@ -23,8 +23,7 @@ namespace kiv_ppr
         };
 
     public:
-        explicit CFile_Stats(CFile_Reader<double>* file,
-                             std::function<bool(double)> is_valid_number);
+        explicit CFile_Stats(CFile_Reader<double>* file);
 
         ~CFile_Stats() = default;
 
@@ -33,7 +32,6 @@ namespace kiv_ppr
 
     private:
         CFile_Reader<double>* m_file;
-        std::function<bool(double)> m_is_valid_number;
         TValues m_values;
     };
 }

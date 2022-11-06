@@ -54,7 +54,6 @@ namespace kiv_ppr
         void Execute_On_GPU(TValues& local_values, CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl);
         TValues Process_Data_Block_On_CPU(CFile_Reader<double>::TData_Block& data_block, size_t offset);
         void Merge_Values(TValues& dest, const TValues& src);
-        void Adjust_Work_Group_Size(kernels::TOpenCL_Settings& opencl);
 
     private:
         CFile_Reader<double>* m_file;

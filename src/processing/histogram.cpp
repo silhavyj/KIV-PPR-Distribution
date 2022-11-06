@@ -23,6 +23,21 @@ namespace kiv_ppr
         return m_intervals.size();
     }
 
+    std::vector<size_t>& CHistogram::Get_Intervals()
+    {
+        return m_intervals;
+    }
+
+    bool CHistogram::Add(size_t index, size_t value)
+    {
+        if (index < m_intervals.size())
+        {
+            m_intervals[index] += value;
+            return true;
+        }
+        return false;
+    }
+
     double CHistogram::Get_Min() const noexcept
     {
         return m_params.min;
