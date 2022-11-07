@@ -148,7 +148,7 @@ namespace kiv_ppr
         double gpu_var = 0.0;
         for (const auto& value : out_var)
         {
-            if (utils::Is_Valid_Double(value))
+            if (utils::Is_Valid_Double(value) || value == std::numeric_limits<double>::infinity())
             {
                 gpu_var += value;
             }
