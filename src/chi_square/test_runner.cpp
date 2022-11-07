@@ -33,11 +33,22 @@ namespace kiv_ppr
                 workers.push_back(std::async(std::launch::async, &CTest_Runner::Run_Poisson, this));
             }
         }
+     
         std::vector<kiv_ppr::CChi_Square::TResult> results(workers.size());
-        for (size_t i = 0; i < workers.size(); ++i)
+
+        try
         {
-            results[i] = workers[i].get();
+            for (size_t i = 0; i < workers.size(); ++i)
+            {
+                results[i] = workers[i].get();
+            }
         }
+        catch (const std::exception& e)
+        {
+            std::cout << "Error while running Chi-Square test: " << e.what() << std::endl;
+            std::exit(15);
+        }
+
         std::sort(results.begin(), results.end());
         Print_Results(results);
     }
