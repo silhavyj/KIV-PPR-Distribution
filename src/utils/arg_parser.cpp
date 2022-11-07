@@ -96,10 +96,12 @@ namespace kiv_ppr
                 }
                 else if (dev[0] == '-')
                 {
-                    i += 2;
-                    continue;
+                    ++i;
                 }
-                m_opencl_devs.insert(m_argv[i]);
+                else
+                {
+                    m_opencl_devs.insert(m_argv[i]);
+                }
             }
             if (m_opencl_devs.empty())
             {

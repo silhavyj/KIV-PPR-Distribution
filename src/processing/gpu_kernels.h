@@ -209,12 +209,12 @@ namespace kiv_ppr::kernels
 
     struct TOpenCL_Settings
     {
-        cl::Program program;
-        cl::Context context;
+        cl::Program program{};
+        cl::Context context{};
         const cl::Device* device = nullptr;
-        cl::Kernel kernel;
-        size_t work_group_size;
-        size_t local_mem_size;
+        cl::Kernel kernel{};
+        size_t work_group_size = 0;
+        size_t local_mem_size = 0;
     };
 
     TOpenCL_Settings Init_OpenCL(const cl::Device* device, const char* src, const char* kernel_name);
