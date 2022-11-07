@@ -52,6 +52,8 @@ namespace kiv_ppr
 
         while (m_enabled)
         {
+            std::this_thread::sleep_for(m_interval_sec);
+
             current_value = m_counter;
             if (!first_check && previous_value == current_value)
             {
@@ -60,7 +62,6 @@ namespace kiv_ppr
             }
             first_check = false;
             current_value = previous_value;
-            std::this_thread::sleep_for(m_interval_sec);
         }
     }
 }
