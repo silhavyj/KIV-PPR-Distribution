@@ -45,7 +45,7 @@ static void Run(const char* filename, double p_critical)
 
 int main(int argc, char* argv[])
 {
-    // kiv_ppr::utils::Generate_Numbers<std::poisson_distribution<>>("test_data.dat", true, 104857600 / sizeof(double), 5);
+    // kiv_ppr::utils::Generate_Numbers<std::normal_distribution<>>("test_data.dat", true, 17179869184 / sizeof(double), 2, 5);
 
     kiv_ppr::CArg_Parser arg_parser(argc, argv);
     try

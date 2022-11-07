@@ -9,7 +9,7 @@ namespace kiv_ppr::kernels
 {
     static constexpr const char* First_Iteration_Kernel_Name = "First_File_Iteration";
 
-    static constexpr size_t First_Iteration_Get_Size_Of_Local_Params = 4 * sizeof(double) + sizeof(int);
+    static constexpr size_t First_Iteration_Get_Size_Of_Local_Params = 3 * sizeof(double) + sizeof(int) + sizeof(cl_ulong);
 
     static constexpr const char* First_Iteration_Kernel = R"CLC(
         #pragma OPENCL EXTENSION cl_khr_fp64 : enable
@@ -109,7 +109,7 @@ namespace kiv_ppr::kernels
 
     static constexpr const char* Second_Iteration_Kernel_Name = "Second_File_Iteration";
 
-    static constexpr size_t Second_Iteration_Get_Size_Of_Local_Params = 2 * sizeof(double) + sizeof(cl_uint);
+    static constexpr size_t Second_Iteration_Get_Size_Of_Local_Params = 1 * sizeof(double);
 
     static constexpr const char* Second_Iteration_Kernel = R"CLC(
         #pragma OPENCL EXTENSION cl_khr_fp64 : enable
@@ -163,8 +163,8 @@ namespace kiv_ppr::kernels
 
                 size_t slot_id = (size_t)((value - min) / interval_size);
 
-                uint old = atomic_inc(&histogram[2 * slot_id]);
-                uint carry = old == 0xFFFFFFFF;
+                uint old_value = atomic_inc(&histogram[2 * slot_id]);
+                uint carry = old_value == 0xFFFFFFFF;
                 atomic_add(&histogram[2 * slot_id + 1], carry);
 
                 double delta = value - mean;

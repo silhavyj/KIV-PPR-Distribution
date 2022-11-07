@@ -39,7 +39,6 @@ namespace kiv_ppr::kernels
 
     void Adjust_Work_Group_Size(kernels::TOpenCL_Settings& opencl, size_t size_of_local_params)
     {
-        // TODO think of a better solution
         while (opencl.work_group_size * size_of_local_params > opencl.local_mem_size)
         {
             opencl.work_group_size /= 2;
