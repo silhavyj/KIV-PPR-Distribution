@@ -29,6 +29,8 @@ namespace kiv_ppr
 
         [[nodiscard]] bool Help();
         [[nodiscard]] double Get_P_Critical();
+        [[nodiscard]] uint32_t Get_Block_Size_Per_Read();
+        [[nodiscard]] uint32_t Get_Watchdog_Sleep_Sec();
         [[nodiscard]] const char* Get_Filename();
         [[nodiscard]] std::unordered_set<std::string> Get_OpenCL_Devs();
         [[nodiscard]] const char* Get_Run_Type_Str();
