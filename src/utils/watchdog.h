@@ -13,6 +13,7 @@ namespace kiv_ppr
         explicit CWatchdog(double interval_sec);
         ~CWatchdog();
 
+        void Start();
         void Stop();
         void Kick(size_t value);
         [[nodiscard]] size_t Get_Counter_Value() const;
@@ -27,4 +28,4 @@ namespace kiv_ppr
         std::mutex m_mtx;
         std::thread m_watchdog_thread;
     };
-}
+};

@@ -6,16 +6,26 @@ namespace kiv_ppr
 {
     CWatchdog::CWatchdog(double interval_sec)
         : m_interval_sec(interval_sec),
-          m_enabled{true},
+          m_enabled{false},
           m_counter(0)
     {
-        m_watchdog_thread = std::thread(&CWatchdog::Run, this);
-        m_watchdog_thread.detach();
+
     }
 
     CWatchdog::~CWatchdog()
     {
         Stop();
+    }
+
+    void CWatchdog::Start()
+    {
+        const std::lock_guard<std::mutex> lock(m_mtx);
+        if (!m_enabled)
+        {
+            m_watchdog_thread = std::thread(&CWatchdog::Run, this);
+            m_watchdog_thread.detach();
+            m_enabled = true;
+        }
     }
 
     void CWatchdog::Stop()

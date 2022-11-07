@@ -43,7 +43,7 @@ namespace kiv_ppr
 
     private:
         void Report_Worker_Results(TValues values);
-        [[nodiscard]] int Worker(config::TThread_Params* thread_config);
+        [[nodiscard]] int Worker(config::TThread_Params* thread_config, CWatchdog* watchdog);
         TOpenCL_Report Execute_OpenCL(kernels::TOpenCL_Settings& opencl, CFile_Reader<double>::TData_Block& data_block);
         static TValues Agregate_Results_From_GPU(const std::vector<double>& out_min,
                                                  const std::vector<double>& out_max, 

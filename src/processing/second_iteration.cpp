@@ -43,11 +43,13 @@ namespace kiv_ppr
     int CSecond_Iteration::Run(config::TThread_Params* thread_config)
     {
         m_file->Seek_Beg();
+
         std::vector<std::future<int>> workers(thread_config->number_of_threads);
-        //CWatchdog watchdog(thread_config->watchdog_expiration_sec);
+        CWatchdog watchdog(thread_config->watchdog_expiration_sec);
+
         for (auto& worker : workers)
         {
-            worker = std::async(std::launch::async, &CSecond_Iteration::Worker, this, thread_config);
+            worker = std::async(std::launch::async, &CSecond_Iteration::Worker, this, thread_config, &watchdog);
         }
 
         int return_values = 0;
@@ -55,10 +57,10 @@ namespace kiv_ppr
         {
             return_values += worker.get();
         }
-        //watchdog.Stop();
+        watchdog.Stop();
 
         m_values.sd = std::sqrt(m_values.var);
-        if (return_values != 0 /* || watchdog.Get_Counter_Value() != m_file->Get_Number_Of_Elements() */)
+        if (return_values != 0 || watchdog.Get_Counter_Value() != m_file->Get_Number_Of_Elements())
         {
             return 1;
         }
@@ -156,7 +158,7 @@ namespace kiv_ppr
         return { true, count == data_block.count };
     }
 
-    int CSecond_Iteration::Worker(config::TThread_Params* thread_config)
+    int CSecond_Iteration::Worker(config::TThread_Params* thread_config, CWatchdog* watchdog)
     {
         TValues local_values{};
         local_values.histogram = std::make_shared<CHistogram>(m_histogram_params);
@@ -191,6 +193,8 @@ namespace kiv_ppr
             opencl_device_guard.Set_Device(device);
         }
 
+        watchdog->Start();
+
         while (true)
         {
             auto data_block = m_file->Read_Data(thread_config->number_of_elements_per_file_read);
@@ -205,6 +209,7 @@ namespace kiv_ppr
                     {
                         Execute_On_GPU(local_values, data_block, opencl);
                     }
+                    watchdog->Kick(data_block.count);
                     break;
 
                 case CFile_Reader<double>::NRead_Status::EOF_:

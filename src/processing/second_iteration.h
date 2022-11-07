@@ -38,7 +38,7 @@ namespace kiv_ppr
 
     private:
         void Report_Worker_Results(const TValues& values);
-        [[nodiscard]] int Worker(config::TThread_Params* thread_config);
+        [[nodiscard]] int Worker(config::TThread_Params* thread_config, CWatchdog* watchdog);
         static size_t Calculate_Number_Of_Intervals(size_t n);
         void Scale_Up_Basic_Values(typename CFirst_Iteration::TValues* basic_values);
         void Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, size_t offset = 0);
