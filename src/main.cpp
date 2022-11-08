@@ -74,10 +74,12 @@ int main(int argc, char* argv[])
 
     kiv_ppr::config::default_thread_params.number_of_elements_per_file_read = arg_parser.Get_Block_Size_Per_Read();
     kiv_ppr::config::default_thread_params.watchdog_expiration_sec = arg_parser.Get_Watchdog_Sleep_Sec();
+    kiv_ppr::config::default_thread_params.number_of_threads = arg_parser.Get_Number_Of_Threads();
 
     std::cout << "The program is running in '" << arg_parser.Get_Run_Type_Str() << "' mode" << std::endl;
     std::cout << "Block size per read = " << kiv_ppr::config::default_thread_params.number_of_elements_per_file_read << " [B]" << std::endl;
-    std::cout << "Watchdog checkup period = " << kiv_ppr::config::default_thread_params.watchdog_expiration_sec << "s\n" << std::endl;
+    std::cout << "Watchdog checkup period = " << kiv_ppr::config::default_thread_params.watchdog_expiration_sec << "s" << std::endl;
+    std::cout << "Number of threads = " << kiv_ppr::config::default_thread_params.number_of_threads << std::endl << std::endl;
     
     const auto& listed_devs = arg_parser.Get_OpenCL_Devs();
 

@@ -16,6 +16,7 @@ namespace kiv_ppr
             ("p,p_critical", "Critical p value used in the Chi-square test", cxxopts::value<double>()->default_value(std::to_string(config::chi_square::Default_P_Critical)))
             ("b,block_size", "Number of bytes read from the input file at a time (block size)", cxxopts::value<uint32_t>()->default_value(std::to_string(config::processing::Block_Size_Per_Read)))
             ("w,watchdog_period", "How often the watchdog checks if the program is working correctly [s]", cxxopts::value<uint32_t>()->default_value(std::to_string(config::processing::Watchdog_Sleep_Sec)))
+            ("t,thread_count", "Number of threads created by the application", cxxopts::value<uint32_t>()->default_value(std::to_string(config::default_thread_params.number_of_threads)))
             ("h,help", "Print out this help menu");
     }
 
@@ -37,6 +38,11 @@ namespace kiv_ppr
     uint32_t CArg_Parser::Get_Block_Size_Per_Read()
     {
         return m_args["block_size"].as<uint32_t>() / sizeof(double);
+    }
+
+    uint32_t CArg_Parser::Get_Number_Of_Threads()
+    {
+        return m_args["thread_count"].as<uint32_t>();
     }
 
     uint32_t CArg_Parser::Get_Watchdog_Sleep_Sec()
