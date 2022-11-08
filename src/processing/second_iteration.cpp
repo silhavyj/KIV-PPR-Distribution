@@ -84,7 +84,7 @@ namespace kiv_ppr
             return { false, false };
         }
 
-        auto intervals = local_values.histogram->Get_Intervals();
+        auto& intervals = local_values.histogram->Get_Intervals();
         double interval_size = local_values.histogram->Get_Interval_Size();
 
         cl::Buffer data_buff(opencl.context, CL_MEM_READ_ONLY | CL_MEM_HOST_NO_ACCESS | CL_MEM_USE_HOST_PTR, count * sizeof(double), data_block.data.get());
