@@ -109,7 +109,7 @@ namespace kiv_ppr
         }
 
         std::vector<double> out_var(work_groups_count);
-        std::vector<cl_uint> out_hisogram(2 * intervals.size());
+        std::vector<cl_uint> out_hisogram(2 * intervals.size(), 0);
 
         cl::CommandQueue cmd_queue(opencl.context, *opencl.device);
 
