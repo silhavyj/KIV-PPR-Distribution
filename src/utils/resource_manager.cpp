@@ -67,10 +67,10 @@ namespace kiv_ppr
         {
             if (m_gpu_devices.empty())
             {
-                std::cout << "No available GPU devices supported double precision were found" << std::endl;
+                std::cout << "No available OpenCL devices supported double precision were found" << std::endl;
                 std::exit(6);
             }
-            std::cout << "Available GPU devices supporting double precision:" << std::endl;
+            std::cout << "Available OpenCL devices supporting double precision:" << std::endl;
             for (const auto& [status, device] : m_gpu_devices)
             {
                 std::cout << device.getInfo<CL_DEVICE_NAME>() << std::endl;
@@ -97,7 +97,7 @@ namespace kiv_ppr
             std::cout << std::endl;
             if (terminate_program)
             {
-                std::cout << "Some of the listed devices are not available or do not support double precision" << std::endl;
+                std::cout << "Some of the listed OpenCL devices are not available or do not support double precision" << std::endl;
                 std::exit(6);
             }
         }
