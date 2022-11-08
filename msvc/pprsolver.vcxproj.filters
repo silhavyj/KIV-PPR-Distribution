@@ -114,5 +114,20 @@
     <ClCompile Include="..\src\chi_square\chi_square.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\processing\gpu_kernels.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utils\resource_guard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cdfs\exponential_cdf.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\processing\gpu_kernels.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utils\resource_guard.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
