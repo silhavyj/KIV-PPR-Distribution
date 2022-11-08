@@ -10,11 +10,11 @@
 namespace kiv_ppr
 {
     CSecond_Iteration::CSecond_Iteration(CFile_Reader<double>* file,
-                                         typename CFirst_Iteration::TValues* basic_values)
+        typename CFirst_Iteration::TValues* basic_values)
         : m_file(file),
-          m_basic_values(basic_values),
-          m_values{},
-          m_histogram_params{}
+        m_basic_values(basic_values),
+        m_values{},
+        m_histogram_params{}
     {
         if (m_basic_values->min >= 0)
         {
@@ -86,10 +86,11 @@ namespace kiv_ppr
 
         auto& intervals = local_values.histogram->Get_Intervals();
         double interval_size = local_values.histogram->Get_Interval_Size();
+        std::vector<cl_uint> out_hisogram(2 * intervals.size(), 0);
 
         cl::Buffer data_buff(opencl.context, CL_MEM_READ_ONLY | CL_MEM_HOST_NO_ACCESS | CL_MEM_USE_HOST_PTR, count * sizeof(double), data_block.data.get());
         cl::Buffer out_var_buff(opencl.context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, work_groups_count * sizeof(double));
-        cl::Buffer histogram_buff(opencl.context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, 2 * intervals.size() * sizeof(cl_uint));
+        cl::Buffer histogram_buff(opencl.context, CL_MEM_WRITE_ONLY | CL_MEM_USE_HOST_PTR, out_hisogram.size() * sizeof(cl_uint), out_hisogram.data());
 
         try
         {
@@ -109,7 +110,6 @@ namespace kiv_ppr
         }
 
         std::vector<double> out_var(work_groups_count);
-        std::vector<cl_uint> out_hisogram(2 * intervals.size(), 0);
 
         cl::CommandQueue cmd_queue(opencl.context, *opencl.device);
 
@@ -197,25 +197,25 @@ namespace kiv_ppr
             auto data_block = m_file->Read_Data(thread_config->number_of_elements_per_file_read);
             switch (data_block.status)
             {
-                case kiv_ppr::CFile_Reader<double>::NRead_Status::OK:
-                    if (use_cpu)
-                    {
-                        Execute_On_CPU(local_values, data_block);
-                    }
-                    else
-                    {
-                        Execute_On_GPU(local_values, data_block, opencl);
-                    }
-                    watchdog->Kick(data_block.count);
-                    break;
+            case kiv_ppr::CFile_Reader<double>::NRead_Status::OK:
+                if (use_cpu)
+                {
+                    Execute_On_CPU(local_values, data_block);
+                }
+                else
+                {
+                    Execute_On_GPU(local_values, data_block, opencl);
+                }
+                watchdog->Kick(data_block.count);
+                break;
 
-                case CFile_Reader<double>::NRead_Status::EOF_:
-                    Report_Worker_Results(local_values);
-                    return 0;
+            case CFile_Reader<double>::NRead_Status::EOF_:
+                Report_Worker_Results(local_values);
+                return 0;
 
-                case CFile_Reader<double>::NRead_Status::Error: [[fallthrough]];
-                default:
-                    return 1;
+            case CFile_Reader<double>::NRead_Status::Error: [[fallthrough]];
+            default:
+                return 1;
             }
         }
     }
