@@ -148,13 +148,10 @@ namespace kiv_ppr
         double gpu_var = 0.0;
         for (const auto& value : out_var)
         {
-            if (utils::Is_Valid_Double(value) || value == std::numeric_limits<double>::infinity())
-            {
-                gpu_var += value;
-            }
+            gpu_var += value;
         }
         local_values.var += gpu_var;
-        
+
         return { true, count == data_block.count };
     }
 

@@ -116,95 +116,88 @@ namespace kiv_ppr::kernels
 
         int Is_Valid_Double(double x)
         {
-            ulong u = *(ulong*)&x;
-            uint exp = (uint)((u & 0x7fffffffffffffffUL) >> 52);
-            if (0 == exp)
-            {
-                if (u & 0x000fffffffffffffUL)
-                {
-                    return 0;
-                }
-                return 1;
-            }
-            if (0x7ff == exp)
-            {
-                if (u & 0x000fffffffffffffUL)
-                {
-                    return 0;
-                }
-                return 0;
-            }
-            return 1;
+	        ulong u = *(ulong*)&x;
+	        uint exp = (uint)((u & 0x7fffffffffffffffUL) >> 52);
+	        if (0 == exp)
+	        {
+		        if (u & 0x000fffffffffffffUL)
+		        {
+			        return 0;
+		        }
+		        return 1;
+	        }
+	        if (0x7ff == exp)
+	        {
+		        if (u & 0x000fffffffffffffUL)
+		        {
+			        return 0;
+		        }
+		        return 0;
+	        }
+	        return 1;
         }
 
         __kernel void Second_File_Iteration(__global double* data,
-                                            __local double* local_var,
-                                            __global double* out_var,
-                                            __global uint* histogram,
-                                            double mean,
-                                            ulong count,
-                                            double min,
-                                            double interval_size)
+									        __local double* local_var,
+									        __global double* out_var,
+									        __global uint* histogram,
+									        double mean,
+									        ulong count,
+									        double min,
+									        double interval_size)
         {
-            size_t global_id = get_global_id(0);
-            size_t local_id = get_local_id(0);
-            size_t local_size = get_local_size(0);
-            size_t group_id = get_group_id(0);
+	        size_t global_id = get_global_id(0);
+	        size_t local_id = get_local_id(0);
+	        size_t local_size = get_local_size(0);
+	        size_t group_id = get_group_id(0);
 
-            double value = data[global_id];
-            local_var[local_id] = value;
+	        double value = data[global_id];
+	        int is_valid = Is_Valid_Double(value);
+	
+	        local_var[local_id] = value;
+	        if (!is_valid)
+	        {
+		        local_var[local_id] = 0;
+	        }
 
-            if (Is_Valid_Double(value))
-            {
-                if (min < 0)
-                {
-                    value /= 2;
-                }
+	        if (is_valid)
+	        {
+		        if (min < 0)
+		        {
+			        value /= 2;
+		        }
 
-                size_t slot_id = (size_t)((value - min) / interval_size);
+		        size_t slot_id = (size_t)((value - min) / interval_size);
 
-                uint old_value = atomic_inc(&histogram[2 * slot_id]);
-                uint carry = old_value == 0xFFFFFFFF;
-                atomic_add(&histogram[2 * slot_id + 1], carry);
+		        uint old_value = atomic_inc(&histogram[2 * slot_id]);
+		        uint carry = old_value == 0xFFFFFFFF;
+		        atomic_add(&histogram[2 * slot_id + 1], carry);
 
-                double delta = value - mean;
-                double tmp_val = delta;
-                delta /= (count - 1);
-                delta *= tmp_val;
+		        double delta = value - mean;
+		        double tmp_val = delta;
+		        delta /= (count - 1);
+		        delta *= tmp_val;
 
-                local_var[local_id] = delta;
-            }
+		        local_var[local_id] = delta;
+	        }
 
-            barrier(CLK_LOCAL_MEM_FENCE);
+	        barrier(CLK_LOCAL_MEM_FENCE);
 
-            int valid_1;
-            int valid_2;
+	        for (size_t i = local_size / 2; i > 0; i /= 2)
+	        {
+		        if (local_id < i)
+		        {
+			        local_var[local_id] += local_var[local_id + i];
+		        }
 
-            for (size_t i = local_size / 2; i > 0; i /= 2)
-            {
-                if (local_id < i)
-                {
-                    valid_1 = Is_Valid_Double(local_var[local_id]);
-                    valid_2 = Is_Valid_Double(local_var[local_id + i]);
+		        barrier(CLK_LOCAL_MEM_FENCE);
+	        }
 
-                    if (!valid_1 && valid_2)
-                    {
-                        local_var[local_id] = local_var[local_id + i];
-                    }
-                    if (valid_1 && valid_2)
-                    {
-                        local_var[local_id] += local_var[local_id + i];
-                    }
-                }
-
-                barrier(CLK_LOCAL_MEM_FENCE);
-            }
-
-            if (0 == local_id)
-            {
-                out_var[group_id] = local_var[0];
-            }
-        }        
+	        if (0 == local_id)
+	        {
+		        out_var[group_id] = local_var[0];
+	        }
+        }  
     )CLC";
 
     struct TOpenCL_Settings
