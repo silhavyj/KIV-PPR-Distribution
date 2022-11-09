@@ -21,8 +21,8 @@ namespace kiv_ppr
 
     typename CChi_Square::TResult CChi_Square::Run(int estimated_parameters)
     {
-        double E; // Expected value
-        double O; // Actual calculated value
+        double E;                             // Expected value
+        double O;                             // Actual calculated value
         double chi_square_val = 0.0; // Chi-Square value
 
         // Get the number of intervals the histogram has originally.
