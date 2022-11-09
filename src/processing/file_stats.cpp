@@ -13,18 +13,28 @@ namespace kiv_ppr
 
     int CFile_Stats::Process(config::TThread_Params* thread_config)
     {
+        // Create an instance of the first filer iteration.
         CFirst_Iteration first_iteration(m_file);
+
+        // Reade the input file (1).
         if (0 != first_iteration.Run(thread_config))
         {
             return 1;
         }
+
+        // Store the values calculated in the first iteration.
         m_values.first_iteration = first_iteration.Get_Values();
 
+        // Create an instance of the second file iteration.
         CSecond_Iteration second_iteration(m_file, &m_values.first_iteration);
+
+        // Read the input file (2).
         if (0 != second_iteration.Run(thread_config))
         {
             return 1;
         }
+        
+        // Store the values calculated in the second iteration.
         m_values.second_iteration = second_iteration.Get_Values();
 
         return 0;
