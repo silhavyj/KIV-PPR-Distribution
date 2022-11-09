@@ -173,7 +173,7 @@ namespace kiv_ppr
         }
         if (run_type == CArg_Parser::NRun_Type::All || run_type == CArg_Parser::NRun_Type::OpenCL_Devs)
         {
-            device = resource_manager->Get_Avaliable_Device();
+            device = resource_manager->Get_Available_Device();
             if (run_type == CArg_Parser::NRun_Type::OpenCL_Devs && nullptr == device)
             {
                 return 0;

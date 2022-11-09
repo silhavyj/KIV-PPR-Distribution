@@ -72,7 +72,7 @@ namespace kiv_ppr
         }
     }
 
-    inline CFirst_Iteration::TValues CFirst_Iteration::Agregate_Results_From_GPU(
+    inline CFirst_Iteration::TValues CFirst_Iteration::Aggregate_Results_From_GPU(
                 const std::vector<double>& out_min,
                 const std::vector<double>& out_max,
                 const std::vector<double>& out_mean,
@@ -206,7 +206,7 @@ namespace kiv_ppr
             all_ints = all_ints && out_all_ints[i];
         }
 
-        const auto aggregated_vals = Agregate_Results_From_GPU(out_min, out_max, out_mean, out_count, number_of_valid_doubles);
+        const auto aggregated_vals = Aggregate_Results_From_GPU(out_min, out_max, out_mean, out_count, number_of_valid_doubles);
 
         return { true, count == data_block.count, {
             aggregated_vals.min,
@@ -234,7 +234,7 @@ namespace kiv_ppr
         }
         if (run_type == CArg_Parser::NRun_Type::All || run_type == CArg_Parser::NRun_Type::OpenCL_Devs)
         {
-            device = resource_manager->Get_Avaliable_Device();
+            device = resource_manager->Get_Available_Device();
             if (run_type == CArg_Parser::NRun_Type::OpenCL_Devs && nullptr == device)
             {
                 return 0;

@@ -103,7 +103,7 @@ namespace kiv_ppr
         }
     }
 
-    const cl::Device* CResource_Manager::Get_Avaliable_Device()
+    const cl::Device* CResource_Manager::Get_Available_Device()
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
         for (auto& [status, device] : m_gpu_devices)
