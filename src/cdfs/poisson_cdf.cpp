@@ -1,6 +1,9 @@
+// Required by MSVC when using constants such as M_E or M_PI
 #define _USE_MATH_DEFINES
+
 #include <cmath>
 #include <stdexcept>
+#include <limits>
 
 #include "poisson_cdf.h"
 
@@ -10,10 +13,13 @@ namespace kiv_ppr
         : m_lambda(lambda),
           m_factorials(MAX_CALCULABLE_FACTORIAL + 1, 1)
     {
+        // Make sure that a valid value of the lambda parameter was provided.
         if (m_lambda <= 0)
         {
             throw std::runtime_error("Poisson distribution (CDF) - lambda must be > 0");
         }
+
+        // Pre-calculate all factorials (0 to MAX_CALCULABLE_FACTORIAL).
         Calculate_Factorials();
     }
 
@@ -27,7 +33,9 @@ namespace kiv_ppr
 
     double CPoisson_CDF::operator()(double x) const
     {
+        // This algorithm uses the Ramanujan's factorial approximation.
         // https://www.codeproject.com/Tips/1216237/Csharp-Poisson-Cumulative-Distribution-for-large-L
+
         auto k = static_cast<long>(x);
         long i = 0;
         double sum = 0.0;
@@ -68,3 +76,5 @@ namespace kiv_ppr
         return sum;
     }
 }
+
+// EOF

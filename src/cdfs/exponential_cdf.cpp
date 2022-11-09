@@ -6,8 +6,9 @@
 namespace kiv_ppr
 {
     CExponential_CDF::CExponential_CDF(double lambda)
-            : m_lambda(lambda)
+        : m_lambda(lambda)
     {
+        // Make sure that a valid lambda value was provided.
         if (m_lambda <= 0)
         {
             throw std::runtime_error("Exponential distribution (CDF) - lambda must be > 0");
@@ -19,3 +20,5 @@ namespace kiv_ppr
         return 1 - std::exp(-m_lambda * x);
     }
 }
+
+// EOF

@@ -7,10 +7,11 @@
 namespace kiv_ppr
 {
     CNormal_CDF::CNormal_CDF(double mean, double variance)
-            : m_mean(mean),
-              m_variance(variance),
-              m_sd(std::sqrt(variance))
+        : m_mean(mean),
+            m_variance(variance),
+            m_sd(std::sqrt(variance))
     {
+        // Make sure that a valid variance value was provided.
         if (m_variance <= 0)
         {
             throw std::runtime_error("Normal distribution (CDF) - variance must be > 0");
@@ -22,3 +23,5 @@ namespace kiv_ppr
         return 0.5 * (1 + std::erf((x - m_mean) / (m_sd * M_SQRT2)));
     }
 }
+
+// EOF
