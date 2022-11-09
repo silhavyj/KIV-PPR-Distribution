@@ -1,4 +1,4 @@
-// Required by MSVC when using constants such as M_E or M_PI
+// Required by MSVC when using constants such as M_E or M_PI.
 #define _USE_MATH_DEFINES
 
 #include <cmath>

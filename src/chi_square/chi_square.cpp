@@ -11,76 +11,98 @@ namespace kiv_ppr
                              double alpha_critical,
                              std::shared_ptr<CHistogram> histogram,
                              std::shared_ptr<CCDF> cdf)
-            : m_name(std::move(name)),
-              m_alpha_critical(alpha_critical),
-              m_histogram(std::move(histogram)),
-              m_cdf(std::move(cdf))
+        : m_name(std::move(name)),
+          m_alpha_critical(alpha_critical),
+          m_histogram(std::move(histogram)),
+          m_cdf(std::move(cdf))
     {
 
     }
 
     typename CChi_Square::TResult CChi_Square::Run(int estimated_parameters)
     {
-        double E;
-        double O;
-        double chi_square_val = 0.0;
+        double E; // Expected value
+        double O; // Actual calculated value
+        double chi_square_val = 0.0; // Chi-Square value
+
+        // Get the number of intervals the histogram has originally.
         const size_t original_number_of_intervals = m_histogram->Get_Number_Of_Intervals() - 1;
 
-        double left = m_histogram->Get_Min();
-        double left_last = 0;
-        double right = left;
-        size_t number_of_interval = 0;
-        double error;
-        double error_last = 0;
-        size_t i = 0;
-        size_t i_last = 0;
-        size_t i_last_tmp;
+        double left = m_histogram->Get_Min(); // Left boundary of the interval (L)
+        double left_last = 0;                 // Previous left boundary of the interval (the very last interval may need to be merged to the left)
+        double right = left;                  // Right boundary of the interval (R)
+        size_t number_of_interval = 0;        // Actual number of intervals after the histogram has been shrank.
+        double error;                         // Calculated error = ((O-E)^2) / E
+        double error_last = 0;                // Previous error (used if the very last interval has to be merged to the left)
+        size_t i = 0;                         // Current index (going over all intervals)
+        size_t i_last = 0;                    // Previous index 
+        size_t i_last_tmp;                    // Temporary index value
 
+        // Goes over all intervals and calculates the Chi-Square value (error).
         while (i < original_number_of_intervals)
         {
             i_last_tmp = i;
             O = 0;
+
+            // If the expected value (E) is < 5, the interval has to be merged
+            // with the next interval to its right (unless it is the very last interval).
             do
             {
+                // Merge the interval (move its right boundary).
                 right += m_histogram->Get_Interval_Size();
+
+                // Calculate the expected value (E).
                 E = Calculate_E(right, left, left == m_histogram->Get_Min());
+
+                // Sum up all actual values that fall in between the [left; right].
                 O += static_cast<double>(m_histogram->operator[](i));
                 ++i;
             } while (i < original_number_of_intervals && E < config::chi_square::Min_Expected_Value);
 
+            // Check if the last interval needs to be merged with the previous one.
             if (E < config::chi_square::Min_Expected_Value)
             {
+                // Rollback all values calculated in the previous iteration.
                 chi_square_val -= error_last;
                 O = 0;
                 i = i_last;
                 left = left_last;
                 right = left;
 
+                // Iterate over the remaining intervals (to the end of the histogram).
                 while (i < original_number_of_intervals)
                 {
                     right += m_histogram->Get_Interval_Size();
                     O += static_cast<double>(m_histogram->operator[](i));
                     ++i;
                 }
+                
+                // Calculate the final Chi-Square error and exit the loop.
                 E = Calculate_E(right, left, left == m_histogram->Get_Min());
                 chi_square_val += ((O - E) / E) * (O - E);
                 break;
             }
 
+            // Calculate the error and add it to the final Chi-Square value.
             error = ((O - E) / E) * (O - E);
             chi_square_val += error;
 
+            // Store current values in case a rollback will take place.
             error_last = error;
             i_last = i_last_tmp;
             left_last = left;
 
+            // Move on to the next bin (interval).
             left = right;
             ++number_of_interval;
         }
 
+        // Calculate the degrees of freedom as well as the P-value.
         const auto df = static_cast<int>(number_of_interval - 1 - estimated_parameters);
         const double p_value = Calculate_P_Value(chi_square_val, df);
 
+        // Compare the calculated P-value to the critical one and set
+        // the result status to either Accepted or Rejected.
         NTResult_Status result_status;
         if (p_value > m_alpha_critical)
         {
@@ -90,14 +112,20 @@ namespace kiv_ppr
         {
             result_status = NTResult_Status::Rejected;
         }
+
+        // Return the results of the test.
         return { result_status, chi_square_val, p_value, df, m_name };
     }
 
     double CChi_Square::Calculate_E(double x, double x_prev, bool first_interval) const
     {
         double E;
+
+        // The CDF function results a value between [0; 1]. Therefore, we
+        // need to multiply it by the total number of values stored in the histogram.
         const auto count = static_cast<double>(m_histogram->Get_Total_Count());
 
+        // In the first interval, we do not subtract the previous input value.
         if (first_interval)
         {
             E = m_cdf->operator()(x) * count;
@@ -106,11 +134,14 @@ namespace kiv_ppr
         {
             E = (m_cdf->operator()(x) - m_cdf->operator()(x_prev)) * count;
         }
+
         return E;
     }
 
     bool CChi_Square::TResult::operator<(const TResult& other) const
     {
+        // Compare the results primarily by their p values. If they are
+        // the same, compare them by their Chi-Square values (minimal error).
         if (p_value == other.p_value)
         {
             if ((df < 0 && other.df > 0) || (df > 0 && other.df < 0))
@@ -222,7 +253,7 @@ namespace kiv_ppr
         // output = p under Normal curve from -inf to z
         // ACM Algorithm #209
         double y; // 209 scratch variable
-        double p; // result. called ‘z’ in 209
+        double p; // result. called z in 209
         double w; // 209 scratch variable
         if (z == 0.0)
         {
@@ -286,3 +317,5 @@ namespace kiv_ppr
         return out;
     }
 }
+
+// EOF
