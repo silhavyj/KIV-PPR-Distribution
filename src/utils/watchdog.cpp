@@ -59,7 +59,7 @@ namespace kiv_ppr
                 std::cout << "Watchodog: Program seems to be inactive. Exiting..." << std::endl;
                 std::exit(5);
             }
-            current_value = previous_value;
+            previous_value = current_value;
         }
     }
 }
