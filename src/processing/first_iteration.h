@@ -122,3 +122,5 @@ namespace kiv_ppr
         std::vector<Worker_Mean_t> m_worker_means; ///< Means calculated by individual workers
     };
 }
+
+// EOF

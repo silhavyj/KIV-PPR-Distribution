@@ -1,16 +1,23 @@
 #pragma once
 
+// How to set up an OpenCL project:
 // https://stackoverflow.com/questions/56858213/how-to-create-nvidia-opencl-project/57017982#57017982
+
 #define CL_USE_DEPRECATED_OPENCL_2_0_APIS
 #define __CL_ENABLE_EXCEPTIONS
 #include <CL/cl.hpp>
 
 namespace kiv_ppr::kernels
 {
+    /// Name of the entry point ("main function") of the kernel performing the first iteration.
     static constexpr const char* First_Iteration_Kernel_Name = "First_File_Iteration";
 
+    /// Size of the local parameters the kernel takes as parameters.
+    /// This values is then multiplied by the work group size, to find out
+    /// if the maximum local memory size is exceeded or not.
     static constexpr size_t First_Iteration_Get_Size_Of_Local_Params = 3 * sizeof(double) + sizeof(int) + sizeof(cl_ulong);
 
+    /// Kernel for the first iteration.
     static constexpr const char* First_Iteration_Kernel = R"CLC(
         #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 
@@ -107,10 +114,15 @@ namespace kiv_ppr::kernels
         }
     )CLC";
 
+    /// Name of the entry point ("main function") of the kernel performing the second iteration.
     static constexpr const char* Second_Iteration_Kernel_Name = "Second_File_Iteration";
 
+    /// Size of the local parameters the kernel takes as parameters.
+    /// This values is then multiplied by the work group size, to find out
+    /// if the maximum local memory size is exceeded or not.
     static constexpr size_t Second_Iteration_Get_Size_Of_Local_Params = 1 * sizeof(double);
 
+    /// Kernel for the second iteration.
     static constexpr const char* Second_Iteration_Kernel = R"CLC(
         #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 
@@ -200,18 +212,43 @@ namespace kiv_ppr::kernels
         }
     )CLC";
 
+    /// Data associated with an OpenCL device.
     struct TOpenCL_Settings
     {
-        cl::Program program{};
-        cl::Context context{};
-        const cl::Device* device = nullptr;
-        cl::Kernel kernel{};
-        size_t work_group_size = 0;
-        size_t local_mem_size = 0;
+        cl::Program program{};              ///< Program the device will execute
+        cl::Context context{};              ///< Context within which the code will execute
+        const cl::Device* device = nullptr; ///< OpenCL device itself
+        cl::Kernel kernel{};                ///< Kernel ("source code")
+        size_t work_group_size = 0;         ///< Maximum work group size of the device
+        size_t local_mem_size = 0;          ///< Maximum local memory size of the device
     };
 
-    TOpenCL_Settings Init_OpenCL(const cl::Device* device, const char* src, const char* kernel_name);
-    const char* Get_OpenCL_Error_Desc(cl_int error);
+    /// Initializes an OpenCL device and creates a kernel.
+    /// This method is called from a worker thread after it gets hold of an available OpenCL device.
+    /// \param device OpenCL device
+    /// \param src Kernel source code
+    /// \param kernel_name Name of the kernel's entry point
+    /// \return Data associated with the OpenCL device and the kernel.
+    [[nodiscard]] TOpenCL_Settings Init_OpenCL(const cl::Device* device, const char* src, const char* kernel_name);
+
+    /// Helper function that returns a text description based on an OpenCL error code.
+    /// @param error OpenCL error code
+    /// @return Text description of the error.
+    [[nodiscard]] const char* Get_OpenCL_Error_Desc(cl_int error);
+
+    /// Prints out an OpenCL error.
+    /// \param e OpenCL error that has been caught
+    /// \param device OpenCL device associated with the error.
     void Print_OpenCL_Error(const cl::Error& e, const cl::Device& device);
+
+    /// Modifies the work group size of an OpenCL device, so it is able to execute the given kernel.
+    /// We need to make sure that the total size of __local atributes does not exceed 
+    /// the maximum local memory size of the device. If it does, we need to device the work group size
+    /// by 2 until the condition is satisfied. The work group size has to be a power of two number,
+    /// so the numerical reduce algorithm works properly.
+    /// \param opencl OpenCL device 
+    /// \param size_of_local_params Size of the local values the device takes as parameters.
     void Adjust_Work_Group_Size(kernels::TOpenCL_Settings& opencl, size_t size_of_local_params);
 }
+
+// EOF

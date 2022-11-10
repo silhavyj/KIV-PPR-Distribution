@@ -7,15 +7,24 @@ namespace kiv_ppr::kernels
 {
     TOpenCL_Settings Init_OpenCL(const cl::Device* device, const char* src, const char* kernel_name)
     {
+        // Create a source with the kernel code.
         cl::Program::Sources sources(1, { src, strlen(src) + 1 });
+
+        // Create a context with the OpenCL device.
         cl::Context context(*device);
+
+        // Create a program (context + sources).
         cl::Program program(context, sources);
 
         try
         {
+            // Compile the source code (kernel).
             program.build("-cl-std=CL2.0");
+
+            // Create a kernel object (it needs to know the program and the name of the entry point).
             cl::Kernel kernel(program, kernel_name);
 
+            // Retrieve other information from the device.
             const size_t work_group_size = kernel.getWorkGroupInfo<CL_KERNEL_WORK_GROUP_SIZE>(*device);
             const size_t local_mem_size = device->getInfo<CL_DEVICE_LOCAL_MEM_SIZE>();
 
@@ -30,19 +39,27 @@ namespace kiv_ppr::kernels
 
     inline void Print_OpenCL_Error(const cl::Error& e, const cl::Device& device)
     {
+        // Retrieve the name of the device and pop out the last character ('\0').
         std::string device_name = device.getInfo<CL_DEVICE_NAME>();
         device_name.pop_back();
+
+        // Get the description of the error that has ocurred.
         const char* error_desc = Get_OpenCL_Error_Desc(e.err());
 
+        // Print the error as well as the device out to the STDO.
         std::cout << "OpenCL Error [" << device_name << "] (" << error_desc << "): " << e.what() << std::endl;
     }
 
     void Adjust_Work_Group_Size(kernels::TOpenCL_Settings& opencl, size_t size_of_local_params)
     {
+        // Keep dividing the work group size by 2 until the maximum local memory size is not exceeded.
         while (opencl.work_group_size * size_of_local_params > opencl.local_mem_size)
         {
             opencl.work_group_size /= 2;
         }
+
+        // The device is incapable of executing the kernel
+        // (it does not have enough local memory).
         if (0 == opencl.work_group_size)
         {
             std::string device_name = opencl.device->getInfo<CL_DEVICE_NAME>();
@@ -130,3 +147,5 @@ namespace kiv_ppr::kernels
         }
     }
 }
+
+// EOF
