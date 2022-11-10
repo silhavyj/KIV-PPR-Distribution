@@ -234,7 +234,7 @@ namespace kiv_ppr::kernels
     /// Helper function that returns a text description based on an OpenCL error code.
     /// @param error OpenCL error code
     /// @return Text description of the error.
-    [[nodiscard]] const char* Get_OpenCL_Error_Desc(cl_int error);
+    [[nodiscard]] const char* Get_OpenCL_Error_Desc(cl_int error) noexcept;
 
     /// Prints out an OpenCL error.
     /// \param e OpenCL error that has been caught

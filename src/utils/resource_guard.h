@@ -12,10 +12,10 @@ namespace kiv_ppr
     class CResource_Guard
     {
     public:      
-        CResource_Guard();
+        CResource_Guard() noexcept;
         ~CResource_Guard();
 
-        void Set_Device(const cl::Device* device);
+        void Set_Device(const cl::Device* device) noexcept;
 
     private:
         const cl::Device* m_device;

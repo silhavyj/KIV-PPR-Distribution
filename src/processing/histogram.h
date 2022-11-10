@@ -34,14 +34,14 @@ namespace kiv_ppr
 
         /// Adds a number into the histogram.
         /// \param value Value to be added into the histogram.
-        void Add(double value);
+        void Add(double value) noexcept;
 
         /// Increments the value at a particular index by the values passed 
         /// as a parameter (histogram[index] += value).
         /// \param index Index (position in the histogram)
         /// \param value Value to be added to the value at the index
         /// \return true, if all went well, false otherwise.
-        [[nodiscard]] bool Add(size_t index, size_t value);
+        [[nodiscard]] bool Add(size_t index, size_t value) noexcept;
 
         /// Returns the number of intervals that make up the histogram.
         /// \return Number of intervals of the histogram.
@@ -58,20 +58,16 @@ namespace kiv_ppr
 
         /// Returns the total number of values inserted into the histogram.
         /// \return Number of values stored in the histogram
-        [[nodiscard]] size_t Get_Total_Count() const;
-
-        /// Returns the intervals that make up the histogram (bins).
-        /// \return Intervals of the histogram
-        [[nodiscard]] std::vector<size_t>& Get_Intervals();
+        [[nodiscard]] size_t Get_Total_Count() const noexcept;
 
         /// Overloaded [] operator for accessing individual intervals (bins).
         /// \param index Index (position in the histogram)
         /// \return Reference to the value at the index position
-        [[nodiscard]] size_t& operator[](size_t index);
+        [[nodiscard]] size_t& operator[](size_t index) noexcept;
 
         /// Overloaded += operator fro merging two histograms.
         /// \param other Other histogram to be merged into this one.
-        void operator+=(CHistogram& other);
+        void operator+=(CHistogram& other) noexcept;
 
         /// Prints out the histogram into an output stream.
         /// \param out Output stream

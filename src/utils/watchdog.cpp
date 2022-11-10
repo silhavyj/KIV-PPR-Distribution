@@ -4,7 +4,7 @@
 
 namespace kiv_ppr
 {
-    CWatchdog::CWatchdog(double interval_sec)
+    CWatchdog::CWatchdog(double interval_sec) noexcept
         : m_interval_sec(interval_sec),
           m_enabled{false},
           m_counter(0)
@@ -27,13 +27,13 @@ namespace kiv_ppr
             m_enabled = true;
         }
     }
-
-    void CWatchdog::Stop()
+     
+    void CWatchdog::Stop() noexcept
     {
         m_enabled = false;
     }
 
-    size_t CWatchdog::Get_Counter_Value() const
+    size_t CWatchdog::Get_Counter_Value() const noexcept
     {
         return m_counter;
     }
@@ -46,18 +46,20 @@ namespace kiv_ppr
 
     void CWatchdog::Run()
     {
-        size_t current_value;
+        size_t current_value{};
         size_t previous_value = m_counter;
 
         while (m_enabled)
         {
             std::this_thread::sleep_for(m_interval_sec);
 
+            m_mtx.lock();
             current_value = m_counter;
+            m_mtx.unlock();
+
             if (m_enabled && previous_value == current_value)
             {
-                std::cout << "Watchodog: Program seems to be inactive. Exiting..." << std::endl;
-                std::exit(5);
+                std::cout << "Warning (watchdog): Program seems to be inactive" << std::endl;
             }
             previous_value = current_value;
         }

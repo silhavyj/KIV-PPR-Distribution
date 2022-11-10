@@ -18,7 +18,7 @@ namespace kiv_ppr
         /// Creates an instance of the class.
         /// \param values Statistical values calculated from the input file (min, max, mean, ...).
         /// \param p_critical Critical P-value used to determine whether a test is accepted or not.
-        explicit CTest_Runner(CFile_Stats::TValues values, double p_critical);
+        explicit CTest_Runner(CFile_Stats::TValues values, double p_critical) noexcept;
 
         /// Default destructor.
         ~CTest_Runner() = default;
@@ -49,7 +49,7 @@ namespace kiv_ppr
 
         /// Prints out a reasoning (explanation) behind the best result of all the tests.
         /// \param result The best result out of all the results.
-        static void Print_Result_Reasoning(CChi_Square::TResult& result);
+        static void Print_Result_Reasoning(const CChi_Square::TResult& result);
 
     private:
         CFile_Stats::TValues m_values; ///< Statistical values calculated from the input file (min, max, mean, ...).

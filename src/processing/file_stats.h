@@ -37,7 +37,7 @@ namespace kiv_ppr
     public:
         /// Creates an instance of the class.
         /// \param file Pointer to an input file reader. 
-        explicit CFile_Stats(CFile_Reader<double>* file);
+        explicit CFile_Stats(CFile_Reader<double>* file) noexcept;
 
         /// Default destructor.
         ~CFile_Stats() = default;

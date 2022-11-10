@@ -43,7 +43,7 @@ namespace kiv_ppr
             /// values (minimal error).
             /// \param other Result which this result will be compared to.
             /// \return true if the first result is better, false otherwise.
-            bool operator<(const TResult& other) const;
+            bool operator<(const TResult& other) const noexcept;
         };
 
     public:
@@ -55,7 +55,7 @@ namespace kiv_ppr
         CChi_Square(std::string name,
                     double alpha_critical,
                     std::shared_ptr<CHistogram> histogram,
-                    std::shared_ptr<CCDF> cdf);
+                    std::shared_ptr<CCDF> cdf) noexcept;
 
         /// Default class destructor.
         ~CChi_Square() = default;
@@ -78,19 +78,19 @@ namespace kiv_ppr
         /// \param x Chi-Square value (summed up differences).
         /// \param df Degrees of freedom (differs with every distribution). 
         /// \return Calculated p-value
-        double Calculate_P_Value(double x, int df);
+        double Calculate_P_Value(double x, int df) noexcept;
 
         /// Calculates the p-value under the normal curve from -inf to z.
         /// This method is a part of ACM 299 algorithm.
         /// \param z Upper boundary to which the p-value under the normal curve is calculated.
         /// \return p-value under the normal curve from -inf to z.
-        double Gauss(double z);
+        double Gauss(double z) noexcept;
 
         /// Calculates Exp(x).
         /// This method is a part of ACM 299 algorithm. 
         /// \param x Input value.
         /// \return 0, if x < -40 (ACM update remark (8)), std::exp(x) otherwise.
-        double Exp(double x);
+        double Exp(double x) noexcept;
 
     private:
         std::string m_name;                      ///< Name of the test to be carried out.

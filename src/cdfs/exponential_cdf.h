@@ -24,7 +24,7 @@ namespace kiv_ppr
 
         /// Call operator of the class.
         /// \return CDF(x)
-        [[nodiscard]] double operator()(double x) const override;
+        [[nodiscard]] double operator()(double x) const noexcept override;
 
     private:
         double m_lambda; ///< Lambda parameter of the distribution

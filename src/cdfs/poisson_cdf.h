@@ -31,7 +31,7 @@ namespace kiv_ppr
 
     private:
         /// Creates a look-up table for factorials from zero 0 to MAX_CALCULABLE_FACTORIAL. 
-        void Calculate_Factorials();
+        void Calculate_Factorials() noexcept;
 
     private:
         static constexpr int MAX_CALCULABLE_FACTORIAL = 170; ///< Highest factorial that fits into a double (!170)

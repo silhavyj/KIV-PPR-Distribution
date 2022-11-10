@@ -4,7 +4,7 @@
 
 namespace kiv_ppr
 {
-    CFile_Stats::CFile_Stats(CFile_Reader<double>* file)
+    CFile_Stats::CFile_Stats(CFile_Reader<double>* file) noexcept
         : m_file(file),
           m_values{}
     {
@@ -47,7 +47,7 @@ namespace kiv_ppr
 
     std::ostream& operator<<(std::ostream& out, const CFile_Stats::TValues& values)
     {
-        double scale_factor = values.first_iteration.min < 0 ? config::processing::Scale_Factor : 1;
+        const double scale_factor = values.first_iteration.min < 0 ? config::processing::Scale_Factor : 1;
         out << "min   = " << std::setprecision(kiv_ppr::config::Double_Precision) << (values.first_iteration.min * scale_factor) << '\n';
         out << "max   = " << (values.first_iteration.max * scale_factor)   << '\n';
         out << "mean  = " << (values.first_iteration.mean * scale_factor)  << '\n';

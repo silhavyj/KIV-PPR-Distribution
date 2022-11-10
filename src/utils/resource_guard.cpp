@@ -3,13 +3,13 @@
 
 namespace kiv_ppr
 {
-    CResource_Guard::CResource_Guard()
+    CResource_Guard::CResource_Guard() noexcept
         : m_device(nullptr)
     {
 
     }
 
-    void CResource_Guard::Set_Device(const cl::Device* device)
+    void CResource_Guard::Set_Device(const cl::Device* device) noexcept
     {
         m_device = device;
     }
@@ -19,6 +19,11 @@ namespace kiv_ppr
         if (nullptr != m_device)
         {
             auto resource_manager = Singleton<CResource_Manager>::Get_Instance();
+            if (nullptr == resource_manager)
+            {
+                std::cout << "Error: resource manager is NULL" << std::endl;
+                std::exit(22);
+            }
             resource_manager->Release_Device(m_device);
         }
     }

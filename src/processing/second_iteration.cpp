@@ -28,7 +28,7 @@ namespace kiv_ppr
         m_values.histogram = std::make_shared<CHistogram>(m_histogram_params);
     }
 
-    void CSecond_Iteration::Scale_Up_Basic_Values(typename CFirst_Iteration::TValues* basic_values)
+    void CSecond_Iteration::Scale_Up_Basic_Values(typename CFirst_Iteration::TValues* basic_values) noexcept
     {
         basic_values->min *= config::processing::Scale_Factor;
         basic_values->max *= config::processing::Scale_Factor;
@@ -74,7 +74,7 @@ namespace kiv_ppr
         m_values.histogram->operator+=(*values.histogram);
     }
 
-    CSecond_Iteration::TOpenCL_Report CSecond_Iteration::Execute_OpenCL(kernels::TOpenCL_Settings& opencl, CFile_Reader<double>::TData_Block& data_block, TValues& local_values)
+    CSecond_Iteration::TOpenCL_Report CSecond_Iteration::Execute_OpenCL(kernels::TOpenCL_Settings& opencl, const CFile_Reader<double>::TData_Block& data_block, TValues& local_values)
     {
         const auto work_groups_count = data_block.count / opencl.work_group_size;
         const size_t count = data_block.count - (data_block.count % opencl.work_group_size);
@@ -84,9 +84,9 @@ namespace kiv_ppr
             return { false, false };
         }
 
-        auto& intervals = local_values.histogram->Get_Intervals();
-        double interval_size = local_values.histogram->Get_Interval_Size();
-        std::vector<cl_uint> out_hisogram(2 * intervals.size(), 0);
+        const size_t number_of_intervals = local_values.histogram->Get_Number_Of_Intervals();
+        const double interval_size = local_values.histogram->Get_Interval_Size();
+        std::vector<cl_uint> out_hisogram(2 * number_of_intervals, 0);
 
         cl::Buffer data_buff(opencl.context, CL_MEM_READ_ONLY | CL_MEM_HOST_NO_ACCESS | CL_MEM_USE_HOST_PTR, count * sizeof(double), data_block.data.get());
         cl::Buffer out_var_buff(opencl.context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, work_groups_count * sizeof(double));
@@ -134,8 +134,7 @@ namespace kiv_ppr
             std::exit(13);
         }
 
-        size_t size = intervals.size();
-        for (size_t i = 0; i < size; ++i)
+        for (size_t i = 0; i < number_of_intervals; ++i)
         {
             const size_t value = static_cast<size_t>(out_hisogram[2 * i]) + static_cast<size_t>(out_hisogram[2 * i + 1]) * sizeof(cl_uint);
             if (false == local_values.histogram->Add(i, value))
@@ -155,12 +154,26 @@ namespace kiv_ppr
         return { true, count == data_block.count };
     }
 
-    int CSecond_Iteration::Worker(config::TThread_Params* thread_config, CWatchdog* watchdog)
+    int CSecond_Iteration::Worker(const config::TThread_Params* thread_config, CWatchdog* watchdog)
     {
         TValues local_values{};
         local_values.histogram = std::make_shared<CHistogram>(m_histogram_params);
 
+        // Make sure that watchdog is not NULL
+        if (nullptr == watchdog)
+        {
+            std::cout << "Error: instance of CWatch_Dog is NULL" << std::endl;
+            std::exit(22);
+        }
+
+        // Make sure that the resouce manager is not NULL.
         auto resource_manager = Singleton<CResource_Manager>::Get_Instance();
+        if (nullptr == resource_manager)
+        {
+            std::cout << "Error: resource manager is NULL" << std::endl;
+            std::exit(23);
+        }
+
         const cl::Device* device = nullptr;
         kernels::TOpenCL_Settings opencl;
         CResource_Guard opencl_device_guard;
@@ -220,16 +233,16 @@ namespace kiv_ppr
         }
     }
 
-    size_t CSecond_Iteration::Calculate_Number_Of_Intervals(size_t n)
+    size_t CSecond_Iteration::Calculate_Number_Of_Intervals(size_t n) noexcept
     {
         // https://onlinelibrary.wiley.com/doi/full/10.1002/1097-0320%2820011001%2945%3A2%3C141%3A%3AAID-CYTO1156%3E3.0.CO%3B2-M#bib11
         return static_cast<size_t>(2 * std::pow(n, 2.0 / 5.0));
     }
 
-    void CSecond_Iteration::Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, size_t offset)
+    void CSecond_Iteration::Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, size_t offset) noexcept
     {
-        double delta;
-        double tmp_value;
+        double delta{};
+        double tmp_value{};
 
         for (auto i = offset; i < data_block.count; ++i)
         {
@@ -252,7 +265,7 @@ namespace kiv_ppr
         }
     }
 
-    void CSecond_Iteration::Execute_On_GPU(TValues& local_values, CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl)
+    void CSecond_Iteration::Execute_On_GPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl)
     {
         const auto opencl_report = Execute_OpenCL(opencl, data_block, local_values);
 

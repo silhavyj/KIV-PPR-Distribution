@@ -11,7 +11,7 @@ namespace kiv_ppr
 
     }
 
-    void CHistogram::Add(double value)
+    void CHistogram::Add(double value) noexcept
     {
         // Add the value into its corresponding bin (interval).
         const auto slot_id = static_cast<size_t>((value - m_params.min) / m_interval_size);
@@ -21,17 +21,12 @@ namespace kiv_ppr
         ++m_count;
     }
 
-    inline size_t CHistogram::Get_Number_Of_Intervals() const noexcept
+    size_t CHistogram::Get_Number_Of_Intervals() const noexcept
     {
         return m_intervals.size();
     }
 
-    std::vector<size_t>& CHistogram::Get_Intervals()
-    {
-        return m_intervals;
-    }
-
-    bool CHistogram::Add(size_t index, size_t value)
+    bool CHistogram::Add(size_t index, size_t value) noexcept
     {
         if (index < m_intervals.size())
         {
@@ -47,27 +42,27 @@ namespace kiv_ppr
         return false;
     }
 
-    inline double CHistogram::Get_Min() const noexcept
+    double CHistogram::Get_Min() const noexcept
     {
         return m_params.min;
     }
 
-    inline double CHistogram::Get_Interval_Size() const noexcept
+    double CHistogram::Get_Interval_Size() const noexcept
     {
         return m_interval_size;
     }
 
-    inline size_t CHistogram::Get_Total_Count() const
+    size_t CHistogram::Get_Total_Count() const noexcept
     {
         return m_count;
     }
 
-    size_t& CHistogram::operator[](size_t index)
+    size_t& CHistogram::operator[](size_t index) noexcept
     {
         return m_intervals[index % Get_Number_Of_Intervals()];
     }
 
-    void CHistogram::operator+=(CHistogram& other)
+    void CHistogram::operator+=(CHistogram& other) noexcept
     {
         // Make sure we do not overflow (take the minimum of the two histograms).
         const size_t size = std::min(Get_Number_Of_Intervals(), other.Get_Number_Of_Intervals());

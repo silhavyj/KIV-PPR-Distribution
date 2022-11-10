@@ -55,7 +55,7 @@ namespace kiv_ppr
         return m_opencl_devs;
     }
 
-    const char* CArg_Parser::Get_Filename()
+    const char* CArg_Parser::Get_Filename() noexcept
     {
         return m_filename;
     }
@@ -65,7 +65,7 @@ namespace kiv_ppr
         m_args = m_options.parse(m_argc, m_argv);
     }
 
-    CArg_Parser::NRun_Type CArg_Parser::Get_Run_Type()
+    CArg_Parser::NRun_Type CArg_Parser::Get_Run_Type() noexcept
     {
         return m_run_type;
     }
@@ -79,7 +79,7 @@ namespace kiv_ppr
         m_filename = m_argv[1];
         std::string run_type = m_argv[2];
 
-        std::transform(run_type.begin(), run_type.end(), run_type.begin(), [](unsigned char c) {
+        std::transform(run_type.begin(), run_type.end(), run_type.begin(), [](unsigned char c) noexcept {
             return std::tolower(c);
         });
         if (run_type == All_Run_Type_Str)
@@ -116,7 +116,7 @@ namespace kiv_ppr
         }
     }
 
-    const char* CArg_Parser::Get_Run_Type_Str()
+    const char* CArg_Parser::Get_Run_Type_Str() noexcept
     {
         switch (m_run_type)
         {

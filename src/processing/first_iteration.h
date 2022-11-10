@@ -37,7 +37,7 @@ namespace kiv_ppr
     public:
         /// Creates an instance of the class.
         /// \param file Pointer to an input file reader. 
-        explicit CFirst_Iteration(CFile_Reader<double>* file);
+        explicit CFirst_Iteration(CFile_Reader<double>* file) noexcept;
 
         /// Default destructor.
         ~CFirst_Iteration() = default;
@@ -70,13 +70,13 @@ namespace kiv_ppr
         /// \param thread_config Configuration containing the size of a data block processed by each thread
         /// \param watchdog Watchdog the thread periodically reports to (health check)
         /// \return 0, if all went well, 1 otherwise (e.g. failed to read the input file).
-        [[nodiscard]] int Worker(config::TThread_Params* thread_config, CWatchdog* watchdog);
+        [[nodiscard]] int Worker(const config::TThread_Params* thread_config, CWatchdog* watchdog);
 
         /// Processes a block of data read from the input file on an OpenCL device.
         /// \param opencl OpenCL configuration (device, context, work group size, ...)
         /// \param data_block Block of data to be processed
         /// \return OpenCL report (whether the data was processed successfully or not and how many values were not processed due to the work group size).
-        [[nodiscard]] TOpenCL_Report Execute_OpenCL(kernels::TOpenCL_Settings& opencl, CFile_Reader<double>::TData_Block& data_block);
+        [[nodiscard]] TOpenCL_Report Execute_OpenCL(kernels::TOpenCL_Settings& opencl, const CFile_Reader<double>::TData_Block& data_block);
 
         /// Aggregates values calculated on an OpenCL device.
         /// \param out_min Minimums calculated by individual work groups
@@ -89,31 +89,31 @@ namespace kiv_ppr
                                                                 const std::vector<double>& out_max, 
                                                                 const std::vector<double>& out_mean,
                                                                 const std::vector<cl_ulong>& out_count,
-                                                                size_t total_count);
+                                                                size_t total_count) noexcept;
 
         /// Processes a block of data read from the input file on the CPU.
         /// This method directly modifies the local_values structure passed in as a parameter.
         /// \param local_values Local values being calculated within a single worker thread.
         /// \param data_block Block of data to be processed.
-        void Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block);
+        void Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block) noexcept;
 
         /// Processes a block of data read from the input file on an OpenCL device.
         /// This method directly modifies the local_values structure passed in as a parameter.
         /// \param local_values Local values being calculated within a single worker thread.
         /// \param data_block Block of data to be processed.
         /// \param opencl OpenCL configuration (device, context, work group size, ...)
-        void Execute_On_GPU(TValues& local_values, CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl);
+        void Execute_On_GPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl);
 
         /// Processes the reaming values that the OpenCL device did not calculate (due to its work group size).
         /// \param data_block Block of data to be processed.
         /// \param offset Number of values the OpenCL device did process (where it should start from).
         /// \return Calculated values (statistics)
-        [[nodiscard]] TValues Process_Data_Block_On_CPU(CFile_Reader<double>::TData_Block& data_block, size_t offset);
+        [[nodiscard]] TValues Process_Data_Block_On_CPU(const CFile_Reader<double>::TData_Block& data_block, size_t offset) noexcept;
 
         /// Merges values calculated on an OpenCL device and on the CPU.
         /// \param dest Destination values that will be modified (result).
         /// \param src The other set of data to be merged into the first set of data.
-        void Merge_Values(TValues& dest, const TValues& src);
+        void Merge_Values(TValues& dest, const TValues& src) noexcept;
 
     private:
         CFile_Reader<double>* m_file;              ///< Pointer to the input file reader

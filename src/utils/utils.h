@@ -49,5 +49,5 @@ namespace kiv_ppr::utils
         return std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time).count();
     }
 
-    bool Is_Valid_Double(double value);
+    bool Is_Valid_Double(double value) noexcept;
 }

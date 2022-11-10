@@ -2,7 +2,7 @@
 
 namespace kiv_ppr::utils
 {
-    bool Is_Valid_Double(double value)
+    bool Is_Valid_Double(double value) noexcept
     {
         const auto type = std::fpclassify(value);
         return type == FP_NORMAL || type == FP_ZERO;

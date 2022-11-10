@@ -19,11 +19,11 @@ namespace kiv_ppr
         CResource_Manager() = default;
         ~CResource_Manager() = default;
 
-        void Set_Run_Type(CArg_Parser::NRun_Type run_type);
+        void Set_Run_Type(CArg_Parser::NRun_Type run_type) noexcept;
         void Find_Available_GPUs(const std::unordered_set<std::string>& listed_devices);
         [[nodiscard]] const cl::Device* Get_Available_Device();
         void Release_Device(const cl::Device* device);
-        [[nodiscard]] CArg_Parser::NRun_Type Get_Run_Type() const;
+        [[nodiscard]] CArg_Parser::NRun_Type Get_Run_Type() const noexcept;
 
 
     private:

@@ -7,6 +7,13 @@ namespace kiv_ppr::kernels
 {
     TOpenCL_Settings Init_OpenCL(const cl::Device* device, const char* src, const char* kernel_name)
     {
+        // Make sure that the device is not null.
+        if (nullptr == device)
+        {
+            std::cout << "OpenCL Error (Init_OpenCL): device is NULL" << std::endl;
+            std::exit(18);
+        }
+
         // Create a source with the kernel code.
         cl::Program::Sources sources(1, { src, strlen(src) + 1 });
 
@@ -69,7 +76,7 @@ namespace kiv_ppr::kernels
         }
     }
 
-    const char* Get_OpenCL_Error_Desc(cl_int error)
+    const char* Get_OpenCL_Error_Desc(cl_int error) noexcept
     {
         switch (error) 
         {

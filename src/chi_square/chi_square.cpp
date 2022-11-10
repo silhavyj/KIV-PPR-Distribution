@@ -10,7 +10,7 @@ namespace kiv_ppr
     CChi_Square::CChi_Square(std::string name,
                              double alpha_critical,
                              std::shared_ptr<CHistogram> histogram,
-                             std::shared_ptr<CCDF> cdf)
+                             std::shared_ptr<CCDF> cdf) noexcept
         : m_name(std::move(name)),
           m_alpha_critical(alpha_critical),
           m_histogram(std::move(histogram)),
@@ -21,9 +21,9 @@ namespace kiv_ppr
 
     typename CChi_Square::TResult CChi_Square::Run(int estimated_parameters)
     {
-        double E;                             // Expected value
-        double O;                             // Actual calculated value
-        double chi_square_val = 0.0; // Chi-Square value
+        double E = 0.0;                       // Expected value
+        double O = 0.0;                       // Actual calculated value
+        double chi_square_val = 0.0;          // Chi-Square value
 
         // Get the number of intervals the histogram has originally.
         const size_t original_number_of_intervals = m_histogram->Get_Number_Of_Intervals() - 1;
@@ -32,11 +32,11 @@ namespace kiv_ppr
         double left_last = 0;                 // Previous left boundary of the interval (the very last interval may need to be merged to the left)
         double right = left;                  // Right boundary of the interval (R)
         size_t number_of_interval = 0;        // Actual number of intervals after the histogram has been shrank.
-        double error;                         // Calculated error = ((O-E)^2) / E
+        double error = 0.0;                   // Calculated error = ((O-E)^2) / E
         double error_last = 0;                // Previous error (used if the very last interval has to be merged to the left)
         size_t i = 0;                         // Current index (going over all intervals)
         size_t i_last = 0;                    // Previous index 
-        size_t i_last_tmp;                    // Temporary index value
+        size_t i_last_tmp = 0;                // Temporary index value
 
         // Goes over all intervals and calculates the Chi-Square value (error).
         while (i < original_number_of_intervals)
@@ -103,14 +103,10 @@ namespace kiv_ppr
 
         // Compare the calculated P-value to the critical one and set
         // the result status to either Accepted or Rejected.
-        NTResult_Status result_status;
+        NTResult_Status result_status = NTResult_Status::Rejected;
         if (p_value > m_alpha_critical)
         {
             result_status = NTResult_Status::Accepted;
-        }
-        else
-        {
-            result_status = NTResult_Status::Rejected;
         }
 
         // Return the results of the test.
@@ -119,7 +115,7 @@ namespace kiv_ppr
 
     double CChi_Square::Calculate_E(double x, double x_prev, bool first_interval) const
     {
-        double E;
+        double E = 0.0;
 
         // The CDF function results a value between [0; 1]. Therefore, we
         // need to multiply it by the total number of values stored in the histogram.
@@ -138,7 +134,7 @@ namespace kiv_ppr
         return E;
     }
 
-    bool CChi_Square::TResult::operator<(const TResult& other) const
+    bool CChi_Square::TResult::operator<(const TResult& other) const noexcept
     {
         // Compare the results primarily by their p values. If they are
         // the same, compare them by their Chi-Square values (minimal error).
@@ -153,7 +149,7 @@ namespace kiv_ppr
         return p_value > other.p_value;
     }
 
-    double CChi_Square::Calculate_P_Value(double x, int df)
+    double CChi_Square::Calculate_P_Value(double x, int df) noexcept
     {
         // x = a computed chi-square value.
         // df = degrees of freedom.
@@ -163,13 +159,13 @@ namespace kiv_ppr
         {
             return 0;
         }
-        double a; // 299 variable names
+        double a{}; // 299 variable names
         double y = 0.0;
-        double s;
-        double z;
-        double ee; // change from e
-        double c;
-        bool even; // Is df even?
+        double s{};
+        double z{};
+        double ee{}; // change from e
+        double c{};
+        bool even{}; // Is df even?
         a = 0.5 * x;
         if (df % 2 == 0)
         {
@@ -247,14 +243,14 @@ namespace kiv_ppr
         }
     }
 
-    double CChi_Square::Gauss(double z)
+    double CChi_Square::Gauss(double z) noexcept
     {
         // input = z-value (-inf to +inf)
         // output = p under Normal curve from -inf to z
         // ACM Algorithm #209
-        double y; // 209 scratch variable
-        double p; // result. called z in 209
-        double w; // 209 scratch variable
+        double y{}; // 209 scratch variable
+        double p{}; // result. called z in 209
+        double w{}; // 209 scratch variable
         if (z == 0.0)
         {
             p = 0.0;
@@ -299,7 +295,7 @@ namespace kiv_ppr
         }
     }
 
-    double CChi_Square::Exp(double x)
+    double CChi_Square::Exp(double x) noexcept
     {
         if (x < -40.0) // ACM update remark (8)
         {

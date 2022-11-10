@@ -12,7 +12,7 @@
 
 namespace kiv_ppr
 {
-    CTest_Runner::CTest_Runner(CFile_Stats::TValues values, double p_critical)
+    CTest_Runner::CTest_Runner(CFile_Stats::TValues values, double p_critical) noexcept
         : m_values(std::move(values)),
           m_p_critical(p_critical)
     {
@@ -136,7 +136,7 @@ namespace kiv_ppr
         }
     }
 
-    inline void CTest_Runner::Print_Result_Reasoning(CChi_Square::TResult& result)
+    inline void CTest_Runner::Print_Result_Reasoning(const CChi_Square::TResult& result)
     {
         // If the DoF of the first test is < 0, it indicates that not enough data may have been provided.
         if (result.df < 0)

@@ -12,7 +12,7 @@
 
 namespace kiv_ppr
 {
-    CFirst_Iteration::CFirst_Iteration(CFile_Reader<double>* file)
+    CFirst_Iteration::CFirst_Iteration(CFile_Reader<double>* file) noexcept
         : m_file(file),
           m_values{},
           m_worker_means{}
@@ -85,11 +85,10 @@ namespace kiv_ppr
                 const std::vector<double>& out_max,
                 const std::vector<double>& out_mean,
                 const std::vector<cl_ulong>& out_count,
-                size_t total_count)
+                size_t total_count) noexcept
     {
         TValues values{};
-        size_t size = out_min.size(); // All the sizes are the same (work group count).
-        size_t count = 0;
+        const size_t size = out_min.size(); // All the sizes are the same (work group count).
 
         for (size_t i = 0; i < size; ++i)
         {
@@ -115,11 +114,10 @@ namespace kiv_ppr
         return values;
     }
 
-    CFirst_Iteration::TValues CFirst_Iteration::Process_Data_Block_On_CPU(CFile_Reader<double>::TData_Block& data_block, size_t offset)
+    CFirst_Iteration::TValues CFirst_Iteration::Process_Data_Block_On_CPU(const CFile_Reader<double>::TData_Block& data_block, size_t offset) noexcept
     {
         TValues values{};
-        size_t count = 0;
-        double delta;
+        double delta{};
 
         for (size_t i = offset; i < data_block.count; ++i)
         {
@@ -127,7 +125,7 @@ namespace kiv_ppr
             if (utils::Is_Valid_Double(data_block.data[i]))
             {
                 // Scale it down, so we are able to calculate -DOUBLE_MAX - DOUBLE_MAX.
-                double value = data_block.data[i] / config::processing::Scale_Factor;
+                const double value = data_block.data[i] / config::processing::Scale_Factor;
 
                 // Update the minimum and maximum.
                 values.min = std::min(values.min, value);
@@ -149,7 +147,7 @@ namespace kiv_ppr
         return values;
     }
 
-    CFirst_Iteration::TOpenCL_Report CFirst_Iteration::Execute_OpenCL(kernels::TOpenCL_Settings& opencl, CFile_Reader<double>::TData_Block& data_block)
+    CFirst_Iteration::TOpenCL_Report CFirst_Iteration::Execute_OpenCL(kernels::TOpenCL_Settings& opencl, const CFile_Reader<double>::TData_Block& data_block)
     {
         // Calculate how many work groups will be needed.
         const auto work_groups_count = data_block.count / opencl.work_group_size;
@@ -255,11 +253,25 @@ namespace kiv_ppr
         } };
     }
 
-    int CFirst_Iteration::Worker(config::TThread_Params* thread_config, CWatchdog* watchdog)
+    int CFirst_Iteration::Worker(const config::TThread_Params* thread_config, CWatchdog* watchdog)
     {
         TValues local_values{}; // Local values (each worker has its own).
 
+        // Make sure that watchdog is not NULL
+        if (nullptr == watchdog)
+        {
+            std::cout << "Error: instance of CWatch_Dog is NULL" << std::endl;
+            std::exit(20);
+        }
+
+        // Make sure that the resouce manager is not NULL.
         auto resource_manager = Singleton<CResource_Manager>::Get_Instance();
+        if (nullptr == resource_manager)
+        {
+            std::cout << "Error: resource manager is NULL" << std::endl;
+            std::exit(20);
+        }
+
         const cl::Device* device = nullptr;
         kernels::TOpenCL_Settings opencl;
         CResource_Guard opencl_device_guard;
@@ -337,9 +349,9 @@ namespace kiv_ppr
         }
     }
 
-    void CFirst_Iteration::Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block)
+    void CFirst_Iteration::Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block) noexcept
     {
-        double delta;
+        double delta{};
 
         for (auto i = 0; i < data_block.count; ++i)
         {
@@ -369,7 +381,7 @@ namespace kiv_ppr
         }
     }
 
-    void CFirst_Iteration::Execute_On_GPU(TValues& local_values, CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl)
+    void CFirst_Iteration::Execute_On_GPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl)
     {
         // Process as much data of the block of data on the OpenCL device as you can.
         const auto opencl_report = Execute_OpenCL(opencl, data_block);
@@ -396,7 +408,7 @@ namespace kiv_ppr
         Merge_Values(local_values, gpu_values);
     }
 
-    void CFirst_Iteration::Merge_Values(TValues& dest, const TValues& src)
+    void CFirst_Iteration::Merge_Values(TValues& dest, const TValues& src) noexcept
     {
         // Add up the two sub-counts to the total count.
         const size_t total_count = dest.count + src.count;

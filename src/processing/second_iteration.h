@@ -38,12 +38,12 @@ namespace kiv_ppr
 
     private:
         void Report_Worker_Results(const TValues& values);
-        [[nodiscard]] int Worker(config::TThread_Params* thread_config, CWatchdog* watchdog);
-        static size_t Calculate_Number_Of_Intervals(size_t n);
-        void Scale_Up_Basic_Values(typename CFirst_Iteration::TValues* basic_values);
-        void Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, size_t offset = 0);
-        void Execute_On_GPU(TValues& local_values, CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl);
-        TOpenCL_Report Execute_OpenCL(kernels::TOpenCL_Settings& opencl, CFile_Reader<double>::TData_Block& data_block, TValues& local_values);
+        [[nodiscard]] int Worker(const config::TThread_Params* thread_config, CWatchdog* watchdog);
+        static size_t Calculate_Number_Of_Intervals(size_t n) noexcept;
+        void Scale_Up_Basic_Values(typename CFirst_Iteration::TValues* basic_values) noexcept;
+        void Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, size_t offset = 0) noexcept;
+        void Execute_On_GPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl);
+        TOpenCL_Report Execute_OpenCL(kernels::TOpenCL_Settings& opencl, const CFile_Reader<double>::TData_Block& data_block, TValues& local_values);
 
     private:
         CFile_Reader<double>* m_file;

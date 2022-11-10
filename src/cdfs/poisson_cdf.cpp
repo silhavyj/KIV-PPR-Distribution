@@ -23,7 +23,7 @@ namespace kiv_ppr
         Calculate_Factorials();
     }
 
-    void CPoisson_CDF::Calculate_Factorials()
+    void CPoisson_CDF::Calculate_Factorials() noexcept
     {
         for (size_t i = 1; i < m_factorials.size(); ++i)
         {
@@ -36,20 +36,20 @@ namespace kiv_ppr
         // This algorithm uses the Ramanujan's factorial approximation.
         // https://www.codeproject.com/Tips/1216237/Csharp-Poisson-Cumulative-Distribution-for-large-L
 
-        auto k = static_cast<long>(x);
+        const auto k = static_cast<long>(x);
         long i = 0;
         double sum = 0.0;
         bool infinity_is_found = false;
-        double e_lambda = std::pow(M_E, -m_lambda);
-        double log_pi_div_2 = std::log(M_PI) / 2.0;
+        const double e_lambda = std::pow(M_E, -m_lambda);
+        const double log_pi_div_2 = std::log(M_PI) / 2.0;
 
         while (i <= k)
         {
-            double n;
+            double n{};
             if (infinity_is_found)
             {
-                double log_6th_tail = std::log(i * (1 + 4 * i * (1 + 2 * i))) / 6;
-                double ln_n = (double)i * std::log(m_lambda) - ((double)i * std::log(i) - (double)i + log_6th_tail + log_pi_div_2);
+                const double log_6th_tail = std::log(i * (1 + 4 * i * (1 + 2 * i))) / 6;
+                const double ln_n = static_cast<double>(i) * std::log(m_lambda) - (static_cast<double>(i) * std::log(i) - static_cast<double>(i) + log_6th_tail + log_pi_div_2);
                 n = std::pow(M_E, ln_n - m_lambda);
             }
             else
@@ -57,8 +57,8 @@ namespace kiv_ppr
                 if (i > MAX_CALCULABLE_FACTORIAL || std::numeric_limits<double>::infinity() == std::pow(m_lambda, i))
                 {
                     infinity_is_found = true;
-                    double log_6th_tail = std::log(i * (1 + 4 * i * (1 + 2 * i))) / 6;
-                    double ln_n = (double)i * std::log(m_lambda) - ((double)i * std::log(i) - (double)i + log_6th_tail + log_pi_div_2);
+                    const double log_6th_tail = std::log(i * (1 + 4 * i * (1 + 2 * i))) / 6;
+                    const double ln_n = static_cast<double>(i) * std::log(m_lambda) - (static_cast<double>(i) * std::log(i) - static_cast<double>(i) + log_6th_tail + log_pi_div_2);
                     n = std::pow(M_E, ln_n - m_lambda);
                 }
                 else

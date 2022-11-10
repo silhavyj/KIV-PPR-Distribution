@@ -84,6 +84,11 @@ int main(int argc, char* argv[])
     const auto& listed_devs = arg_parser.Get_OpenCL_Devs();
 
     auto resource_manager = kiv_ppr::Singleton<kiv_ppr::CResource_Manager>::Get_Instance();
+    if (nullptr == resource_manager)
+    {
+        std::cout << "Error: resource manager is NULL" << std::endl;
+        std::exit(21);
+    }
     resource_manager->Set_Run_Type(arg_parser.Get_Run_Type());
     resource_manager->Find_Available_GPUs(listed_devs);
 

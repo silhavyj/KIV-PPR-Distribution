@@ -15,7 +15,7 @@ namespace kiv_ppr
         }
     }
 
-    double CExponential_CDF::operator()(double x) const
+    double CExponential_CDF::operator()(double x) const noexcept
     {
         return 1 - std::exp(-m_lambda * x);
     }

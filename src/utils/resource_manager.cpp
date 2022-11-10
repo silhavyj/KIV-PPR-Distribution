@@ -11,7 +11,7 @@ namespace kiv_ppr
 
     }
 
-    void CResource_Manager::Set_Run_Type(CArg_Parser::NRun_Type run_type)
+    void CResource_Manager::Set_Run_Type(CArg_Parser::NRun_Type run_type) noexcept
     {
         m_run_type = run_type;
     }
@@ -129,7 +129,7 @@ namespace kiv_ppr
         }
     }
 
-    CArg_Parser::NRun_Type CResource_Manager::Get_Run_Type() const
+    CArg_Parser::NRun_Type CResource_Manager::Get_Run_Type() const noexcept
     {
         return m_run_type;
     }

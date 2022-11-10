@@ -32,10 +32,10 @@ namespace kiv_ppr
         [[nodiscard]] uint32_t Get_Block_Size_Per_Read();
         [[nodiscard]] uint32_t Get_Watchdog_Sleep_Sec();
         [[nodiscard]] uint32_t Get_Number_Of_Threads();
-        [[nodiscard]] const char* Get_Filename();
+        [[nodiscard]] const char* Get_Filename() noexcept;
         [[nodiscard]] std::unordered_set<std::string> Get_OpenCL_Devs();
-        [[nodiscard]] const char* Get_Run_Type_Str();
-        [[nodiscard]] NRun_Type Get_Run_Type();
+        [[nodiscard]] const char* Get_Run_Type_Str() noexcept;
+        [[nodiscard]] NRun_Type Get_Run_Type() noexcept;
 
     private:
         static constexpr const char* All_Run_Type_Str = "all";

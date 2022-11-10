@@ -15,7 +15,7 @@ namespace kiv_ppr
         }
     }
 
-    double CUniform_CDF::operator()(double x) const
+    double CUniform_CDF::operator()(double x) const noexcept
     {
         if (x < m_a)
         {

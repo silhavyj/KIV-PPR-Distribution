@@ -25,7 +25,7 @@ namespace kiv_ppr
 
         /// Call operator of the class.
         /// \return CDF(x)
-        [[nodiscard]] double operator()(double x) const override;
+        [[nodiscard]] double operator()(double x) const noexcept override;
 
     private:
         double m_a; ///< a parameter of the uniform distribution (min).

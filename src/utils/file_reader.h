@@ -21,13 +21,13 @@ namespace kiv_ppr
         struct TData_Block
         {
             NRead_Status status;
-            long count;
+            size_t count;
             std::shared_ptr<T[]> data;
         };
 
     public:
         explicit CFile_Reader(const std::string& filename);
-        ~CFile_Reader();
+        ~CFile_Reader() = default;
 
         [[nodiscard]] bool Is_Open() const;
         [[nodiscard]] size_t Get_File_Size() const noexcept;

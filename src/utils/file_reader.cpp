@@ -21,15 +21,6 @@ namespace kiv_ppr
     }
 
     template<typename T>
-    CFile_Reader<T>::~CFile_Reader()
-    {
-        if (m_file.is_open())
-        {
-            m_file.close();
-        }
-    }
-
-    template<typename T>
     bool CFile_Reader<T>::Is_Open() const
     {
         return m_file.is_open();
@@ -58,7 +49,6 @@ namespace kiv_ppr
     {
         m_number_of_read_elements = 0;
         m_file.clear();
-        // m_file.seekp(0);
         m_file.seekg(0, std::ios::beg);
     }
 
@@ -81,20 +71,8 @@ namespace kiv_ppr
             return { NRead_Status::Error, 0, nullptr };
         }
         m_file.read(reinterpret_cast<char*>(buffer.get()), number_of_elements * sizeof(T));
-        
-        // TODO
-        /*auto current_pos = m_file.tellp();
-        if (current_pos == -1)
-        {
-            return { NRead_Status::EOF_, 0, nullptr };
-        }
-        std::cout << current_pos << '\n';
 
-        current_pos += 1 * (number_of_elements * sizeof(T));
-        m_file.seekp(current_pos);
-        m_number_of_read_elements += number_of_elements;*/
-
-        return { NRead_Status::OK, static_cast<long>(number_of_elements), buffer };
+        return { NRead_Status::OK, number_of_elements, buffer };
     }
 
     template<class E>
