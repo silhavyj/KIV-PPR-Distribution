@@ -83,8 +83,11 @@ namespace kiv_ppr
             return { NRead_Status::Error, 0, nullptr };
         }
 
+        // Temporarily bypass warning C26490 - "Don't use reinterpret_cast"
+#pragma warning(disable:26490)
         // Read the elements from the input file.
         m_file.read(reinterpret_cast<char*>(buffer.get()), number_of_elements * sizeof(T));
+#pragma warning(default:26490)
 
         return { NRead_Status::OK, number_of_elements, buffer };
     }

@@ -27,7 +27,7 @@ namespace kiv_ppr
     {
         for (size_t i = 1; i < m_factorials.size(); ++i)
         {
-            m_factorials[i] = m_factorials[i - 1] * static_cast<double>(i);
+            m_factorials.at(i) = m_factorials.at(i - 1) * static_cast<double>(i);
         }
     }
 

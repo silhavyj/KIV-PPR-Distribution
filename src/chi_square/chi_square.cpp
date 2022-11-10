@@ -55,7 +55,7 @@ namespace kiv_ppr
                 E = Calculate_E(right, left, left == m_histogram->Get_Min());
 
                 // Sum up all actual values that fall in between the [left; right].
-                O += static_cast<double>(m_histogram->operator[](i));
+                O += static_cast<double>(m_histogram->at(i));
                 ++i;
             } while (i < original_number_of_intervals && E < config::chi_square::Min_Expected_Value);
 
@@ -73,7 +73,7 @@ namespace kiv_ppr
                 while (i < original_number_of_intervals)
                 {
                     right += m_histogram->Get_Interval_Size();
-                    O += static_cast<double>(m_histogram->operator[](i));
+                    O += static_cast<double>(m_histogram->at(i));
                     ++i;
                 }
                 
@@ -98,7 +98,7 @@ namespace kiv_ppr
         }
 
         // Calculate the degrees of freedom as well as the P-value.
-        const auto df = static_cast<int>(number_of_interval - 1 - estimated_parameters);
+        const auto df = static_cast<long long>(number_of_interval - 1 - estimated_parameters);
         const double p_value = Calculate_P_Value(chi_square_val, df);
 
         // Compare the calculated P-value to the critical one and set
@@ -149,7 +149,7 @@ namespace kiv_ppr
         return p_value > other.p_value;
     }
 
-    double CChi_Square::Calculate_P_Value(double x, int df) noexcept
+    double CChi_Square::Calculate_P_Value(double x, long long df) noexcept
     {
         // x = a computed chi-square value.
         // df = degrees of freedom.

@@ -14,7 +14,7 @@ namespace kiv_ppr
         m_device = device;
     }
 
-    CResource_Guard::~CResource_Guard()
+    CResource_Guard::~CResource_Guard() noexcept(false)
     {
         // Make sure that the device is not null.
         if (nullptr != m_device)

@@ -65,6 +65,11 @@ namespace kiv_ppr
         /// \return Reference to the value at the index position
         [[nodiscard]] size_t& operator[](size_t index) noexcept;
 
+        /// Returns the value at the position given as a parameter.
+        /// \param index Index (position in the histogram)
+        /// \return Value at the index position
+        [[nodiscard]] size_t at(size_t index) const noexcept;
+
         /// Overloaded += operator fro merging two histograms.
         /// \param other Other histogram to be merged into this one.
         void operator+=(CHistogram& other) noexcept;

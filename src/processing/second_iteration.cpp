@@ -175,7 +175,7 @@ namespace kiv_ppr
         for (size_t i = 0; i < number_of_intervals; ++i)
         {
             // Each interval is represented as two uint variable. 
-            const size_t value = static_cast<size_t>(out_histogram[2 * i]) + static_cast<size_t>(out_histogram[2 * i + 1]) * sizeof(cl_uint);
+            const size_t value = static_cast<size_t>(out_histogram.at(2 * i)) + static_cast<size_t>(out_histogram.at(2 * i + 1)) * sizeof(cl_uint);
 
             if (false == local_values.histogram->Add(i, value))
             {

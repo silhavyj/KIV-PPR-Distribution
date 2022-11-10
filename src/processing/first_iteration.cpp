@@ -93,21 +93,21 @@ namespace kiv_ppr
         for (size_t i = 0; i < size; ++i)
         {
             // Update the minimum.
-            if (utils::Is_Valid_Double(out_min[i]))
+            if (utils::Is_Valid_Double(out_min.at(i)))
             {
-                values.min = std::min(values.min, out_min[i]);
+                values.min = std::min(values.min, out_min.at(i));
             }
 
             // Update the maximum.
-            if (utils::Is_Valid_Double(out_max[i]))
+            if (utils::Is_Valid_Double(out_max.at(i)))
             {
-                values.max = std::max(values.max, out_max[i]);
+                values.max = std::max(values.max, out_max.at(i));
             }
 
             // Update the mean (with regards to how many values each work group has processed).
-            if (utils::Is_Valid_Double(out_mean[i]))
+            if (utils::Is_Valid_Double(out_mean.at(i)))
             {
-                values.mean += out_mean[i] * (out_count[i] / static_cast<double>(total_count));
+                values.mean += out_mean.at(i) * (out_count.at(i) / static_cast<double>(total_count));
             }
         }
 
@@ -237,8 +237,8 @@ namespace kiv_ppr
         // Calculate the total sum of valid doubles as well as if all values are integers.
         for (size_t i = 0; i < work_groups_count; ++i)
         {
-            number_of_valid_doubles += out_count[i];
-            all_ints = all_ints && out_all_ints[i];
+            number_of_valid_doubles += out_count.at(i);
+            all_ints = all_ints && out_all_ints.at(i);
         }
 
         // Aggregate the values calculated by individual worker groups.

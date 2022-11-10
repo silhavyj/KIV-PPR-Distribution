@@ -59,7 +59,12 @@ namespace kiv_ppr
 
     size_t& CHistogram::operator[](size_t index) noexcept
     {
-        return m_intervals[index % Get_Number_Of_Intervals()];
+        return m_intervals.at(index % Get_Number_Of_Intervals());
+    }
+
+    size_t CHistogram::at(size_t index) const noexcept
+    {
+        return m_intervals.at(index);
     }
 
     void CHistogram::operator+=(CHistogram& other) noexcept
@@ -71,10 +76,10 @@ namespace kiv_ppr
         for (size_t i = 0; i < size; ++i)
         {
             // Merge the current interval (bin).
-            (*this)[i] += other[i];
+            (*this)[i] += other.at(i);
 
             // Update the number of values stored in the histogram.
-            m_count += other[i];
+            m_count += other.at(i);
         }
     }
 
@@ -84,8 +89,8 @@ namespace kiv_ppr
         size_t sum{};
         for (size_t i = 0; i < size; ++i)
         {
-            out << i << ": " << histogram[i] << '\n';
-            sum += histogram[i];
+            out << i << ": " << histogram.at(i) << '\n';
+            sum += histogram.at(i);
         }
         out << "sum: " << sum;
         return out;

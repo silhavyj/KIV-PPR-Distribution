@@ -52,7 +52,7 @@ namespace kiv_ppr
             // Perform all the tests and wait for them to finish.
             for (size_t i = 0; i < workers.size(); ++i)
             {
-                results[i] = workers[i].get();
+                results.at(i) = workers.at(i).get();
             }
         }
         catch (const std::exception& e)
