@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <unordered_set>
 
-#include "../cxxopts/cxxopts.hpp"
+#include "../cxxopts/cxxopts.h"
 
 namespace kiv_ppr
 {

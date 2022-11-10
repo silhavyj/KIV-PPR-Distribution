@@ -30,7 +30,7 @@ namespace kiv_ppr
 
 
     private:
-        /// Creates a look-up table for factorials from zero 0 to MAX_CALCULABLE_FACTORIAL. 
+        /// Creates a look-up table of factorials from 0 to MAX_CALCULABLE_FACTORIAL. 
         void Calculate_Factorials() noexcept;
 
     private:

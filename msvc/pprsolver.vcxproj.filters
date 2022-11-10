@@ -129,5 +129,8 @@
     <ClCompile Include="..\src\utils\resource_guard.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\cxxopts\cxxopts.hpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
