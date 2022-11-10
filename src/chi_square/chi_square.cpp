@@ -98,7 +98,7 @@ namespace kiv_ppr
         }
 
         // Calculate the degrees of freedom as well as the P-value.
-        const auto df = static_cast<long long>(number_of_interval - 1 - estimated_parameters);
+        const int df = static_cast<int>(number_of_interval) - 1 - estimated_parameters;
         const double p_value = Calculate_P_Value(chi_square_val, df);
 
         // Compare the calculated P-value to the critical one and set
@@ -149,7 +149,7 @@ namespace kiv_ppr
         return p_value > other.p_value;
     }
 
-    double CChi_Square::Calculate_P_Value(double x, long long df) noexcept
+    double CChi_Square::Calculate_P_Value(double x, int df) noexcept
     {
         // x = a computed chi-square value.
         // df = degrees of freedom.

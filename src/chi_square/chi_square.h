@@ -34,7 +34,7 @@ namespace kiv_ppr
             NTResult_Status status{}; ///< Status of the result.
             double chi_square{};      ///< Chi-Square value (error - summed up squared differences).
             double p_value{};         ///< Calculated p-value to determine the result status of the test.
-            long long df{};           ///< Degrees of freedom of the distribution used in the test.
+            int df{};                 ///< Degrees of freedom of the distribution used in the test.
             std::string name{};       ///< Name of the test.
 
             /// Compares two results. This function is used when sorting test results
@@ -78,7 +78,7 @@ namespace kiv_ppr
         /// \param x Chi-Square value (summed up differences).
         /// \param df Degrees of freedom (differs with every distribution). 
         /// \return Calculated p-value
-        double Calculate_P_Value(double x, long long df) noexcept;
+        double Calculate_P_Value(double x, int df) noexcept;
 
         /// Calculates the p-value under the normal curve from -inf to z.
         /// This method is a part of ACM 299 algorithm.
