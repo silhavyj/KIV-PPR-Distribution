@@ -16,6 +16,7 @@ namespace kiv_ppr
 
     CResource_Guard::~CResource_Guard()
     {
+        // Make sure that the device is not null.
         if (nullptr != m_device)
         {
             auto resource_manager = Singleton<CResource_Manager>::Get_Instance();
@@ -24,6 +25,8 @@ namespace kiv_ppr
                 std::cout << "Error: resource manager is NULL" << std::endl;
                 std::exit(22);
             }
+
+            // Tell the resource manage that the OpenCL device is now available.
             resource_manager->Release_Device(m_device);
         }
     }
