@@ -5,27 +5,41 @@
 
 namespace kiv_ppr
 {
+    /// \author Jakub Silhavy
+    /// @tparam T Class to be used as a singleton
+    ///
+    /// This class works as a wrapper for any class that
+    /// is intended to be used as a singleton. The class
+    /// must provide a default constructor.
     template<typename T>
     class Singleton
     {
     public:
+        /// Returns the instance of the class. 
+        /// @return Instance of the class 
         static T* Get_Instance()
         {
-            std::call_once(m_init_flag, [=]() {
-                Singleton<T>::m_instance = std::make_unique<T>();
+            // Instantiate the class only once.
+            std::call_once(s_init_flag, [=]() {
+                Singleton<T>::s_instance = std::make_unique<T>();
             });
 
-            return m_instance.get();
+            // Return the instance.
+            return s_instance.get();
         }
 
     private:
-        static std::unique_ptr<T> m_instance;
-        static std::once_flag m_init_flag;
+        static std::unique_ptr<T> s_instance; ///< Instance of the class (typename T)
+        static std::once_flag s_init_flag;    ///< Flag indicating whether or not the class has been instantiated
     };
 
-    template<typename T>
-    std::unique_ptr<T> Singleton<T>::m_instance = nullptr;
+    // Initialize static class members.
 
     template<typename T>
-    std::once_flag Singleton<T>::m_init_flag = {};
+    std::unique_ptr<T> Singleton<T>::s_instance = nullptr;
+
+    template<typename T>
+    std::once_flag Singleton<T>::s_init_flag = {};
 }
+
+// EOF

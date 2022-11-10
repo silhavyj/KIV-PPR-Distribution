@@ -8,3 +8,5 @@ namespace kiv_ppr::utils
         return type == FP_NORMAL || type == FP_ZERO;
     }
 }
+
+// EOF
