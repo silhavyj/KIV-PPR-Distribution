@@ -15,7 +15,7 @@ namespace kiv_ppr
     {
         // Add the value into its corresponding bin (interval).
         const auto slot_id = static_cast<size_t>((value - m_params.min) / m_interval_size);
-        ++m_intervals[slot_id];
+        ++m_intervals.at(slot_id);
 
         // Increment the number of values inserted into the histogram.
         ++m_count;
@@ -31,7 +31,7 @@ namespace kiv_ppr
         if (index < m_intervals.size())
         {
             // Update the current interval (bin).
-            m_intervals[index] += value;
+            m_intervals.at(index) += value;
             
             // Update the number of values stored in the histogram.
             m_count += value;
@@ -76,7 +76,7 @@ namespace kiv_ppr
         for (size_t i = 0; i < size; ++i)
         {
             // Merge the current interval (bin).
-            (*this)[i] += other.at(i);
+            m_intervals.at(i) += other.at(i);
 
             // Update the number of values stored in the histogram.
             m_count += other.at(i);
