@@ -14,12 +14,15 @@ namespace kiv_ppr
 
     CWatchdog::~CWatchdog()
     {
+        // Stop the watchdog
         Stop();
     }
 
     void CWatchdog::Start()
     {
         const std::lock_guard<std::mutex> lock(m_mtx);
+
+        // Start the watchdog thread (if it has not been started yet).
         if (!m_enabled)
         {
             m_watchdog_thread = std::thread(&CWatchdog::Run, this);
@@ -51,17 +54,24 @@ namespace kiv_ppr
 
         while (m_enabled)
         {
+            // Go to sleep for n seconds.
             std::this_thread::sleep_for(m_interval_sec);
 
+            // Get the current value of the counter.
             m_mtx.lock();
             current_value = m_counter;
             m_mtx.unlock();
 
+            // If the counter value has not changed, print out a warning message.
             if (m_enabled && previous_value == current_value)
             {
                 std::cout << "Warning (watchdog): Program seems to be inactive" << std::endl;
             }
+
+            // Store the last value of the counter.
             previous_value = current_value;
         }
     }
 }
+
+// EOF
