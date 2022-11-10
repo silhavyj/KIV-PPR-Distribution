@@ -53,3 +53,5 @@ namespace kiv_ppr
         CHistogram::TParams m_histogram_params;
     };
 }
+
+// EOF
