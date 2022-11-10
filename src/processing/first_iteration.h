@@ -46,7 +46,7 @@ namespace kiv_ppr
         /// \return Statistical values: min, max, mean, count, all_ints
         [[nodiscard]] TValues Get_Values() const noexcept;
 
-        /// Reads the input file and calculates the statistical value.
+        /// Reads the input file and calculates the statistical values.
         /// \param thread_config Configuration containing how many threads should be used to process the input file.
         /// \return 0, if all goes well. 1, if it failed to process the input file.
         [[nodiscard]] int Run(config::TThread_Params* thread_config);

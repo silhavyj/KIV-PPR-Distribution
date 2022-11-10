@@ -156,6 +156,7 @@ namespace kiv_ppr
         const size_t count = data_block.count - (data_block.count % opencl.work_group_size);
 
         // The number of input values is less than the size of one work group.
+        // All work will be done by the CPU.
         if (0 == work_groups_count)
         {
             return { false, false, {} };
@@ -264,7 +265,7 @@ namespace kiv_ppr
             std::exit(20);
         }
 
-        // Make sure that the resouce manager is not NULL.
+        // Make sure that the resource manager is not NULL.
         auto resource_manager = Singleton<CResource_Manager>::Get_Instance();
         if (nullptr == resource_manager)
         {
@@ -302,7 +303,7 @@ namespace kiv_ppr
             }
         }
         
-        // If an OpenCL is a
+        // If the worker obtained an OpenCL device.
         if (nullptr != device)
         {
             opencl = kernels::Init_OpenCL(device, kernels::First_Iteration_Kernel, kernels::First_Iteration_Kernel_Name);
@@ -320,8 +321,8 @@ namespace kiv_ppr
 
             switch (data_block.status)
             {
+                // Process the block of data (either on a CPU or an OpenCL device).
                 case kiv_ppr::CFile_Reader<double>::NRead_Status::OK:
-                    // Process the block of data (either on a CPU or an OpenCL device).
                     if (use_cpu)
                     {
                         Execute_On_CPU(local_values, data_block);
