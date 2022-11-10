@@ -70,8 +70,8 @@ namespace kiv_ppr
             cl::Device m_device;     ///< OpenCL device
 
             /// Creates an instance of the struct 
-            /// @param status Status of the OpenCL device
-            /// @param device OpenCL device
+            /// \param status Status of the OpenCL device
+            /// \param device OpenCL device
             TResource(NDevice_Status status, cl::Device device);
         };
 

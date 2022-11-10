@@ -93,6 +93,7 @@ namespace kiv_ppr
         std::unordered_set<std::string> m_opencl_devs; ///< OpenCL devices the user wishes to use
         cxxopts::Options m_options;                    ///< Options of the program (-p, -w, ...)
         cxxopts::ParseResult m_args;                   ///< Argument parser
+        std::vector<std::string> m_cmd_args;           ///< List of command line arguments
     };
 }
 

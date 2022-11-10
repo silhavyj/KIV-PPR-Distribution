@@ -232,8 +232,8 @@ namespace kiv_ppr::kernels
     [[nodiscard]] TOpenCL_Settings Init_OpenCL(const cl::Device* device, const char* src, const char* kernel_name);
 
     /// Helper function that returns a text description based on an OpenCL error code.
-    /// @param error OpenCL error code
-    /// @return Text description of the error.
+    /// \param error OpenCL error code
+    /// \return Text description of the error.
     [[nodiscard]] const char* Get_OpenCL_Error_Desc(cl_int error) noexcept;
 
     /// Prints out an OpenCL error.

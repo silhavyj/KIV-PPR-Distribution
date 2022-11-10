@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <stdexcept>
+#include <vector>
 
 #include "../config.h"
 #include "arg_parser.h"
@@ -9,6 +10,7 @@ namespace kiv_ppr
     CArg_Parser::CArg_Parser(int argc, char* argv[])
         : m_argc(argc),
           m_argv(argv),
+          m_cmd_args(argv, argv + argc),
           m_options("pprsolver.exe <filename> <all | SMP | \"dev1\" \"dev2\" \"dev3\" ...>", "KIV/PPR Semester project - "
                     "Classification of statistical distributions (Chi-Square Goodness of Fit Test)")
     {
@@ -81,8 +83,8 @@ namespace kiv_ppr
         {
             throw std::invalid_argument{"Invalid number of parameters"};
         }
-        m_filename = m_argv[1];           // Path to the input file
-        std::string run_type = m_argv[2]; // Mode of the program (smp, all, ...)
+        m_filename = m_cmd_args.at(1).c_str();   // Path to the input file
+        std::string run_type = m_cmd_args.at(2); // Mode of the program (smp, all, ...)
 
         // Transform the mode into lowercase.
         std::transform(run_type.begin(), run_type.end(), run_type.begin(), [](unsigned char c) noexcept {
@@ -104,21 +106,21 @@ namespace kiv_ppr
             // Create a set of entered OpenCL devices.
             for (int i = 2; i < m_argc; ++i)
             {
-                const std::string dev = m_argv[i];
+                const std::string dev = m_cmd_args.at(i);
                 
                 // Skip the option (e.g. --p_critical).
-                if (dev.length() > 1 && dev[0] == '-' && dev[1] == '-')
+                if (dev.length() > 1 && dev.at(0) == '-' && dev.at(1) == '-')
                 {
                     continue;
                 }
                 // Skip the option (e.g. -p 0.1).
-                else if (dev[0] == '-')
+                else if (dev.at(0) == '-')
                 {
                     ++i;
                 }
                 else
                 {
-                    m_opencl_devs.insert(m_argv[i]);
+                    m_opencl_devs.insert(dev);
                 }
             }
             if (m_opencl_devs.empty())

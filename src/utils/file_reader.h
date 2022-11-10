@@ -67,16 +67,16 @@ namespace kiv_ppr
         [[nodiscard]] TData_Block Read_Data(size_t number_of_elements);
 
         /// Prints out the contents of the input file to an output stream.
-        /// @tparam Datatype associated with the file reader.
-        /// @param out Output stream.
-        /// @param file File reader.
-        /// @return Output stream.
+        /// \tparam Datatype associated with the file reader.
+        /// \param out Output stream.
+        /// \param file File reader.
+        /// \return Output stream.
         template<class E>
         friend std::ostream& operator<<(std::ostream& out, CFile_Reader<E>& file);
 
     private:
         /// Calculates the size of the input file. 
-        /// @return Size of the input file.
+        /// \return Size of the input file.
         [[nodiscard]] size_t Calculate_File_Size();
 
     private:

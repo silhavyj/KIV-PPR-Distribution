@@ -26,7 +26,7 @@ namespace kiv_ppr
 
     public:
         /// Creates an instance of the class. 
-        /// @param params Histogram parameters
+        /// \param params Histogram parameters
         explicit CHistogram(TParams params);
 
         /// Default destructor.

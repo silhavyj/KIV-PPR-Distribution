@@ -6,7 +6,7 @@
 namespace kiv_ppr
 {
     /// \author Jakub Silhavy
-    /// @tparam T Class to be used as a singleton
+    /// \tparam T Class to be used as a singleton
     ///
     /// This class works as a wrapper for any class that
     /// is intended to be used as a singleton. The class
@@ -16,7 +16,7 @@ namespace kiv_ppr
     {
     public:
         /// Returns the instance of the class. 
-        /// @return Instance of the class 
+        /// \return Instance of the class 
         static T* Get_Instance()
         {
             // Instantiate the class only once.

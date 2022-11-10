@@ -25,6 +25,18 @@ namespace kiv_ppr
         /// Default destructor.
         ~CWatchdog();
 
+        /// Delete copy constructor.
+        CWatchdog(const CWatchdog&) = delete;
+
+        /// Delete copy constructor (R value).
+        CWatchdog(CWatchdog&&) = delete;
+
+        /// Delete assignment operator.
+        CWatchdog& operator=(const CWatchdog&) = delete;
+
+        /// Delete assignment operator (R value).
+        CWatchdog& operator=(const CWatchdog&&) = delete;
+
         /// Start the watchdog thread. 
         void Start();
 

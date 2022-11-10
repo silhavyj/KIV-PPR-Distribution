@@ -67,8 +67,8 @@ namespace kiv_ppr::utils
     }
 
     /// Check if a value is a valid double or not.
-    /// @param value Value to be tested
-    /// @return true, if the value is a valid double, false otherwise.
+    /// \param value Value to be tested
+    /// \return true, if the value is a valid double, false otherwise.
     bool Is_Valid_Double(double value) noexcept;
 }
 
