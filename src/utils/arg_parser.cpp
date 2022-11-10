@@ -12,6 +12,7 @@ namespace kiv_ppr
           m_options("pprsolver.exe <filename> <all | SMP | \"dev1\" \"dev2\" \"dev3\" ...>", "KIV/PPR Semester project - "
                     "Classification of statistical distributions (Chi-Square Goodness of Fit Test)")
     {
+        // Add program options.
         m_options.add_options()
             ("p,p_critical", "Critical p value used in the Chi-square test", cxxopts::value<double>()->default_value(std::to_string(config::chi_square::Default_P_Critical)))
             ("b,block_size", "Number of bytes read from the input file at a time (block size)", cxxopts::value<uint32_t>()->default_value(std::to_string(config::processing::Block_Size_Per_Read)))
@@ -22,6 +23,7 @@ namespace kiv_ppr
 
     bool CArg_Parser::Help()
     {
+        // Check whether the user entered help or not.
         return m_args.count("help") > 0;
     }
 
@@ -37,6 +39,8 @@ namespace kiv_ppr
 
     uint32_t CArg_Parser::Get_Block_Size_Per_Read()
     {
+        // The program reads the input file as double.
+        // Therefore the block size needs to be divided by sizeof(double).
         return m_args["block_size"].as<uint32_t>() / sizeof(double);
     }
 
@@ -72,16 +76,19 @@ namespace kiv_ppr
 
     void CArg_Parser::Parse()
     {
+        // Name of the program, input file, and mode.
         if (m_argc < 3)
         {
             throw std::invalid_argument{"Invalid number of parameters"};
         }
-        m_filename = m_argv[1];
-        std::string run_type = m_argv[2];
+        m_filename = m_argv[1];           // Path to the input file
+        std::string run_type = m_argv[2]; // Mode of the program (smp, all, ...)
 
+        // Transform the mode into lowercase.
         std::transform(run_type.begin(), run_type.end(), run_type.begin(), [](unsigned char c) noexcept {
             return std::tolower(c);
         });
+
         if (run_type == All_Run_Type_Str)
         {
             m_run_type = NRun_Type::All;
@@ -93,13 +100,18 @@ namespace kiv_ppr
         else
         {
             m_run_type = NRun_Type::OpenCL_Devs;
+
+            // Create a set of entered OpenCL devices.
             for (int i = 2; i < m_argc; ++i)
             {
                 const std::string dev = m_argv[i];
+                
+                // Skip the option (e.g. --p_critical).
                 if (dev.length() > 1 && dev[0] == '-' && dev[1] == '-')
                 {
                     continue;
                 }
+                // Skip the option (e.g. -p 0.1).
                 else if (dev[0] == '-')
                 {
                     ++i;
@@ -134,3 +146,5 @@ namespace kiv_ppr
         }
     }
 }
+
+// EOF
