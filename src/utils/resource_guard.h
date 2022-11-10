@@ -30,3 +30,5 @@ namespace kiv_ppr
         const cl::Device* m_device; ///< OpenCL device
     };
 }
+
+// EOF

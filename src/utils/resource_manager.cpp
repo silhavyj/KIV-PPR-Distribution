@@ -4,7 +4,7 @@
 
 namespace kiv_ppr
 {
-    CResource_Manager::TRecource::TRecource(NDevice_Status status, cl::Device device)
+    CResource_Manager::TResource::TResource(NDevice_Status status, cl::Device device)
         : m_status(status),
           m_device(device)
     {
@@ -23,40 +23,56 @@ namespace kiv_ppr
             return;
         }
 
+        // Find all platforms on the machine.
         std::vector<cl::Platform> platforms;
         cl::Platform::get(&platforms);
 	
+        // Found devices on the machine (they all must be 
+        // available and support double precision).
         std::unordered_set<std::string> found_devices;
+
         for (const auto& platform : platforms)
         {
+            // Get all devices of the current platform.
             std::vector<cl::Device> devices;
             platform.getDevices(CL_DEVICE_TYPE_ALL, &devices);
+
             for (const auto& device : devices)
             {
+                // Check if the device is available.
                 if (!device.getInfo<CL_DEVICE_AVAILABLE>())
                 {
                     continue;
                 }
 				
+                // Retrieve the device's name.
                 std::string name = device.getInfo<CL_DEVICE_NAME>();
                 name.pop_back();
+
+                // Retrieve the device's extensions (what features it supports).
                 const std::string extensions = device.getInfo<CL_DEVICE_EXTENSIONS>();
 
+                // Check if the device supports double precision.
                 if (extensions.find("cl_khr_fp64") == std::string::npos &&
                     extensions.find("cl_amd_fp64") == std::string::npos)
                 {
                     continue;
                 }
+
+                // Based on the mode of the program, add the device to the 
+                // list of OpenCL devices to be used by the program.
                 if ((m_run_type == CArg_Parser::NRun_Type::OpenCL_Devs && listed_devices.count(name)) ||
                      m_run_type == CArg_Parser::NRun_Type::All)
                 {
                     m_gpu_devices.emplace_back(NDevice_Status::Available, device);
                 }
-                std::string device_name = device.getInfo<CL_DEVICE_NAME>();
-                device_name.pop_back();
-                found_devices.insert(device_name);
+
+                // Add the device to the list of all existing devices.
+                found_devices.insert(name);
             }
         }
+
+        // Print out OpenCL devices to be used by the program.
         Print_Found_Devs(found_devices, listed_devices);
     }
 
@@ -65,11 +81,14 @@ namespace kiv_ppr
     {
         if (m_run_type == CArg_Parser::NRun_Type::All)
         {
+            // No OpenCL devices were found.
             if (m_gpu_devices.empty())
             {
                 std::cout << "No available OpenCL devices supported double precision were found" << std::endl;
-                std::exit(6);
+                return;
             }
+
+            // Print out all OpenCL devices that were found on the machine.
             std::cout << "Available OpenCL devices supporting double precision:" << std::endl;
             for (const auto& [status, device] : m_gpu_devices)
             {
@@ -79,6 +98,7 @@ namespace kiv_ppr
         }
         else
         {
+            // Check if all of the listed devices were found on the machine.
             std::cout << "Checking availability of the listed devices:" << std::endl;
             bool terminate_program = false;
             for (const auto& device_name : listed_devices)
@@ -134,3 +154,5 @@ namespace kiv_ppr
         return m_run_type;
     }
 }
+
+// EOF
