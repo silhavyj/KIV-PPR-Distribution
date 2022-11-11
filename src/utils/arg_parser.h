@@ -53,6 +53,10 @@ namespace kiv_ppr
         /// \return Critical P-Value.
         [[nodiscard]] double Get_P_Critical();
 
+        /// Return whether or not the program should use only GPU devices (out of all OpenCL devices).
+        /// \return true, if the user wishes to use only OpenCL devices, false otherwise.
+        [[nodiscard]] bool Should_Use_GPUs_Only();
+
         /// Returns the size of a data block read from the input file.
         /// \return Size of a data block.
         [[nodiscard]] uint32_t Get_Block_Size_Per_Read();

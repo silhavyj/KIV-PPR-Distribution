@@ -28,7 +28,8 @@ namespace kiv_ppr
         /// Sets the run mode of the application.
         /// The run mode affects what device will be available for the worker threads (all/some).
         /// \param run_type Run type (mode) of the program
-        void Set_Run_Type(CArg_Parser::NRun_Type run_type) noexcept;
+        /// \param use_gpu_only Whether or not the program should only use GPUs as OpenCL devices.
+        void Set_Run_Type(CArg_Parser::NRun_Type run_type, bool use_gpu_only) noexcept;
 
         /// Finds available OpenCL devices.
         /// \param listed_devices List of OpenCL devices the user entered into the program.
@@ -79,6 +80,7 @@ namespace kiv_ppr
         std::vector<TResource> m_gpu_devices; ///< Available resources (OpenCL devices)
         CArg_Parser::NRun_Type m_run_type{};  ///< Mode of the program (all, smp, ...)
         std::mutex m_mtx;                     ///< Mutex used when a device is being allocated/released
+        bool m_use_gpu_only = false;          ///< Whether or not the program should use only GPUs as OpenCL devices.
     };
 }
 

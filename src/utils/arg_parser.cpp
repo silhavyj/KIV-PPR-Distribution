@@ -20,6 +20,7 @@ namespace kiv_ppr
             ("b,block_size", "Number of bytes read from the input file at a time (block size)", cxxopts::value<uint32_t>()->default_value(std::to_string(config::processing::Block_Size_Per_Read)))
             ("w,watchdog_period", "How often the watchdog checks if the program is working correctly [s]", cxxopts::value<uint32_t>()->default_value(std::to_string(config::processing::Watchdog_Sleep_Sec)))
             ("t,thread_count", "Number of threads created by the application", cxxopts::value<uint32_t>()->default_value(std::to_string(config::default_thread_params.number_of_threads)))
+            ("g,gpu_only", "Do not use an OpenCL device which is not a GPU", cxxopts::value<bool>()->default_value("false"))
             ("h,help", "Print out this help menu");
     }
 
@@ -37,6 +38,11 @@ namespace kiv_ppr
     double CArg_Parser::Get_P_Critical()
     {
         return m_args["p_critical"].as<double>();
+    }
+
+    bool CArg_Parser::Should_Use_GPUs_Only()
+    {
+        return m_args["gpu_only"].as<bool>();
     }
 
     uint32_t CArg_Parser::Get_Block_Size_Per_Read()

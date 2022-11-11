@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
     }
 
     // Set the mode of the program (smp, all, ...).
-    resource_manager->Set_Run_Type(arg_parser.Get_Run_Type());
+    resource_manager->Set_Run_Type(arg_parser.Get_Run_Type(), arg_parser.Should_Use_GPUs_Only());
 
     // Check out the availability of the listed OpenCL devices.
     resource_manager->Find_Available_GPUs(listed_devs);

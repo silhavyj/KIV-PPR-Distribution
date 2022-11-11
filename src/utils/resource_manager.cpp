@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "resource_manager.h"
 
 namespace kiv_ppr
@@ -11,9 +10,10 @@ namespace kiv_ppr
 
     }
 
-    void CResource_Manager::Set_Run_Type(CArg_Parser::NRun_Type run_type) noexcept
+    void CResource_Manager::Set_Run_Type(CArg_Parser::NRun_Type run_type, bool use_gpu_only) noexcept
     {
         m_run_type = run_type;
+        m_use_gpu_only = use_gpu_only;
     }
 
     void CResource_Manager::Find_Available_GPUs(const std::unordered_set<std::string>& listed_devices)
@@ -35,7 +35,7 @@ namespace kiv_ppr
         {
             // Get all devices of the current platform.
             std::vector<cl::Device> devices;
-            platform.getDevices(CL_DEVICE_TYPE_ALL, &devices);
+            platform.getDevices(m_use_gpu_only ? CL_DEVICE_TYPE_GPU :  CL_DEVICE_TYPE_ALL, &devices);
 
             for (const auto& device : devices)
             {
