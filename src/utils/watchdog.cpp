@@ -58,9 +58,7 @@ namespace kiv_ppr
             std::this_thread::sleep_for(m_interval_sec);
 
             // Get the current value of the counter.
-            m_mtx.lock();
             current_value = m_counter;
-            m_mtx.unlock();
 
             // If the counter value has not changed, print out a warning message.
             if (m_enabled && previous_value == current_value)
