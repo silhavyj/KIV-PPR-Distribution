@@ -129,7 +129,7 @@
     <ClCompile Include="..\src\utils\resource_guard.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\cxxopts\cxxopts.hpp">
+    <ClCompile Include="..\src\cxxopts\cxxopts.h">
       <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>

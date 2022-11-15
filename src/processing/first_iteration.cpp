@@ -201,24 +201,16 @@ namespace kiv_ppr
         std::vector<double> out_mean(work_groups_count);
         std::vector<cl_ulong> out_count(work_groups_count);
         std::vector<int> out_all_ints(work_groups_count);
-
-        // Create a command queue to communicate with the OpenCL device.
-        cl::CommandQueue cmd_queue(opencl.context, *opencl.device);
-
-        // Pass the kernel into the OpenCL device ("start the program").
+        
         try
         {
+            // Create a command queue to communicate with the OpenCL device.
+            cl::CommandQueue cmd_queue(opencl.context, *opencl.device);
+
+            // Pass the kernel into the OpenCL device ("start the program").
             cmd_queue.enqueueNDRangeKernel(opencl.kernel, cl::NullRange, cl::NDRange(count), cl::NDRange(opencl.work_group_size));
-        }
-        catch (const cl::Error& e)
-        {
-            kernels::Print_OpenCL_Error(e, *opencl.device);
-            std::exit(8);
-        }
 
-        // Read the results from the OpenCL device.
-        try
-        {
+            // Read the results from the OpenCL device.
             cmd_queue.enqueueReadBuffer(out_mean_buff, CL_TRUE, 0, out_mean.size() * sizeof(double), out_mean.data());
             cmd_queue.enqueueReadBuffer(out_min_buff, CL_TRUE, 0, out_min.size() * sizeof(double), out_min.data());
             cmd_queue.enqueueReadBuffer(out_max_buff, CL_TRUE, 0, out_max.size() * sizeof(double), out_max.data());

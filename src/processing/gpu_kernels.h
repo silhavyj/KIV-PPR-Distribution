@@ -1,11 +1,6 @@
 #pragma once
 
-// How to set up an OpenCL project:
-// https://stackoverflow.com/questions/56858213/how-to-create-nvidia-opencl-project/57017982#57017982
-
-#define CL_USE_DEPRECATED_OPENCL_2_0_APIS
-#define __CL_ENABLE_EXCEPTIONS
-#include <CL/cl2.hpp>
+#include "../opencl.h"
 
 namespace kiv_ppr::kernels
 {

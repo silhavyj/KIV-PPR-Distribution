@@ -144,24 +144,16 @@ namespace kiv_ppr
 
         // Create output CPU buffers to store the results from the OpenCL device to.
         std::vector<double> out_var(work_groups_count);
-
-        // Create a command queue to communicate with the OpenCL device.
-        cl::CommandQueue cmd_queue(opencl.context, *opencl.device);
-
-        // Pass the kernel into the OpenCL device ("start the program").
+   
         try
         {
+            // Create a command queue to communicate with the OpenCL device.
+            cl::CommandQueue cmd_queue(opencl.context, *opencl.device);
+
+            // Pass the kernel into the OpenCL device ("start the program").
             cmd_queue.enqueueNDRangeKernel(opencl.kernel, cl::NullRange, cl::NDRange(count), cl::NDRange(opencl.work_group_size));
-        }
-        catch (const cl::Error& e)
-        {
-            kernels::Print_OpenCL_Error(e, *opencl.device);
-            std::exit(12);
-        }
 
-        // Read the results from the OpenCL device.
-        try
-        {
+            // Read the results from the OpenCL device.
             cmd_queue.enqueueReadBuffer(out_var_buff, CL_TRUE, 0, out_var.size() * sizeof(double), out_var.data());
             cmd_queue.enqueueReadBuffer(histogram_buff, CL_TRUE, 0, out_histogram.size() * sizeof(cl_uint), out_histogram.data());
         }

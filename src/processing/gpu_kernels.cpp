@@ -47,8 +47,7 @@ namespace kiv_ppr::kernels
     inline void Print_OpenCL_Error(const cl::Error& e, const cl::Device& device)
     {
         // Retrieve the name of the device and pop out the last character ('\0').
-        std::string device_name = device.getInfo<CL_DEVICE_NAME>();
-        device_name.pop_back();
+        const std::string device_name = device.getInfo<CL_DEVICE_NAME>();
 
         // Get the description of the error that has ocurred.
         const char* error_desc = Get_OpenCL_Error_Desc(e.err());
@@ -69,8 +68,7 @@ namespace kiv_ppr::kernels
         // (it does not have enough local memory).
         if (0 == opencl.work_group_size)
         {
-            std::string device_name = opencl.device->getInfo<CL_DEVICE_NAME>();
-            device_name.pop_back();
+            const std::string device_name = opencl.device->getInfo<CL_DEVICE_NAME>();
             std::cout << "OpenCL Error [" << device_name << "]: " << "local memory size (" << opencl.local_mem_size << " B) is not sufficient for the kernel to store all __local parameters" << std::endl;
             std::exit(9);
         }

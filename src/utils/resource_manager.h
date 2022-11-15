@@ -4,10 +4,7 @@
 #include <mutex>
 #include <unordered_set>
 
-#define CL_USE_DEPRECATED_OPENCL_2_0_APIS
-#define __CL_ENABLE_EXCEPTIONS
-#include <CL/cl2.hpp>
-
+#include "../opencl.h"
 #include "arg_parser.h"
 
 namespace kiv_ppr

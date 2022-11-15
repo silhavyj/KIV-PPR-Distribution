@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "resource_manager.h"
 
 namespace kiv_ppr
@@ -33,6 +34,8 @@ namespace kiv_ppr
 
         for (const auto& platform : platforms)
         {
+            std::cout << platform.getInfo<CL_PLATFORM_VERSION>() << std::endl;
+
             // Get all devices of the current platform.
             std::vector<cl::Device> devices;
             platform.getDevices(m_use_gpu_only ? CL_DEVICE_TYPE_GPU :  CL_DEVICE_TYPE_ALL, &devices);
@@ -46,8 +49,7 @@ namespace kiv_ppr
                 }
 				
                 // Retrieve the device's name.
-                std::string name = device.getInfo<CL_DEVICE_NAME>();
-                name.pop_back();
+                const std::string name = device.getInfo<CL_DEVICE_NAME>();
 
                 // Retrieve the device's extensions (what features it supports).
                 const std::string extensions = device.getInfo<CL_DEVICE_EXTENSIONS>();
@@ -79,6 +81,17 @@ namespace kiv_ppr
     void CResource_Manager::Print_Found_Devs(const std::unordered_set<std::string>& found_devices,
                                              const std::unordered_set<std::string>& listed_devices)
     {
+        const auto Print_Available_Devs = [&]()
+        {
+            // Print out all OpenCL devices that were found on the machine.
+            std::cout << "Available OpenCL devices supporting double precision:" << std::endl;
+            for (const auto& name : found_devices)
+            {
+                std::cout << "- " << name << std::endl;
+            }
+            std::cout << std::endl;
+        };
+
         if (m_run_type == CArg_Parser::NRun_Type::All)
         {
             // No OpenCL devices were found.
@@ -87,14 +100,7 @@ namespace kiv_ppr
                 std::cout << "No available OpenCL devices supported double precision were found" << std::endl;
                 return;
             }
-
-            // Print out all OpenCL devices that were found on the machine.
-            std::cout << "Available OpenCL devices supporting double precision:" << std::endl;
-            for (const auto& [status, device] : m_gpu_devices)
-            {
-                std::cout << device.getInfo<CL_DEVICE_NAME>() << std::endl;
-            }
-            std::cout << std::endl;
+            Print_Available_Devs();
         }
         else
         {
@@ -117,7 +123,8 @@ namespace kiv_ppr
             std::cout << std::endl;
             if (terminate_program)
             {
-                std::cout << "Some of the listed OpenCL devices are not available or do not support double precision" << std::endl;
+                std::cout << "Some of the listed OpenCL devices are not available or do not support double precision! See the list of available OpenCL devices below\n" << std::endl;
+                Print_Available_Devs();
                 std::exit(6);
             }
         }
