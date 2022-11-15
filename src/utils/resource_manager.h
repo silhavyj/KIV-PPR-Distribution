@@ -6,7 +6,7 @@
 
 #define CL_USE_DEPRECATED_OPENCL_2_0_APIS
 #define __CL_ENABLE_EXCEPTIONS
-#include <CL/cl.hpp>
+#include <CL/cl2.hpp>
 
 #include "arg_parser.h"
 
