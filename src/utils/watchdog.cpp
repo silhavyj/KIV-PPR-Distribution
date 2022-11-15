@@ -7,33 +7,25 @@ namespace kiv_ppr
     CWatchdog::CWatchdog(double interval_sec) noexcept
         : m_interval_sec(interval_sec),
           m_enabled{false},
-          m_counter(0)
+          m_counter(0),
+          m_init_flag{}
     {
 
-    }
-
-    CWatchdog::~CWatchdog()
-    {
-        // Stop the watchdog
-        Stop();
     }
 
     void CWatchdog::Start()
     {
-        const std::lock_guard<std::mutex> lock(m_mtx);
-
         // Start the watchdog thread (if it has not been started yet).
-        if (!m_enabled)
-        {
-            m_watchdog_thread = std::thread(&CWatchdog::Run, this);
-            m_watchdog_thread.detach();
+        std::call_once(m_init_flag, [&]() {
             m_enabled = true;
-        }
+            m_watchdog_thread = std::thread(&CWatchdog::Run, this);
+        });
     }
      
     void CWatchdog::Stop() noexcept
     {
         m_enabled = false;
+        m_watchdog_thread.join();
     }
 
     size_t CWatchdog::Get_Counter_Value() const noexcept
@@ -43,7 +35,6 @@ namespace kiv_ppr
 
     void CWatchdog::Kick(size_t value)
     {
-        const std::lock_guard<std::mutex> lock(m_mtx);
         m_counter += value;
     }
 
@@ -63,7 +54,7 @@ namespace kiv_ppr
             // If the counter value has not changed, print out a warning message.
             if (m_enabled && previous_value == current_value)
             {
-                std::cout << "Warning (watchdog): Program seems to be inactive" << std::endl;
+                std::cout << "Warning(watchdog) : Program seems to be inactive" << std::endl;
             }
 
             // Store the last value of the counter.

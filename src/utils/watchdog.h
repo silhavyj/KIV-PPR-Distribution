@@ -2,8 +2,9 @@
 
 #include <atomic>
 #include <cstddef>
-#include <mutex>
 #include <thread>
+#include <mutex>
+#include <memory>
 
 namespace kiv_ppr
 {
@@ -23,19 +24,7 @@ namespace kiv_ppr
         explicit CWatchdog(double interval_sec) noexcept;
 
         /// Default destructor.
-        ~CWatchdog();
-
-        /// Delete copy constructor.
-        CWatchdog(const CWatchdog&) = delete;
-
-        /// Delete copy constructor (R value).
-        CWatchdog(CWatchdog&&) = delete;
-
-        /// Delete assignment operator.
-        CWatchdog& operator=(const CWatchdog&) = delete;
-
-        /// Delete assignment operator (R value).
-        CWatchdog& operator=(const CWatchdog&&) = delete;
+        ~CWatchdog() = default;
 
         /// Start the watchdog thread. 
         void Start();
@@ -59,9 +48,9 @@ namespace kiv_ppr
     private:
         std::chrono::duration<double> m_interval_sec; ///< Watchdog period
         std::atomic<bool> m_enabled;                  ///< Flag indicating if the watchdog thread should be active or dead
-        size_t m_counter;                             ///< Total sum (number of values processed by all worker threads)
-        std::mutex m_mtx;                             ///< Mutex used when kicking the watchdog
+        std::atomic<size_t> m_counter;                ///< Total sum (number of values processed by all worker threads)
         std::thread m_watchdog_thread;                ///< Watchdog thread
+        std::once_flag m_init_flag;                   ///< Flag to ensure that the watchdog thread starts only once
     };
 };
 
