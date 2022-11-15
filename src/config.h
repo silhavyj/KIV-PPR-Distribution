@@ -19,8 +19,8 @@ namespace kiv_ppr::config
         /// Default block size (10 MB)
         static constexpr uint32_t Block_Size_Per_Read = 1024 * 1024 * 10;
 
-        // Default Watchdog sleep period (10s)
-        static constexpr uint32_t Watchdog_Sleep_Sec = 10;
+        // Default Watchdog sleep period (5s)
+        static constexpr uint32_t Watchdog_Sleep_Sec = 5;
 
         // Scale factor for all the input values
         static constexpr double Scale_Factor = 2.0;
