@@ -8,3 +8,5 @@
 #define CL_HPP_ENABLE_EXCEPTIONS
 
 #include <CL/opencl.hpp>
+
+// EOF
