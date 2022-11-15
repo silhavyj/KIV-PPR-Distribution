@@ -34,8 +34,6 @@ namespace kiv_ppr
 
         for (const auto& platform : platforms)
         {
-            std::cout << platform.getInfo<CL_PLATFORM_VERSION>() << std::endl;
-
             // Get all devices of the current platform.
             std::vector<cl::Device> devices;
             platform.getDevices(m_use_gpu_only ? CL_DEVICE_TYPE_GPU :  CL_DEVICE_TYPE_ALL, &devices);
