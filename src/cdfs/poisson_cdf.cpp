@@ -11,7 +11,7 @@ namespace kiv_ppr
 {
     CPoisson_CDF::CPoisson_CDF(double lambda)
         : m_lambda(lambda),
-          m_factorials(MAX_CALCULABLE_FACTORIAL + 1, 1)
+          m_factorials(Max_Calculable_Factorial + 1, 1)
     {
         // Make sure that a valid value of the lambda parameter was provided.
         if (m_lambda <= 0)
@@ -23,7 +23,7 @@ namespace kiv_ppr
         Calculate_Factorials();
     }
 
-    void CPoisson_CDF::Calculate_Factorials() noexcept
+    constexpr void CPoisson_CDF::Calculate_Factorials() noexcept
     {
         for (size_t i = 1; i < m_factorials.size(); ++i)
         {
@@ -54,7 +54,7 @@ namespace kiv_ppr
             }
             else
             {
-                if (i > MAX_CALCULABLE_FACTORIAL || std::numeric_limits<double>::infinity() == std::pow(m_lambda, i))
+                if (i > Max_Calculable_Factorial || std::numeric_limits<double>::infinity() == std::pow(m_lambda, i))
                 {
                     infinity_is_found = true;
                     const double log_6th_tail = std::log(i * (1 + 4 * i * (1 + 2 * i))) / 6;

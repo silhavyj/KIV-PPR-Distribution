@@ -31,10 +31,10 @@ namespace kiv_ppr
 
     private:
         /// Creates a look-up table of factorials from 0 to MAX_CALCULABLE_FACTORIAL. 
-        void Calculate_Factorials() noexcept;
+        constexpr void Calculate_Factorials() noexcept;
 
     private:
-        static constexpr int MAX_CALCULABLE_FACTORIAL = 170; ///< Highest factorial that fits into a double (!170)
+        static constexpr int Max_Calculable_Factorial = 170; ///< Highest factorial that fits into a double (!170)
 
     private:
         double m_lambda;                  ///< Lambda value of the poisson distribution
