@@ -23,7 +23,7 @@ namespace kiv_ppr
         Calculate_Factorials();
     }
 
-    constexpr void CPoisson_CDF::Calculate_Factorials() noexcept
+    void CPoisson_CDF::Calculate_Factorials() noexcept
     {
         for (size_t i = 1; i < m_factorials.size(); ++i)
         {
