@@ -119,6 +119,23 @@ namespace kiv_ppr
         TValues values{};
         double delta{};
 
+        __m256d _min = _mm256_set_pd(
+            std::numeric_limits<double>::max(),
+            std::numeric_limits<double>::max(),
+            std::numeric_limits<double>::max(),
+            std::numeric_limits<double>::max()
+        );
+
+        __m256d _max = _mm256_set_pd(
+            std::numeric_limits<double>::lowest(),
+            std::numeric_limits<double>::lowest(),
+            std::numeric_limits<double>::lowest(),
+            std::numeric_limits<double>::lowest()
+        );
+
+        std::array<double, 4> valid_doubles{};
+        std::size_t index{0};
+
         for (size_t i = offset; i < data_block.count; ++i)
         {
             // The value has to to be a valid double.
@@ -127,9 +144,20 @@ namespace kiv_ppr
                 // Scale it down, so we are able to calculate -DOUBLE_MAX - DOUBLE_MAX.
                 const double value = data_block.data[i] / config::processing::Scale_Factor;
 
-                // Update the minimum and maximum.
-                values.min = std::min(values.min, value);
-                values.max = std::max(values.max, value);
+                // Update the minimum and maximum using SIMD instructions.
+                valid_doubles.at(index) = value;
+                if (index == 3)
+                {
+                    const auto _vals = utils::vectorization::Create_4Doubles(valid_doubles, 4, 0);
+                    _min = _mm256_min_pd(_min, _vals);
+                    _max = _mm256_max_pd(_max, _vals);
+
+                    index = 0;
+                }
+                else
+                {
+                    ++index;
+                }
 
                 // Update the mean.
                 ++values.count;
@@ -143,6 +171,17 @@ namespace kiv_ppr
                 }
             }
         }
+        if (index != 0)
+        {
+            auto _vals = utils::vectorization::Create_4Doubles(valid_doubles, index, std::numeric_limits<double>::max());
+            _min = _mm256_min_pd(_min, _vals);
+
+            _vals = utils::vectorization::Create_4Doubles(valid_doubles, index, std::numeric_limits<double>::lowest());
+            _max = _mm256_max_pd(_max, _vals);
+        }
+
+        values.min = utils::vectorization::Aggregate(_min, std::numeric_limits<double>::max(), [](double x, double y) { return std::min(x, y); });
+        values.max = utils::vectorization::Aggregate(_max, std::numeric_limits<double>::lowest(), [](double x, double y) { return std::max(x, y); });
 
         return values;
     }
@@ -342,9 +381,24 @@ namespace kiv_ppr
         }
     }
 
-    void CFirst_Iteration::Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block) noexcept
+    void CFirst_Iteration::Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block)
     {
-        double delta{};
+        __m256d _min = _mm256_set_pd(
+            std::numeric_limits<double>::max(),
+            std::numeric_limits<double>::max(),
+            std::numeric_limits<double>::max(),
+            std::numeric_limits<double>::max()
+        );
+
+        __m256d _max = _mm256_set_pd(
+            std::numeric_limits<double>::lowest(),
+            std::numeric_limits<double>::lowest(),
+            std::numeric_limits<double>::lowest(),
+            std::numeric_limits<double>::lowest()
+        );
+
+        std::array<double, 4> valid_doubles{};
+        std::size_t index{0};
 
         for (auto i = 0; i < data_block.count; ++i)
         {
@@ -362,16 +416,41 @@ namespace kiv_ppr
                 // Scale the value down, so the mean does not overflow.
                 value /= config::processing::Scale_Factor;
 
-                // Update the minimum and maximum.
-                local_values.min = std::min(local_values.min, value);
-                local_values.max = std::max(local_values.max, value);
+                // Update the minimum and maximum using SIMD instructions.
+                valid_doubles.at(index) = value;
+                if (index == 3)
+                {
+                    const auto _vals = utils::vectorization::Create_4Doubles(valid_doubles, 4, 0);
+                    _min = _mm256_min_pd(_min, _vals);
+                    _max = _mm256_max_pd(_max, _vals);
+
+                    index = 0;
+                }
+                else
+                {
+                    ++index;
+                }
 
                 // Update the mean.
                 ++local_values.count;
-                delta = value - local_values.mean;
+                const double delta = value - local_values.mean;
                 local_values.mean += delta / static_cast<double>(local_values.count);
             }
         }
+        if (index != 0)
+        {
+            auto _vals = utils::vectorization::Create_4Doubles(valid_doubles, index, std::numeric_limits<double>::max());
+            _min = _mm256_min_pd(_min, _vals);
+
+            _vals = utils::vectorization::Create_4Doubles(valid_doubles, index, std::numeric_limits<double>::lowest());
+            _max = _mm256_max_pd(_max, _vals);
+        }
+
+        const double min = utils::vectorization::Aggregate(_min, std::numeric_limits<double>::max(), [](double x, double y) { return std::min(x, y); });
+        const double max = utils::vectorization::Aggregate(_max, std::numeric_limits<double>::lowest(), [](double x, double y) { return std::max(x, y); });
+
+        local_values.min = std::min(local_values.min, min);
+        local_values.max = std::max(local_values.max, max);
     }
 
     void CFirst_Iteration::Execute_On_GPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl)

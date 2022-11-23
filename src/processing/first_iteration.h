@@ -95,7 +95,7 @@ namespace kiv_ppr
         /// This method directly modifies the local_values structure passed in as a parameter.
         /// \param local_values Local values being calculated within a single worker thread.
         /// \param data_block Block of data to be processed.
-        void Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block) noexcept;
+        void Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block);
 
         /// Processes a block of data read from the input file on an OpenCL device.
         /// This method directly modifies the local_values structure passed in as a parameter.

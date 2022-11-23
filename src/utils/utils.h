@@ -2,11 +2,14 @@
 
 #include <cstddef>
 #include <string>
+#include <array>
 #include <fstream>
 #include <random>
 #include <chrono>
 #include <cstdint>
 #include <iostream>
+#include <functional>
+#include <immintrin.h>
 
 namespace kiv_ppr::utils
 {
@@ -70,6 +73,21 @@ namespace kiv_ppr::utils
     /// \param value Value to be tested
     /// \return true, if the value is a valid double, false otherwise.
     bool Is_Valid_Double(double value) noexcept;
+
+    namespace vectorization
+    {
+        /// Aggregates results calculated using SIMD instructions.
+        /// \vals Resluts (final values)
+        /// \default_value Default value of the final aggregation
+        /// \fce Function used to aggregate the values
+        double Aggregate(const __m256d& vals, double default_value, std::function<double(double, double)> fce);
+
+        /// Creates an __m256d (four doubles) - used for SIMD instructions.
+        /// \data Data the __m256d will be created out of
+        /// \offset Offset within the array (indexes higher than the offset are not used)
+        /// \value Default value for the unused indexes
+        __m256d Create_4Doubles(std::array<double, 4>& data, const std::size_t offset, double value);
+    }
 }
 
 // EOF

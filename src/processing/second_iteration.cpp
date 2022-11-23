@@ -292,10 +292,14 @@ namespace kiv_ppr
         return static_cast<size_t>(2 * std::pow(n, 2.0 / 5.0));
     }
 
-    void CSecond_Iteration::Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, size_t offset) noexcept
+    void CSecond_Iteration::Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, size_t offset)
     {
-        double delta{};
-        double tmp_value{};
+        const __m256d _count_minus_1 = _mm256_set1_pd(static_cast<double>(m_basic_values->count) - 1);
+        const __m256d _mean = _mm256_set1_pd(m_basic_values->mean);
+        __m256d _var = _mm256_set1_pd(0);
+
+        std::array<double, 4> valid_doubles{};
+        std::size_t index = 0;
 
         for (auto i = offset; i < data_block.count; ++i)
         {
@@ -310,17 +314,39 @@ namespace kiv_ppr
                     value /= config::processing::Scale_Factor;
                 }
 
-                // Update the local variance.
-                delta = value - m_basic_values->mean;
-                tmp_value = delta;
-                delta /= static_cast<double>(m_basic_values->count - 1);
-                delta *= tmp_value;
-                local_values.var += delta;
+                // Add the value into the array of valid doubles.
+                valid_doubles.at(index) = value;
+
+                // Once we have 4 valid doubles, udpate the variance
+                // using SIMD instructions of the CPU.
+                if (index == 3)
+                {
+                    index = 0;
+                    Update_Variance(valid_doubles, _var, _mean, _count_minus_1);
+                }
+                else
+                {
+                    ++index;
+                }
 
                 // Update the local histogram.
                 local_values.histogram->Add(value);
             }
         }
+        // There might be some values left.
+        if (index != 0)
+        {
+            // The "unused" spots are set to m_basic_values->mean, which
+            // does not have any impact on the final result as the difference will be 0.
+            for (std::size_t i = index; i < 4; ++i)
+            {
+                valid_doubles.at(i) = m_basic_values->mean;
+            }
+            Update_Variance(valid_doubles, _var, _mean, _count_minus_1);
+        }
+
+        // Aggeregate (sum up) all the values.
+        local_values.var = utils::vectorization::Aggregate(_var, 0.0, [](double x, double y) { return x + y; });
     }
 
     void CSecond_Iteration::Execute_On_GPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, kernels::TOpenCL_Settings& opencl)
@@ -339,6 +365,23 @@ namespace kiv_ppr
             const size_t offset = data_block.count - (data_block.count % opencl.work_group_size);
             Execute_On_CPU(local_values, data_block, offset);
         }
+    }
+
+    void CSecond_Iteration::Update_Variance(const std::array<double, 4>& valid_doubles, __m256d& _var, const __m256d& _mean, const __m256d& _count_minus_1) noexcept
+    {
+        // Add the four doubles into __m256d.
+        const __m256d _vals = _mm256_set_pd(
+            valid_doubles.at(0),
+            valid_doubles.at(1),
+            valid_doubles.at(2),
+            valid_doubles.at(3)
+        );
+
+        __m256d _delta = _mm256_sub_pd(_vals, _mean);
+        const __m256d _tmp_value = _delta;
+        _delta = _mm256_div_pd(_delta, _count_minus_1);
+        _delta = _mm256_mul_pd(_delta, _tmp_value);
+        _var = _mm256_add_pd(_var, _delta);
     }
 }
 

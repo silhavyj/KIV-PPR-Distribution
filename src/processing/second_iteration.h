@@ -86,7 +86,7 @@ namespace kiv_ppr
         /// \param local_values Local values being calculated within a single worker thread.
         /// \param data_block Block of data to be processed.
         /// \param offset Offset (remaining part of data that could not be calculated on the OpenCL device).
-        void Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, size_t offset = 0) noexcept;
+        void Execute_On_CPU(TValues& local_values, const CFile_Reader<double>::TData_Block& data_block, size_t offset = 0);
 
         /// Processes a block of data read from the input file on an OpenCL device.
         /// This method directly modifies the local_values structure passed in as a parameter.
@@ -101,6 +101,13 @@ namespace kiv_ppr
         /// \param local_values Statistical values being calculated in the second interation (var, sd, histogram)
         /// \return  OpenCL report (whether the data was processed successfully or not and how many values were not processed due to the work group size).
         [[nodiscard]] TOpenCL_Report Execute_OpenCL(kernels::TOpenCL_Settings& opencl, const CFile_Reader<double>::TData_Block& data_block, TValues& local_values);
+
+        /// Updates the variance using SIMD instructions.
+        /// \valid_doubles Array of four doubles
+        /// \_var Variance
+        /// \_mean Mean
+        /// \_count_minus_1 Number of valid numbers minus 1
+        void Update_Variance(const std::array<double, 4>& valid_doubles, __m256d& _var, const __m256d& _mean, const __m256d& _count_minus_1) noexcept;
 
     private:
         CFile_Reader<double>* m_file;                       ///< Pointer to the input file reader
